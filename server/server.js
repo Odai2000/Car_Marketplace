@@ -6,6 +6,7 @@ const PORT = process.env.PORT || 3500
 
 //Routes
 app.use('/',require('./routes/root'))
-app.use('/posts',require('./routes/posts'))
+app.use('/user',require('./routes/user'))
+app.use('/post',require('./routes/post'))
 
 app.listen(PORT,()=>console.log(`server running on port ${PORT}`))
