@@ -58,10 +58,11 @@ const updateUser = asyncHandler(async (req, res) => {
     !firstName ||
     !lastName ||
     Array.isArray(roles)
-  )
+  ){
     return res.status(400).json({ message: "All fields are required" });
+  }
 
-  const user = await User.findById({ username }).lean().exec();
+  const user = await User.findOne({ username }).lean().exec();
 
   if (!user) {
     return res
@@ -87,6 +88,12 @@ const updateUser = asyncHandler(async (req, res) => {
   }
 
   const updatedUser = await user.save();
+
+  if(!updatedUser){
+    return res.status(400).json({message: 'Update failed'})
+  }
+
+  res.status(200).json({message : 'User updated.'})
 });
 
 const deleteUser = asyncHandler(async(req,res) => {

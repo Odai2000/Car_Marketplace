@@ -1,12 +1,18 @@
-require('dotenv').config()
-const express = require('express')
-const app = express()
-
-const PORT = process.env.PORT || 3500
+require("dotenv").config();
+const PORT = process.env.PORT || 3500;
+//Express
+const express = require("express");
+const app = express();
+//DB
+const { default: mongoose } = require("mongoose");
+const connectDB = require("./config/connectDB");
+connectDB();
 
 //Routes
-app.use('/',require('./routes/root'))
-app.use('/user',require('./routes/user'))
-app.use('/post',require('./routes/post'))
+app.use("/", require("./routes/root"));
+app.use("/user", require("./routes/user"));
+app.use("/post", require("./routes/post"));
 
-app.listen(PORT,()=>console.log(`server running on port ${PORT}`))
+mongoose.connection.once("open", () => {
+  app.listen(PORT, () => console.log(`server running on port ${PORT}`));
+});

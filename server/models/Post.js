@@ -38,6 +38,7 @@ const carSchema = new mongoose.Schema({
   },
 },) 
 
+//is last edit necassry??
 const postSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -53,6 +54,13 @@ const postSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
+  car: {
+    type: carSchema,
+    required:true
+  }
+},
+{
+  timestamps:true
 });
 
 module.exports = mongoose.model('Post',postSchema)
