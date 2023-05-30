@@ -17,7 +17,7 @@ const carSchema = new mongoose.Schema({
       type:Number
   },
   condition: {
-      type: String,
+      type: Boolean
     },
   color:{
       type:String
@@ -54,11 +54,15 @@ const postSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
+  // image:[{
+  //   type: bitmap
+  // }],
   car: {
     type: carSchema,
     required:true
   }
 },
+
 {
   timestamps:true
 });
