@@ -48,7 +48,6 @@ const getPosts = asyncHandler(async (req, res) => {
 });
 
 const createPost = asyncHandler(async (req, res) => {
-  //should car content be alone
   const { title, desc, user, car } = req.body;
 
   //confirm data
