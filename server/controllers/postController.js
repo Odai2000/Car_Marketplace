@@ -11,6 +11,42 @@ const getAllPosts = asyncHandler(async (req, res) => {
   res.status(200).json(posts);
 });
 
+//WIP
+const getPosts = asyncHandler(async (req, res) => {
+  const {
+    make,
+    model,
+    yearRange,
+    transmission,
+    mileageRange,
+    condition,
+    color,
+    engineType,
+    hpRange,
+    priceRange
+  } = req.query;
+
+  const posts = await Post.find({
+    'car.make': make,
+    'car.model': model,
+    'car.year': {$gte:yearRange.min,$lte:yearRange.max},
+    'car.transmission':transmission,
+    'car.mileage':{$gte:mileageRange.min,$lte:mileageRange.max},
+    'car.condition':condition,
+    'car.color': {$in:color},
+    'car.engineType':engineType,
+    'car.hp':{$gte: hpRange.min,$lte: hpRange.max},
+    'car.price':{$gte: priceRange.min,$lte: priceRange.max}
+  });
+
+  if (!posts.length) {
+    return res.status(400).json({ message: "No Posts found." });
+  }
+
+  res.status(200).json(posts);
+  
+});
+
 const createPost = asyncHandler(async (req, res) => {
   //should car content be alone
   const { title, desc, user, car } = req.body;
