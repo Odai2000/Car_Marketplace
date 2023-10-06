@@ -17,6 +17,7 @@ const getPosts = asyncHandler(async (req, res) => {
     make,
     model,
     yearRange,
+    type,
     transmission,
     mileageRange,
     condition,
@@ -29,6 +30,7 @@ const getPosts = asyncHandler(async (req, res) => {
   const posts = await Post.find({
     'car.make': make,
     'car.model': model,
+    'car.type': type,
     'car.year': {$gte:yearRange.min,$lte:yearRange.max},
     'car.transmission':transmission,
     'car.mileage':{$gte:mileageRange.min,$lte:mileageRange.max},

@@ -10,6 +10,9 @@ const carSchema = new mongoose.Schema({
   year:{
       type:Number
   },
+  type: {
+    type:String
+},
   transmission: {
       type:String
   },
