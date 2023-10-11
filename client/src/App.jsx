@@ -5,7 +5,7 @@ function App() {
   return (
     <Routes>
       <Route path = '/' element = '/layout.js'>
-
+        
       </Route>
     </Routes>
   )
