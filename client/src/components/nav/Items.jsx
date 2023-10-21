@@ -1,9 +1,10 @@
 function Items() {
   return (
     <>
-    <a>Catgeory</a>
-    <a>Contract</a>
-    <a>About</a>
+    <li><a><i></i>Categeory</a></li>
+    <li><a><i></i>Articles</a></li>
+    <li><a><i></i>Contact</a></li>
+    <li><a><i></i>About</a></li>
     </>
   );
 }

@@ -1,24 +1,32 @@
 import Items from "./Items";
-
+import "./style.css";
 function NavBar() {
   return (
     <>
-      <nav>
-        <div>
-          <img src="" id="logo" />
+      <div className="nav-wrapper">
+        <div className="nav-container">
+          <div id="logo">
+            <img src="src/assets/logo-white.svg" alt="logo" />
+          </div>
+
+          <nav>
+            <ul>
+              <Items />
+            </ul>
+          </nav>
         </div>
 
-        <ul>
-          <Items/>
-        </ul>
-
-        <div>
-          <button id = "login-btn">Login in</button>
-          <button id="signup-btn">Sign up</button>
+        <div className="btn-group">
+          <button className="btn login-btn">Log in</button>
+          <button className=" btn btn-primary signup-btn">Sign up</button>
         </div>
-      </nav>
+
+        <div className="menu-toggle">
+          <div className="hamburger"></div>
+        </div>
+      </div>
     </>
-  )
+  );
 }
 
-export default NavBar
+export default NavBar;

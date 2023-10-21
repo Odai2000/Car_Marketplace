@@ -1,4 +1,4 @@
-function HeaderFilter() {
+function HeroFilter() {
   return (
     <>
     <label>Look for your next car</label>
@@ -15,4 +15,4 @@ function HeaderFilter() {
   );
 }
 
-export default HeaderFilter;
+export default HeroFilter;
