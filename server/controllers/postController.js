@@ -12,7 +12,7 @@ const getAllPosts = asyncHandler(async (req, res) => {
 });
 
 //WIP
-const getPosts = asyncHandler(async (req, res) => {
+/* const getPosts = asyncHandler(async (req, res) => {
   const {
     make,
     model,
@@ -47,7 +47,7 @@ const getPosts = asyncHandler(async (req, res) => {
 
   res.status(200).json(posts);
   
-});
+}); */
 
 const createPost = asyncHandler(async (req, res) => {
   const { title, desc, user, car } = req.body;
@@ -68,7 +68,7 @@ const createPost = asyncHandler(async (req, res) => {
   res.status(201).json({ message: "Post created." });
 });
 
-const updateUser = asyncHandler(async (req, res) => {
+const updatePost = asyncHandler(async (req, res) => {
   const { id, title, desc, user, car } = req.body;
 
   if (!id || !title || !desc || !user || !car) {
@@ -102,3 +102,10 @@ const deletePost = asyncHandler(async (req, res) => {
 
   res.status(200).json({ message: `Post with id: ${id} has been deleted` });
 });
+
+module.exports = {
+  getAllPosts,
+  createPost,
+  updatePost,
+  deletePost
+}

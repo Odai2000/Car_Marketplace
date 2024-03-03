@@ -19,7 +19,7 @@ const carSchema = new mongoose.Schema({
   mileage:{
       type:Number
   },
-  condition: {
+  isNew: {
       type: Boolean
     },
   color:{
@@ -57,9 +57,9 @@ const postSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  // image:[{
-  //   type: bitmap
-  // }],
+   /* image:[{
+     type: bitmap
+   }], */
   car: {
     type: carSchema,
     required:true
