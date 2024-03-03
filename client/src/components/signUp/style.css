@@ -1,0 +1,26 @@
+.signup{
+    display: grid;
+    grid-template-columns: auto auto;
+    width: 80vh;
+}
+
+.signup > input{
+    grid-column: span 1;
+}
+
+.col-2{
+    grid-column: span 2 !important; 
+}
+
+.signup > h2{
+    text-align: center;
+}
+.signup > input {
+    padding: 1em;
+    
+    border-radius: 8px;
+    border: 1px solid #000;
+}
+.signup > * {
+    margin: 0em 1em 1em 0;
+}

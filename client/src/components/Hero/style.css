@@ -1,0 +1,51 @@
+.hero {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.herofilter-container {
+  padding: 1em 2rem;
+  border-radius: 2px;
+  margin: 2rem 1.5rem;
+  background-color: white;
+}
+
+.herofilter-container form {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-column-gap: 1.5em;
+  grid-row-gap: 1rem;
+  padding: 1em 0;
+}
+
+.herofilter-container form select {
+  grid-column: span 1;
+  border: 1px black solid;
+  background-color: transparent;
+  height: 2.5em;
+  width: 10em;
+  padding-left:0.5em;
+}
+
+select.op {
+}
+
+#hero-btn {
+  grid-column: span 4;
+}
+
+@media (min-width: 700px) {
+  .hero {
+    align-items: flex-start;
+  }
+  .herofilter-container {
+    align-items: flex-start;
+    margin-left: 4em;
+  }
+  .herofilter-container h1 {
+    width: 20ch;
+    font-size: 2em;
+  }
+}

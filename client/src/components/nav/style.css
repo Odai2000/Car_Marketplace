@@ -1,61 +1,81 @@
 .nav-wrapper {
   display: flex;
-  justify-content: space-around;
+  position: relative;
+  justify-content: space-between;
   width: 100%;
   height: 3.5rem;
   background-color: transparent;
-  padding: 1em 0em 0em;
+  padding: 1em 1em 0em;
 }
 
-.nav-container{
-    display: flex;
-    position: relative;
-    height: 100%;
-    justify-content: space-between;
-
+.nav-container {
+  display: flex;
+  height: 100%;
+  justify-content: space-between;
+  align-items: end;
 }
+
 #logo {
-    height: 100%;
+  height: 100%;
 }
 
 nav {
-  position: absolute;
-  top: 100%;
-  margin-left: 4em;
-
+  display: none;
 }
 
 nav > ul {
   display: flex;
   justify-content: space-around;
-  height: 100%;
 }
 
 nav > ul > li {
+  height: 2em;
   display: flex;
   align-self: center;
   padding: 0 1em;
-  color: aliceblue;
+  color: black;
+}
+
+nav.open {
+  display: block;
+  position: absolute;
+  top: 100%;
+  right: 0;
 }
 
 nav.open > ul {
   flex-direction: column;
+  justify-content: flex-start;
+  height: 100vh;
+  background-color: white;
 }
 
 nav.open > ul > li {
   width: 100%;
-  border-bottom: 1px solid black;
-  background-color: green;
-  color: rgb(250, 250, 250);
+  display: flex;
+  padding: 2em;
+  color: #a7a7a7;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid #a7a7a7;
+}
+
+.menu-toggle {
+}
+
+.op {
+  display: block;
+  height: 100%;
+  width: 1.5em;
+  color: white;
+}
+
+.btn-group {
 }
 
 #login-btn {
   padding: none;
   background-color: transparent;
-}
-
-.menu-toggle {
-  display: none;
 }
 
 @media (min-width: 700px) {
@@ -64,13 +84,39 @@ nav.open > ul > li {
   }
 
   nav {
+    display: block;
     position: static;
   }
 
   nav > ul {
+    position: relative;
+    flex-direction: row;
   }
 
   nav > ul > li {
+    display: inline-block;
     font-size: 18px;
+    color: white;
+    
+  }
+  nav > ul > li:hover a {
+    cursor: pointer;
+  }
+  nav > ul > li:after {
+    content: "";
+    display: block;
+    margin: auto;
+    height: 2px;
+    width: 0px;
+    background: transparent;
+    transition: width 0.5s ease, background-color 0.5s ease;
+  }
+  nav > ul > li:hover:after {
+    width: 100%;
+    background: rgb(9, 126, 9);
+  }
+
+  .menu-toggle {
+    display: none;
   }
 }

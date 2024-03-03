@@ -1,16 +1,22 @@
 function HeroFilter() {
   return (
     <>
-    <label>Look for your next car</label>
-      <form>
-        
-        <select name="make"></select>
-        <select name="model"></select>
-        <select name="year"></select>
-        <select name="type"></select>
-        <select name="engine"></select>
-        <button>Placeholder</button>
+    <div className="herofilter-container form">
+         <h1>Look for your next car now.</h1>
+      <form >
+        <select name="make"><option>Make</option></select>
+        <select name="model"><option>Model</option></select>
+        <select name="year-from"><option>From Year</option></select>
+        <select name="year-to"><option>To Year</option></select>
+        <div>Advanced search</div>
+        <select name="type">Any</select>
+        <select name="engine">Any</select>
+        <select name="hp" >0000</select>
+        <select name="condition">Any</select>
+        <select name="mileage">000000</select>
+        <button id = 'hero-btn' className=" btn btn-primary">Placeholder</button>
       </form>
+    </div>
     </>
   );
 }

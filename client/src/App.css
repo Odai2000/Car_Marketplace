@@ -22,6 +22,8 @@ body {
 }
 
 header {
+  display: flex;
+  flex-direction: column;
   height: 100vh;
   background-image: url("./assets/hero.jpg");
   background-size:cover;
@@ -40,4 +42,9 @@ header {
   color: rgb(250, 250, 250);
 }
 
+.card{
+  border-radius: 1em;
+  background-color: #fff;
+  padding: 1em;
+}
 

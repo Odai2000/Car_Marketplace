@@ -1,5 +1,8 @@
+import {FaBars} from 'react-icons/fa6'
 import Items from "./Items";
 import "./style.css";
+import { IconContext } from 'react-icons/lib';
+
 function NavBar() {
   return (
     <>
@@ -9,7 +12,7 @@ function NavBar() {
             <img src="src/assets/logo-white.svg" alt="logo" />
           </div>
 
-          <nav>
+          <nav className="">
             <ul>
               <Items />
             </ul>
@@ -21,9 +24,12 @@ function NavBar() {
           <button className=" btn btn-primary signup-btn">Sign up</button>
         </div>
 
-        <div className="menu-toggle">
-          <div className="hamburger"></div>
+        <IconContext.Provider value={{className:'op' }}>
+          <div className="menu-toggle">
+          <FaBars/>
         </div>
+        </IconContext.Provider>
+        
       </div>
     </>
   );
