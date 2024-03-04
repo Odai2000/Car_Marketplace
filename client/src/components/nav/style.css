@@ -113,7 +113,7 @@ nav.open > ul > li {
   }
   nav > ul > li:hover:after {
     width: 100%;
-    background: rgb(9, 126, 9);
+    background: var(--primary);
   }
 
   .menu-toggle {

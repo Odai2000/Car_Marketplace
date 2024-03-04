@@ -2,6 +2,7 @@ import {FaBars} from 'react-icons/fa6'
 import Items from "./Items";
 import "./style.css";
 import { IconContext } from 'react-icons/lib';
+import Button from '../UI/Button/Button';
 
 function NavBar() {
   return (
@@ -20,8 +21,8 @@ function NavBar() {
         </div>
 
         <div className="btn-group">
-          <button className="btn login-btn">Log in</button>
-          <button className=" btn btn-primary signup-btn">Sign up</button>
+          <Button variant="secondary" styleName = "login-btn">Log in</Button>
+          <Button variant="primary">Sign up</Button>
         </div>
 
         <IconContext.Provider value={{className:'op' }}>

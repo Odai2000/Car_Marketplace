@@ -1,3 +1,5 @@
+import Button from "../UI/Button/Button";
+
 function HeroFilter() {
   return (
     <>
@@ -14,7 +16,7 @@ function HeroFilter() {
         <select name="hp" >0000</select>
         <select name="condition">Any</select>
         <select name="mileage">000000</select>
-        <button id = 'hero-btn' className=" btn btn-primary">Placeholder</button>
+        <Button id = 'hero-btn' variant="primary">Placeholder</Button>
       </form>
     </div>
     </>

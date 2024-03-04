@@ -1,4 +1,5 @@
 import "./style.css";
+import Button from "../UI/Button/Button";
 
 function signup() {
   return (
@@ -18,7 +19,7 @@ function signup() {
 
         <input type="text" name="confirmPassword" placeholder="Confirm Password"/>
 
-        <button className='signup-btn btn btn-primary col-2'>Signup</button>
+        <Button variant = "primary" id='signup-btn' grid='col-2'>Signup</Button>
       </form>
     </>
   );

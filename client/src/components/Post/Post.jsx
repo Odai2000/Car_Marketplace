@@ -1,3 +1,4 @@
+import Button from "../UI/Button/Button";
 function Post() {
   return (
     <div className="post">
@@ -13,9 +14,9 @@ function Post() {
         <span>2010</span>
       </div>
 
-      <button className="btn call-btn">Call</button>
+      <Button variant="primary">Call</Button>
 
-      <button className="btn msg-btn">Message</button>
+      <Button variant="primary">Message</Button>
     </div>
   );
 }
