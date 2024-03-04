@@ -37,7 +37,7 @@
   }
 
   .primary.disabled{
-    background-color: transparent;
+    background-color: gray;
   }
 
   .secondary.disabled {

@@ -1,13 +1,17 @@
 import "./style.css";
 import Button from "../UI/Button/Button";
+import { FaX } from "react-icons/fa6";
 
 function signup() {
   return (
     <>
-      <form className='signup card'>
+      <Button styleName = "cross" ><FaX/></Button>
+
+      <form className="signup card">
 
         <h2 className="col-2">Sign up</h2>
-        <input type="text" name="firstName" placeholder="First Name"  />
+
+        <input type="text" name="firstName" placeholder="First Name" />
 
         <input type="text" name="lastName" placeholder="Last Name" />
 
@@ -17,12 +21,18 @@ function signup() {
 
         <input type="password" name="password" placeholder="Password"/>
 
-        <input type="text" name="confirmPassword" placeholder="Confirm Password"/>
+        <input type="password" name="confirmPassword" placeholder="Confirm Password"/>
 
-        <Button variant = "primary" id='signup-btn' grid='col-2'>Signup</Button>
+        <span className="col-2">
+          Already have an account? <a>Login</a>
+        </span>
+
+        <Button variant="primary" styleName="signup-btn col-2">
+          Sign up
+        </Button>
       </form>
     </>
   );
 }
 
-export default signup
+export default signup;

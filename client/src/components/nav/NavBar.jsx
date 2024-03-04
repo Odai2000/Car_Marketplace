@@ -1,8 +1,8 @@
-import {FaBars} from 'react-icons/fa6'
+import { FaBars } from "react-icons/fa6";
 import Items from "./Items";
 import "./style.css";
-import { IconContext } from 'react-icons/lib';
-import Button from '../UI/Button/Button';
+import { IconContext } from "react-icons/lib";
+import Button from "../UI/Button/Button";
 
 function NavBar() {
   return (
@@ -21,16 +21,17 @@ function NavBar() {
         </div>
 
         <div className="btn-group">
-          <Button variant="secondary" styleName = "login-btn">Log in</Button>
+          <Button variant="secondary" styleName="login-btn">
+            Log in
+          </Button>
           <Button variant="primary">Sign up</Button>
         </div>
 
-        <IconContext.Provider value={{className:'op' }}>
+        <IconContext.Provider value={{ className: "op" }}>
           <div className="menu-toggle">
-          <FaBars/>
-        </div>
+            <FaBars />
+          </div>
         </IconContext.Provider>
-        
       </div>
     </>
   );

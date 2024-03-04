@@ -2,6 +2,7 @@
 import NavBar from "./nav/NavBar";
 import Hero from "./Hero/Hero";
 import Post from "./Post/Post";
+import SignUpForm from "./signUp/SignUpForm";
 function Layout() {
   return (
     <>
@@ -9,7 +10,7 @@ function Layout() {
         <NavBar />
         <Hero />
       </header>
-
+      <SignUpForm/>
       <Post />
     </>
   );
