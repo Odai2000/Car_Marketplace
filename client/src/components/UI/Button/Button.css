@@ -1,0 +1,51 @@
+/* Button.css */
+.btn {
+    padding: 0.7em;
+    border-radius: 4px;
+  }
+  
+  .primary {
+    background-color: var(--primary);
+    color: white;
+  }
+  
+  .secondary {
+    /* Secondary button styles */
+    background-color: transparent;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+  }
+  
+  .destructive {
+    /* Destructive styles */
+    color: white;
+  }
+  
+  .primary.destructive {
+    background-color: var(--destructive);
+  }
+  
+  .secondary.destructive {
+    /* Secondary destructive button styles */
+    background-color: transparent;
+    color:  var(--destructive);
+    border-color:  var(--destructive);
+  }
+  
+  .disabled{
+    color:white;
+  }
+
+  .primary.disabled{
+    background-color: transparent;
+  }
+
+  .secondary.disabled {
+    background-color: transparent;
+    color:  gray;
+    border-color:  gray;
+  }
+
+  .round {
+    border-radius: 64px;
+  }
