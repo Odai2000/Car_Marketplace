@@ -2,8 +2,8 @@
 import NavBar from "./nav/NavBar";
 import Hero from "./Hero/Hero";
 import Post from "./Post/Post";
-import SignUpForm from "./signUp/SignUpForm";
-import LoginForm from "./Login/LoginForm";
+import RegisterForm from "./AuthForms/RegisterForm";
+import LoginForm from "./AuthForms/LoginForm";
 
 function Layout() {
   return (
@@ -12,7 +12,7 @@ function Layout() {
         <NavBar />
         <Hero />
       </header>
-      <SignUpForm/>
+      <RegisterForm/>
       <LoginForm/>
       <Post />
     </>

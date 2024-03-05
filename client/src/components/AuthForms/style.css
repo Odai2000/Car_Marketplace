@@ -1,0 +1,81 @@
+.authFormContainer{
+    display: block;
+    width: max-content;
+    margin: auto auto;
+    border: 1px solid lightgray;
+}  
+
+.cross{
+    position: absolute;
+    background-color: transparent;
+   right: 0;
+}
+
+.authForm{
+    position: relative;
+    display: grid;
+    grid-template-columns: auto auto;
+    width: 80vh;
+    padding: 16px !important;
+}
+
+.authForm > input{
+    grid-column: span 1;
+}
+
+.col-2{
+    grid-column: span 2 !important; 
+}
+
+.authForm > h2{
+    text-align: center;
+}
+.authForm > input {
+    padding: 1em;
+    
+    border-radius: 8px;
+    border: 1px solid #000;
+}
+.authForm > * {
+    margin: 0em 1em 1em 0;
+}
+
+.line-breaker{
+    display:flex;
+    align-items: center;
+}
+
+.line-breaker > .line{
+    height: 1px;
+    flex-grow:2;
+    background-color: black;
+    margin: 0 10px;
+}
+
+.line-breaker .text{
+    white-space: nowrap
+}
+
+.container.alt{
+    margin: 0 1em;
+    display: flex;
+    justify-content:center;
+}
+
+.container.alt > :first-child{
+ margin-right: 0.5em;
+}
+
+.container.alt > .btn{
+    height: 4em;
+    display: flex;
+    align-items: center;
+    font-size: 1em;
+    font-weight: 500;
+    padding: 0 1em;
+    color:rgb(89, 86, 86);
+}
+
+.container.alt > .btn > :first-child{
+    margin-right: 0.25em;
+}
