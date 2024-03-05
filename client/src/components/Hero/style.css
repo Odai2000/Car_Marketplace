@@ -22,7 +22,8 @@
 
 .herofilter-container form select {
   grid-column: span 1;
-  border: 1px black solid;
+  border: 1px rgba(88, 84, 84, 0.808) solid;
+  border-radius: 4px;
   background-color: transparent;
   height: 2.5em;
   width: 10em;

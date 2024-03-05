@@ -1,6 +1,6 @@
 import Button from "../UI/Button/Button";
 
-function HeroFilter() {
+function Filter() {
   return (
     <>
     <div className="herofilter-container form">
@@ -9,7 +9,8 @@ function HeroFilter() {
         <select name="make"><option>Make</option></select>
         <select name="model"><option>Model</option></select>
         <select name="year-from"><option>From Year</option></select>
-        <Button variant="link" id="advanced-btn">Advanced search</Button>
+        <select name="year-to"><option>To Year</option></select>
+        <div>Advanced search</div>
         <select name="type">Any</select>
         <select name="engine">Any</select>
         <select name="hp" >0000</select>
@@ -22,4 +23,4 @@ function HeroFilter() {
   );
 }
 
-export default HeroFilter;
+export default Filter;

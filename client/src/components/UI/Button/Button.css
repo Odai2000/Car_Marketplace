@@ -2,6 +2,11 @@
 .btn {
     padding: 0.7em;
     border-radius: 4px;
+    font-weight: 600;
+  }
+
+  .btn:hover{
+    cursor:pointer;
   }
   
   .primary {
@@ -10,14 +15,18 @@
   }
   
   .secondary {
-    /* Secondary button styles */
     background-color: transparent;
     color: var(--primary);
     border: 1px solid var(--primary);
   }
+
+  .link{
+    background-color: transparent;
+    font-size: 12px;
+    color: var(--primary);
+  }
   
   .destructive {
-    /* Destructive styles */
     color: white;
   }
   
@@ -26,12 +35,15 @@
   }
   
   .secondary.destructive {
-    /* Secondary destructive button styles */
     background-color: transparent;
     color:  var(--destructive);
     border-color:  var(--destructive);
   }
-  
+
+  .link.destructive{
+    color: var(--destructive);
+  }
+
   .disabled{
     color:white;
   }

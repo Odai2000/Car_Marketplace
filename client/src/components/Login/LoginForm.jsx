@@ -30,10 +30,12 @@ function LoginForm() {
           Don't have an account? <a>Sign up</a>
         </span>
 
-        <Button variant="primary" styleName="signup-btn col-2">
+        <Button variant="primary" styleName="login-btn col-2">
           Login
         </Button>
       </form>
     </>
   );
 }
+
+export default LoginForm

@@ -1,0 +1,26 @@
+.login{
+    display: grid;
+    grid-template-columns: auto auto;
+    width: 80vh;
+}
+
+.login > input{
+    grid-column: span 1;
+}
+
+.col-2{
+    grid-column: span 2 !important; 
+}
+
+.login > h2{
+    text-align: center;
+}
+.login > input {
+    padding: 1em;
+    
+    border-radius: 8px;
+    border: 1px solid #000;
+}
+.login > * {
+    margin: 0em 1em 1em 0;
+}
