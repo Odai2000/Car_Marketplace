@@ -1,0 +1,4 @@
+.AboutSection-container{
+    display: flex;
+    flex-direction: column;
+}

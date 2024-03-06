@@ -2,7 +2,8 @@
 .btn {
     padding: 0.7em;
     border-radius: 4px;
-    font-weight: 600;
+    font-weight: 500;
+    letter-spacing: 0.75px;
   }
 
   .btn:hover{
@@ -21,9 +22,14 @@
   }
 
   .link{
+    padding: 0;
     background-color: transparent;
-    font-size: 12px;
     color: var(--primary);
+    border-radius: 0;
+  }
+
+  .link:hover{
+    text-decoration: underline;
   }
   
   .destructive {

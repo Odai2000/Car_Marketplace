@@ -1,5 +1,5 @@
 import Button from "../UI/Button/Button";
-
+import {FaAngleRight} from "react-icons/fa6"
 function HeroFilter() {
   return (
     <>
@@ -9,12 +9,10 @@ function HeroFilter() {
         <select name="make"><option>Make</option></select>
         <select name="model"><option>Model</option></select>
         <select name="year-from"><option>From Year</option></select>
-        <Button variant="link" id="advanced-btn">Advanced search</Button>
-        <select name="type">Any</select>
-        <select name="engine">Any</select>
-        <select name="hp" >0000</select>
-        <select name="condition">Any</select>
-        <select name="mileage">000000</select>
+        <select name="mileage-to"><option >Mileage</option></select>
+        <select name="price-to"><option >Budget</option></select>
+        <Button variant="link" id="hero-advanced-btn">Advanced search<FaAngleRight/></Button>
+        
         <Button id = 'hero-btn' variant="primary">Placeholder</Button>
       </form>
     </div>

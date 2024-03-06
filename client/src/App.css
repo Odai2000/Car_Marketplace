@@ -9,7 +9,7 @@
 }
 
 :root {
-  --primary: #2baa0e;
+  --primary: #257b27;
   --destructive: #de0d0d;
   --warning: #f6ff52;
 }
@@ -38,9 +38,6 @@ header {
   box-shadow: inset 0 0 0 2000px rgba(0, 0, 0, 0.5);
  
 }
-
-
-
 
 .card{
   border-radius: 1em;

@@ -15,7 +15,7 @@ function RegisterForm() {
       <Button styleName="cross">
         <FaX />
       </Button>
-        <h2 className="col-2">Sign up</h2>
+        <h2 className="col-2">Register</h2>
 
         <input type="text" name="firstName" placeholder="First Name" />
 

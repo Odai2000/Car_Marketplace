@@ -4,6 +4,8 @@ import Hero from "./Hero/Hero";
 import Post from "./Post/Post";
 import RegisterForm from "./AuthForms/RegisterForm";
 import LoginForm from "./AuthForms/LoginForm";
+import AboutSection from "./AboutSection/AboutSection";
+
 
 function Layout() {
   return (
@@ -14,6 +16,7 @@ function Layout() {
       </header>
       <RegisterForm/>
       <LoginForm/>
+      <AboutSection/>
       <Post />
     </>
   );
