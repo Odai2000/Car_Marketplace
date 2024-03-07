@@ -1,0 +1,22 @@
+.post {
+  height: 10em;
+  width: 100%;
+  display: flex;
+  border: 1px solid lightgray;
+}
+
+.post > .post-details{
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    gap: .5em;
+    padding: 0.5em;
+    
+}
+
+.post > .post-img{
+  border: 1px solid lightgray;
+}
+.post-details > .post-location{
+  color: gray;
+  align-content: end;
+}

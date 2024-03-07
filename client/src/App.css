@@ -36,7 +36,7 @@ header {
   background-repeat: no-repeat ;
   background-position:center ;
   box-shadow: inset 0 0 0 2000px rgba(0, 0, 0, 0.5);
- 
+
 }
 
 .card{
@@ -45,3 +45,6 @@ header {
   padding: 1em;
 }
 
+.col-4{
+  grid-column: span 4;
+}
