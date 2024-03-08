@@ -19,10 +19,6 @@
     padding: 16px !important;
 }
 
-.authForm > input{
-    grid-column: span 1;
-}
-
 .col-2{
     grid-column: span 2 !important; 
 }

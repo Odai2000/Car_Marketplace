@@ -1,0 +1,12 @@
+.PostCreator > form {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.PostCreator > form > select{
+    border: 1px rgba(88, 84, 84, 0.808) solid;
+    border-radius: 4px;
+    background-color: transparent;
+    height: 3.0em;
+    padding-left:0.5em;
+}

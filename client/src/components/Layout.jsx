@@ -5,7 +5,7 @@ import Post from "./Post/Post";
 import RegisterForm from "./AuthForms/RegisterForm";
 import LoginForm from "./AuthForms/LoginForm";
 import AboutSection from "./AboutSection/AboutSection";
-
+import PostCreator from "./PostCreator/PostCreator";
 
 function Layout() {
   return (
@@ -14,10 +14,12 @@ function Layout() {
         <NavBar />
         <Hero />
       </header>
-      <RegisterForm/>
-      <LoginForm/>
-      <AboutSection/>
+      <AboutSection />
+      <RegisterForm />
+      <LoginForm />
+
       <Post />
+      <PostCreator />
     </>
   );
 }

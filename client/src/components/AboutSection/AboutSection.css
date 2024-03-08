@@ -1,4 +1,37 @@
-.AboutSection-container{
-    display: flex;
-    flex-direction: column;
+.AboutSection {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(246, 252, 246);
+  padding: 1.5em;
+}
+
+.AboutSection-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.AboutSection > h2 {
+  text-align: center;
+  color: var(--primary);
+  font-size: 2em;
+}
+.AboutSection-container > .item {
+  border-radius: 4px;
+  margin: 1.25em 0;
+}
+
+.AboutSection-container > .item > img {
+  height: 9em;
+}
+
+.AboutSection-container > .item > p {
+  padding: 0.5em;
+  width: 28ch;
+  font-size: 1.25em;
+  text-align: center;
+}
+
+.AboutSection-container > .item > p > b {
+  color: var(--primary);
 }

@@ -8,7 +8,7 @@ import { FaMessage } from "react-icons/fa6";
 
 function Post() {
   return (
-    <div className="post card">
+    <div className="post ">
       <div className="post-img">
         <FaCamera />
       </div>
@@ -31,7 +31,6 @@ function Post() {
         <span>HP</span>
         <span className="post-location col-2">City,Co</span>
         <Button variant="primary"><FaPhone/> Call</Button>
-
         <Button variant="primary"><FaMessage/> Message</Button>
       </div>
     </div>
