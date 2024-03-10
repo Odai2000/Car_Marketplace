@@ -27,6 +27,11 @@ body {
   height: 100%;
 }
 
+h2{
+  font-size: 1.5em;
+  font-weight: 800;
+}
+
 header {
   display: flex;
   flex-direction: column;

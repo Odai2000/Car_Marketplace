@@ -1,5 +1,5 @@
 import React from "react";
-import "./Input.css";
+import "./FormControls.css";
 
 const Input = ({ type, name, value, onChange, placeholder, styleName }) => {
   return (
