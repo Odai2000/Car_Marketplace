@@ -1,11 +1,11 @@
 import React from "react";
 import "./Button.css";
 
-function Button({styleName,id,variant, destructive, children, icon, ...props}) {
+function Button({styleName,id,variant, destructive, onClick, children, icon, ...props}) {
   const className = `btn ${variant} ${destructive ? "destructive" : ""} `;
 
   return (
-    <button id ={id} className={className + (styleName?styleName:'')} {...props}>
+    <button id ={id} className={className + (styleName?styleName:'') } onClick={onClick} {...props}>
       {icon && <i className={icon}/>} {children}
     </button>
   );
