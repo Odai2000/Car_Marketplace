@@ -15,5 +15,9 @@ router
   router
   .route("/login")
   .post(userController.loginUser)
+
+  router
+  .route("/token")
+  .post(userController.refreshToken)
   
 module.exports = router;

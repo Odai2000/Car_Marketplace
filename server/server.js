@@ -8,7 +8,6 @@ const bodyParser = require("body-parser");
 const { default: mongoose } = require("mongoose");
 const connectDB = require("./config/connectDB");
 connectDB();
-
 //JWT
 const jwt = require('jsonwebtoken')
 ACCESS_TOKEN_SECRET =process.env.ACCESS_TOKEN_SECRET

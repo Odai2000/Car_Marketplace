@@ -1,7 +1,9 @@
 const User = require("../models/User");
+const Token = require("../models/Token");
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { default: mongoose } = require("mongoose");
 
 //get users
 const getAllUsers = asyncHandler(async (req, res) => {
@@ -128,12 +130,21 @@ const loginUser = asyncHandler(async (req, res) => {
     const { username, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await User.findOne({ username }).lean();
+    const user = await User.findOne({ username }).select("-_id").lean();
 
     const generateAccessToken = (user) => {
-      return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: "15s",
-      });
+      return jwt.sign(
+        {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          username: user.username,
+          email: user.email,
+        },
+        process.env.ACCESS_TOKEN_SECRET,
+        {
+          expiresIn: "10s",
+        }
+      );
     };
 
     const generateRefreshToken = (user) => {
@@ -160,13 +171,22 @@ const loginUser = asyncHandler(async (req, res) => {
 
 const refreshToken = asyncHandler(async (req, res) => {
   const token = req.body.refreshToken;
+  if (token == null) return res.status(401);
+  const refreshToken = Token.findOne({ token });
+  if (!refreshToken) return res.status(403);
 
+  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+    if (err) return res.status(403).send("Invalid Token.");
+    const accessToken = generateAccessToken(user);
+    res.json({ accessToken: accessToken });
+  });
 });
+
 module.exports = {
   getAllUsers,
   createUser,
   updateUser,
   deleteUser,
   loginUser,
-  refreshToken
+  refreshToken,
 };
