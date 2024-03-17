@@ -1,6 +1,7 @@
 const User = require("../models/User");
-const asyncHandler = require('express-async-handler');
+const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 //get users
 const getAllUsers = asyncHandler(async (req, res) => {
@@ -15,7 +16,13 @@ const createUser = asyncHandler(async (req, res) => {
   const { username, password, firstName, lastName, email, roles } = req.body;
 
   //confirm fields
-  if (!username&&res.status(400).json({message:username}) || !password || !firstName || !lastName || !email) {
+  if (
+    (!username && res.status(400).json({ message: username })) ||
+    !password ||
+    !firstName ||
+    !lastName ||
+    !email
+  ) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
@@ -57,12 +64,12 @@ const updateUser = asyncHandler(async (req, res) => {
     !email ||
     !firstName ||
     !lastName ||
-    !Array.isArray(roles)&&res.status(400).json({ message: roles })
-  ){
+    (!Array.isArray(roles) && res.status(400).json({ message: roles }))
+  ) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
-  const user = await User.findById(id)
+  const user = await User.findById(id);
 
   if (!user) {
     return res
@@ -72,7 +79,7 @@ const updateUser = asyncHandler(async (req, res) => {
 
   //Check for username duplicate
   const duplicate = await User.findOne({ username }).lean().exec();
-  
+
   if (duplicate && duplicate?._id.toString() !== id.toString()) {
     return res.status(400).json({ message: "Username already exists" });
   }
@@ -84,35 +91,82 @@ const updateUser = asyncHandler(async (req, res) => {
   user.roles = roles;
 
   if (!password >= 8) {
-    res.send.status(400).json({message:"password must be at least 8 characters long"})
+    res.send
+      .status(400)
+      .json({ message: "password must be at least 8 characters long" });
     user.password = await bcrypt.hash(password, 10);
   }
 
   const updatedUser = await user.save();
 
-  if(!updatedUser){
-    return res.status(400).json({message: 'Update failed'})
+  if (!updatedUser) {
+    return res.status(400).json({ message: "Update failed" });
   }
 
-  res.status(200).json({message : 'User updated.'})
+  res.status(200).json({ message: "User updated." });
 });
 
-const deleteUser = asyncHandler(async(req,res) => {
-  const {id} = req.params
-  console.log(id)
-  const user = await User.findById(id).lean().exec()
+const deleteUser = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  const user = await User.findById(id).lean().exec();
 
-  if(!user){
-    return res.status(404).json({message: `No user with id: ${id} was found.`})
+  if (!user) {
+    return res
+      .status(404)
+      .json({ message: `No user with id: ${id} was found.` });
   }
-  const queryResult = await User.deleteOne({_id:id}).exec()
+  const queryResult = await User.deleteOne({ _id: id }).exec();
 
-  res.json({message:`User ${queryResult.username} with id: ${queryResult._id} deleted.`})
-  })
+  res.json({
+    message: `User ${queryResult.username} with id: ${queryResult._id} deleted.`,
+  });
+});
 
-  module.exports = {
-    getAllUsers,
-    createUser,
-    updateUser,
-    deleteUser
+const loginUser = asyncHandler(async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = await User.findOne({ username }).lean();
+
+    const generateAccessToken = (user) => {
+      return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: "15s",
+      });
+    };
+
+    const generateRefreshToken = (user) => {
+      return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
+    };
+
+    if (!user) return res.status(404).send("Username not found.");
+
+    if (await bcrypt.compare(password, user.password)) {
+      const accessToken = generateAccessToken(user);
+      const refreshToken = generateRefreshToken(user);
+
+      return res
+        .status(200)
+        .json({ accessToken: accessToken, refreshToken: refreshToken });
+    } else {
+      return res.status(401).send("Authentication Failed.");
+    }
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send(err);
   }
+});
+
+const refreshToken = asyncHandler(async (req, res) => {
+  const token = req.body.refreshToken;
+
+});
+module.exports = {
+  getAllUsers,
+  createUser,
+  updateUser,
+  deleteUser,
+  loginUser,
+  refreshToken
+};

@@ -8,9 +8,11 @@ const bodyParser = require("body-parser");
 const { default: mongoose } = require("mongoose");
 const connectDB = require("./config/connectDB");
 connectDB();
-//CORS
-const cors = require("cors");
-const whitelist = ["http://localhost:8097"];
+
+//JWT
+const jwt = require('jsonwebtoken')
+ACCESS_TOKEN_SECRET =process.env.ACCESS_TOKEN_SECRET
+REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET
 
 const corsOptions = {
   origin: function (origin, callback) {
@@ -22,7 +24,7 @@ const corsOptions = {
   },
 };
 
-app.use(bodyParser.json(), cors(corsOptions));
+app.use(bodyParser.json());
 //Routes
 app.use("/", require("./routes/root"));
 app.use("/user", require("./routes/user"));

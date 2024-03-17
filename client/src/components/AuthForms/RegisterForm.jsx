@@ -14,31 +14,36 @@ function RegisterForm() {
   const [password, setPassword] = useState([]);
   const [ConfirmPassword, setConfirmpassword] = useState([]);
 
-  const handleSubmit = (e) =>{
+  const handleSubmit = (e) => {
     e.preventDefault();
-    (password !== ConfirmPassword)?console.log("Passwords don't match!"):createUser(firstName,lastName,email,username,password)
-  }
-  const createUser = async (
+    password !== ConfirmPassword
+      ? console.log("Passwords don't match!")
+      : registerUser(firstName, lastName, email, username, password);
+  };
+  const registerUser = async (
     firstName,
     lastName,
     email,
     username,
-    password,
+    password
   ) => {
-
-    await fetch("http://localhost:8080/user",{
-      method: 'Post',
+    await fetch("http://localhost:8080/user", {
+      method: "Post",
       body: JSON.stringify({
-        "firstName":firstName,
-        "lastName":lastName,
-        "email":{email},
-        "username":username,
-        "password":password
+        firstName: firstName,
+        lastName: lastName,
+        email: { email },
+        username: username,
+        password: password,
       }),
       headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-     },
-    }).then((respose)=>respose.json);
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((respose) => respose.json())
+      .catch((e) => {
+        console.log(e);
+      });
   };
   useEffect(() => {}, []);
   return (
@@ -116,10 +121,7 @@ function RegisterForm() {
             Already have an account? <Button variant="link">Login</Button>
           </span>
 
-          <Button type="submit" 
-            variant="primary"
-            styleName="signup-btn col-2"
-          >
+          <Button type="submit" variant="primary" styleName="signup-btn col-2">
             Register
           </Button>
 
@@ -135,7 +137,7 @@ function RegisterForm() {
                 {" "}
                 <FcGoogle /> Continue with Google
               </Button>
-              <Button variant="secondary link round" >
+              <Button variant="secondary link round">
                 {" "}
                 <FaFacebook
                   style={{ color: " #4267B2", marginBottom: "2px" }}
