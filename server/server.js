@@ -4,14 +4,20 @@ const PORT = process.env.PORT || 3500;
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
+
 //DB
 const { default: mongoose } = require("mongoose");
 const connectDB = require("./config/connectDB");
 connectDB();
+
 //JWT
 const jwt = require('jsonwebtoken')
 ACCESS_TOKEN_SECRET =process.env.ACCESS_TOKEN_SECRET
 REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET
+
+//CORS
+const cors = require("cors");
+const whitelist = ["http://localhost:8097"];
 
 const corsOptions = {
   origin: function (origin, callback) {
@@ -23,7 +29,7 @@ const corsOptions = {
   },
 };
 
-app.use(bodyParser.json());
+app.use(bodyParser.json(),cors(corsOptions));
 //Routes
 app.use("/", require("./routes/root"));
 app.use("/user", require("./routes/user"));
