@@ -11,7 +11,7 @@ function LoginForm() {
   const [password, setPassword] = useState([]);
 
   const login = async (username, password) => {
-    fetch("http://localhost:8080/login", {
+    fetch("http://localhost:8080/user/login", {
       method: "POST",
       body: JSON.stringify({
         username: username,

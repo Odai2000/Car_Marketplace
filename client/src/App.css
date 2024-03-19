@@ -45,9 +45,13 @@ header {
 }
 
 .card{
-  border-radius: 1em;
+  border-radius: 8px;
   background-color: #fff;
   padding: 1em;
+}
+
+.col-1{
+  grid-column: span 1;
 }
 
 .col-4{

@@ -10,7 +10,7 @@ const Input = ({ type, name, value, onChange, placeholder, styleName }) => {
       value={value}
       onChange={onChange}
       placeholder={placeholder}
-      className={"input-field " + styleName}
+      className={"form-control input-field " + styleName}
     />
   );
 };

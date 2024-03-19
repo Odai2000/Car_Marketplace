@@ -23,7 +23,7 @@ function PostCreator() {
         </div>
 
         <div className="form-group post-img">
-            <Button variant="primary">Add Image</Button>
+          <Button variant="primary">Add Image</Button>
         </div>
 
         <div className="form-group post-data">
@@ -34,9 +34,9 @@ function PostCreator() {
             styleName="col-2"
           />
 
-          <select name="make" placeholder="Select Make"></select>
+          <Select name="make" placeholder="Select Make"></Select>
 
-          <select name="model"></select>
+          <Select name="model"></Select>
 
           <Select name="body">
             <option value="coupe">Coupe</option>
@@ -44,12 +44,12 @@ function PostCreator() {
 
           <Select name="year" options={yearsOptions} />
 
-          <select name="engine"></select>
+          <Select name="engine"></Select>
 
-          <select name="Transmisson">
+          <Select name="Transmisson">
             <option value="automatic">Automatic</option>
             <option value="manual">Manual</option>
-          </select>
+          </Select>
 
           <Input type="text" name="mileage" placeholder="mileage" />
 

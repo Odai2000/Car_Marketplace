@@ -1,6 +1,4 @@
 .post {
-  height: 10em;
-  width: 100%;
   display: flex;
   border: 1px solid lightgray;
 }
@@ -15,7 +13,9 @@
 
 .post > .post-img{
   border: 1px solid lightgray;
+  width: 10em;
 }
+
 .post-details > .post-location{
   color: gray;
   align-content: end;

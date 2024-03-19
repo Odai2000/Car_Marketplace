@@ -6,6 +6,7 @@ import RegisterForm from "./AuthForms/RegisterForm";
 import LoginForm from "./AuthForms/LoginForm";
 import AboutSection from "./AboutSection/AboutSection";
 import PostCreator from "./PostCreator/PostCreator";
+import PostSearchResult from "./pages/PostSearchResults/PostSearchResult"
 
 function Layout() {
   return (
@@ -20,6 +21,7 @@ function Layout() {
 
       <Post />
       <PostCreator />
+      <PostSearchResult />
     </>
   );
 }

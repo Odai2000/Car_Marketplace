@@ -8,7 +8,7 @@ const Select = ({ name, id, value, onChange, styleName,options,children }) => {
       id={name}
       value={value}
       onChange={onChange}
-      className={"input-field " + styleName}
+      className={"form-control select-field " + styleName}
     >
        {options?options.map((option)=>(
         <option key ={option.value} value={option.value}>{option.label}</option>
