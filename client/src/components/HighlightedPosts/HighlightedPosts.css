@@ -1,0 +1,16 @@
+.HighlightedPosts{
+    display: flex;
+    flex-direction: column;
+    gap: 1.2em;
+    padding: 1em;
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+.HighlightedPosts > .Carousel >.carousel-btn{
+    position: static;
+    transform: translate(0,0);
+   
+    font-size: 1.5em;
+    color: var(--primary);
+}
+

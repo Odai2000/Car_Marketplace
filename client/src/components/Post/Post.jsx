@@ -1,16 +1,20 @@
 import "./Post.css";
+import { useRef } from "react";
 import Button from "../UI/Button/Button";
+import Carousel from "../UI/Carousel/Carousel";
 import { FaCamera } from "react-icons/fa6";
 import { FaCar } from "react-icons/fa6";
 import { FaCalendar } from "react-icons/fa6";
 import { FaPhone } from "react-icons/fa6";
 import { FaMessage } from "react-icons/fa6";
 
-function Post() {
+const Post = () => {
+  let items = ["1st","2nd","3th","4th"]
   return (
     <div className="post ">
       <div className="post-img">
-        <FaCamera />
+        <Carousel single items={items}>
+        </Carousel>
       </div>
 
       <div className="post-details">
@@ -30,11 +34,15 @@ function Post() {
         <span>Mileage</span>
         <span>HP</span>
         <span className="post-location col-2">City,Co</span>
-        <Button variant="primary"><FaPhone/> Call</Button>
-        <Button variant="primary"><FaMessage/> Message</Button>
+        <Button variant="primary">
+          <FaPhone /> Call
+        </Button>
+        <Button variant="primary">
+          <FaMessage /> Message
+        </Button>
       </div>
     </div>
   );
-}
+};
 
 export default Post;

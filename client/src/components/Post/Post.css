@@ -1,6 +1,7 @@
 .post {
   display: flex;
   border: 1px solid lightgray;
+  background-color: #fff;
 }
 
 .post > .post-details{
@@ -14,6 +15,7 @@
 .post > .post-img{
   border: 1px solid lightgray;
   width: 10em;
+  position: relative;
 }
 
 .post-details > .post-location{
