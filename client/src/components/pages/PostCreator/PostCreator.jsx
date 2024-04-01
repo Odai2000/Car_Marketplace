@@ -1,7 +1,8 @@
 import "./PostCreator.css";
-import Input from "../UI/FormControls/Input";
-import Select from "../UI/FormControls/select";
-import Button from "../UI/Button/Button";
+import Input from "../../UI/FormControls/Input";
+import Select from "../../UI/FormControls/select";
+import Button from "../../UI/Button/Button";
+import { useEffect, useState } from "react";
 
 function PostCreator() {
   const fromYear = 1950;
@@ -14,6 +15,19 @@ function PostCreator() {
       label: y + fromYear,
     })
   );
+
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth < 700);
+    };
+
+    handleResize()
+
+    window.addEventListener('resize',handleResize)
+
+  },[]);
 
   return (
     <div className="PostCreator">
@@ -31,7 +45,7 @@ function PostCreator() {
             type="text"
             name="Title"
             placeholder="Title"
-            styleName="col-2"
+            styleName={!isSmallScreen?"col-2":''}
           />
 
           <Select name="make" placeholder="Select Make"></Select>

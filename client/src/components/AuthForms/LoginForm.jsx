@@ -35,7 +35,7 @@ function LoginForm() {
   return (
     <>
       <div className="authFormContainer card">
-        <form onSubmit={handleSubmit} className="authForm card">
+        <form onSubmit={handleSubmit} className="authForm">
           <Button styleName="cross">
             <FaX />
           </Button>
@@ -95,5 +95,6 @@ function LoginForm() {
     </>
   );
 }
+
 
 export default LoginForm;

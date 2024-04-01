@@ -1,16 +1,22 @@
-.HighlightedPosts{
-    display: flex;
-    flex-direction: column;
-    gap: 1.2em;
-    padding: 1em;
-    background-color: rgba(0, 0, 0, 0.04);
+.HighlightedPosts {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2em;
+  padding: 1em;
+  background-color: rgba(0, 0, 0, 0.04);
 }
 
-.HighlightedPosts > .Carousel >.carousel-btn{
-    position: static;
-    transform: translate(0,0);
-   
-    font-size: 1.5em;
-    color: var(--primary);
+.HighlightedPosts > .Carousel > .carousel-btn {
+  position: static;
+  display: none;
+  transform: translate(0, 0);
+  padding: 0.25em;
+  font-size: 1.5em;
+  color: var(--primary);
 }
 
+@media (min-width: 700px) {
+  .HighlightedPosts > .Carousel > .carousel-btn {
+    display: block;
+  }
+}

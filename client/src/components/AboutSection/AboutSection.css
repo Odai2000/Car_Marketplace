@@ -8,6 +8,7 @@
 .AboutSection-container {
   width: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: space-around;
 }
 
@@ -17,21 +18,32 @@
   font-size: 2em;
 }
 .AboutSection-container > .item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   border-radius: 4px;
   margin: 1.25em 0;
+  align-items: center;
 }
 
 .AboutSection-container > .item > img {
-  height: 9em;
+  height: max(8em,12vw);
 }
 
 .AboutSection-container > .item > p {
   padding: 0.5em;
   width: 28ch;
-  font-size: 1.25em;
+  
+  font-size: max(1em,2vw);
   text-align: center;
 }
 
 .AboutSection-container > .item > p > b {
   color: var(--primary);
+}
+
+@media (min-width:700px){
+  .AboutSection-container{
+    flex-direction: row;
+  }
 }

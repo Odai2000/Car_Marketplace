@@ -49,7 +49,7 @@ function RegisterForm() {
   return (
     <>
       <div className="authFormContainer card">
-        <form className="authForm card" onSubmit={handleSubmit}>
+        <form className="authForm" onSubmit={handleSubmit}>
           <Button styleName="cross">
             <FaX />
           </Button>
