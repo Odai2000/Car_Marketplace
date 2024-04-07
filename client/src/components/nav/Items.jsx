@@ -1,10 +1,12 @@
+import {NavLink} from "react-router-dom"
+
 function Items() {
   return (
     <>
-    <li><a><i></i>Categeory</a></li>
-    <li><a><i></i>Articles</a></li>
-    <li><a><i></i>Contact</a></li>
-    <li><a><i></i>About</a></li>
+    <li><NavLink><i></i>Categeory</NavLink></li>
+    <li><NavLink><i></i>Articles</NavLink></li>
+    <li><NavLink><i></i>Contact</NavLink></li>
+    <li><NavLink><i></i>About</NavLink></li>
     </>
   );
 }

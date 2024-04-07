@@ -24,7 +24,7 @@ function NavBar() {
           <Button variant="secondary" styleName="login-btn">
             Log in
           </Button>
-          <Button variant="primary">Sign up</Button>
+          <Button variant="primary" styleName="signup-btn">Sign up</Button>
         </div>
 
         <IconContext.Provider value={{ className: "op" }}>

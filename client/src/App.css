@@ -1,4 +1,6 @@
-*,*::after,*::before {
+*,
+*::after,
+*::before {
   border: none;
   box-sizing: border-box;
   margin: 0;
@@ -13,7 +15,11 @@
   --destructive: #de0d0d;
   --warning: #f6ff52;
 }
-
+#root {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
 img {
   height: 100%;
   width: 100%;
@@ -29,7 +35,7 @@ body {
   width: 100%;
 }
 
-h2{
+h2 {
   font-size: 1.5em;
   font-weight: 800;
 }
@@ -37,25 +43,27 @@ h2{
 header {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  background-image: url("./assets/hero.jpg");
-  background-size:cover;
-  background-repeat: no-repeat ;
-  background-position:center ;
-  box-shadow: inset 0 0 0 2000px rgba(0, 0, 0, 0.5);
-
 }
 
-.card{
+header.home-header {
+  height: 100vh;
+  background-image: url("/src/assets/hero.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  box-shadow: inset 0 0 0 2000px rgba(0, 0, 0, 0.5);
+}
+
+.card {
   border-radius: 8px;
   background-color: #fff;
   padding: 1em;
 }
 
-.col-1{
+.col-1 {
   grid-column: span 1;
 }
 
-.col-4{
+.col-4 {
   grid-column: span 4;
 }

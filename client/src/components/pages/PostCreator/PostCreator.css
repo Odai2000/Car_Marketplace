@@ -1,5 +1,5 @@
 .PostCreator {
-  height: 100vh;
+  flex-grow: 1;
   padding: 5vh 10vw;
 }
 .PostCreator-form {

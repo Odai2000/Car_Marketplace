@@ -1,26 +1,24 @@
 //For test only
+
 import NavBar from "./nav/NavBar";
 import Hero from "./Hero/Hero";
-import Post from "./Post/Post";
+
 import RegisterForm from "./AuthForms/RegisterForm";
 import LoginForm from "./AuthForms/LoginForm";
-import PostCreator from "./pages/PostCreator/PostCreator";
-import PostSearchResult from "./pages/PostSearchResults/PostSearchResult"
-import UserAccountPage from "./pages/UserAccountPage/UserAccountPage";
-
-import Home from "./pages/Home/Home";
+import { Outlet, useLocation } from "react-router-dom";
 function Layout() {
+  const location = useLocation();
   return (
     <>
-      <Home />
-
-      <RegisterForm />
-      <LoginForm />
-
-      <Post />
-      <PostCreator />
-      <PostSearchResult />
-      <UserAccountPage />
+      <header
+        className={
+          location.pathname === "/" ? "home-header" : location.pathname
+        }
+      >
+        <NavBar />
+        {location.pathname === "/" ? <Hero /> : ""}
+      </header>
+      <Outlet />
     </>
   );
 }
