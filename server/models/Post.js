@@ -2,28 +2,28 @@ const mongoose = require("mongoose");
 
 const carSchema = new mongoose.Schema({
   make: {
-      type:String
+    type: String,
   },
   model: {
-      type:String
+    type: String,
   },
-  year:{
-      type:Number
+  year: {
+    type: Number,
   },
   type: {
-    type:String
-},
+    type: String,
+  },
   transmission: {
-      type:String
+    type: String,
   },
-  mileage:{
-      type:Number
+  mileage: {
+    type: Number,
   },
-  isNew: {
-      type: Boolean
-    },
-  color:{
-      type:String
+  isNewCondition: {
+    type: Boolean,
+  },
+  color: {
+    type: String,
   },
   engineType: {
     type: String,
@@ -31,43 +31,42 @@ const carSchema = new mongoose.Schema({
   hp: {
     type: Number,
   },
-  location:{
-    country:String,
-    state:String,
-    city:String
+  location: {
+    country: String,
+    state: String,
+    city: String,
   },
   price: {
     type: Number,
   },
-},) 
-
-//is last edit necassry??
-const postSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-    maxLength: 36,
-  },
-  desc: {
-    type: String,
-    maxLength: 240,
-  },
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
-   /* image:[{
-     type: bitmap
-   }], */
-  car: {
-    type: carSchema,
-    required:true
-  }
-},
-
-{
-  timestamps:true
 });
 
-module.exports = mongoose.model('Post',postSchema)
+const postSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+      maxLength: 36,
+    },
+    desc: {
+      type: String,
+      maxLength: 240,
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: false,
+    },
+    imageIds: [String],
+    car: {
+      type: carSchema,
+      required: false,
+    },
+  },
+
+  {
+    timestamps: true,
+  }
+);
+
+module.exports = mongoose.model("Post", postSchema);

@@ -1,11 +1,16 @@
-const postController = require('../controllers/postController')
-const express = require('express')
-const router = express()
+const postController = require("../controllers/postController");
+const express = require("express");
+const router = express();
 
-router.route('/')
-    .get(postController.getAllPosts)
-    .post(postController.createPost)
-    .patch(postController.updatePost)
-    .delete(postController.deletePost)
+const multer = require("multer");
 
-module.exports = router
+const upload = multer({ inMemory: true });
+
+router
+  .route("/")
+  .get(postController.getAllPosts)
+  .post(upload.array("imgs"), postController.createPost)
+  .patch(postController.updatePost)
+  .delete(postController.deletePost);
+
+module.exports = router;
