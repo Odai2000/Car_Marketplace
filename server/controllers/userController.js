@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { default: mongoose } = require("mongoose");
 
+
 //get users
 const getAllUsers = asyncHandler(async (req, res) => {
   const users = await User.find().select("-password").lean();

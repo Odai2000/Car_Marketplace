@@ -25,7 +25,7 @@ const carSchema = new mongoose.Schema({
   color: {
     type: String,
   },
-  engineType: {
+  fuel: {
     type: String,
   },
   hp: {

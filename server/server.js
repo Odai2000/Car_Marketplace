@@ -29,11 +29,12 @@ const corsOptions = {
   },
 };
 
-app.use(bodyParser.json(),cors(corsOptions));
+app.use(bodyParser.json(),cors());
 //Routes
 app.use("/", require("./routes/root"));
 app.use("/user", require("./routes/user"));
 app.use("/post", require("./routes/post"));
+app.use("/data",require("./routes/data"))
 
 mongoose.connection.once("open", () => {
   app.listen(PORT, () => console.log(`server running on port ${PORT}`));

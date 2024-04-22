@@ -1,0 +1,8 @@
+{
+    "types": [
+        "Petrol",
+        "Diesel",
+        "Electric",
+        "Hybrid"
+    ]
+}

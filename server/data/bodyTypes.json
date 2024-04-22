@@ -1,0 +1,17 @@
+{
+    "types": [
+        "Convertible",
+        "Coupe",
+        "Wagon",
+        "Hatchback",
+        "Jeep",
+        "MUV",
+        "SUV",
+        "Van",
+        "Pick-up",
+        "Micro",
+        "Sedan",
+        "Sport",
+        "Hyper"
+    ]
+}
