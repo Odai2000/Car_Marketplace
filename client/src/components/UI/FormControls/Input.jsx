@@ -1,7 +1,7 @@
 import React from "react";
 import "./FormControls.css";
 
-const Input = ({ type, name, value, onChange, placeholder, styleName }) => {
+const Input = ({ type, name, value, onChange, placeholder, styleName,...props }) => {
   return (
     <input
       type={type}
@@ -11,6 +11,7 @@ const Input = ({ type, name, value, onChange, placeholder, styleName }) => {
       onChange={onChange}
       placeholder={placeholder}
       className={"form-control input-field " + styleName}
+      {...props}
     />
   );
 };

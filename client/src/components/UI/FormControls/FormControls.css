@@ -5,3 +5,8 @@ form .form-control {
     border-radius: 8px;
     background-color: transparent; 
 }
+form .form-control-container{
+    display: flex;
+    flex-direction: column;  
+    gap:.4em
+  }
