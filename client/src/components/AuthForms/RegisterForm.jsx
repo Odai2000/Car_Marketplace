@@ -6,13 +6,15 @@ import { FaFacebook } from "react-icons/fa6";
 import { IconContext } from "react-icons/lib";
 import { useEffect, useState } from "react";
 
-const RegisterForm = () => {
+const RegisterForm = (props) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [ConfirmPassword, setConfirmpassword] = useState('');
+
+const {show,onCancel}=props
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -46,11 +48,11 @@ const RegisterForm = () => {
       });
   };
   useEffect(() => {}, []);
-  return (
+  return show?(
     <>
-      <div className="authFormContainer card">
-        <form className="authForm" onSubmit={handleSubmit}>
-          <Button styleName="cross">
+      <div className="authFormContainer ">
+        <form className="authForm card" onSubmit={handleSubmit}>
+          <Button styleName="cross" onClick={onCancel}>
             <FaX />
           </Button>
           <h2 className="col-2">Register</h2>
@@ -149,7 +151,7 @@ const RegisterForm = () => {
         </form>
       </div>
     </>
-  );
+  ):'';
 };
 
 export default RegisterForm;

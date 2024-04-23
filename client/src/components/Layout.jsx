@@ -1,8 +1,6 @@
 //For test only
 import NavBar from "./nav/NavBar";
 import Hero from "./Hero/Hero";
-import RegisterForm from "./AuthForms/RegisterForm";
-import LoginForm from "./AuthForms/LoginForm";
 import { Outlet, useLocation } from "react-router-dom";
 function Layout() {
   const location = useLocation();

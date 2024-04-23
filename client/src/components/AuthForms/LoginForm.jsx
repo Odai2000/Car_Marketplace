@@ -6,9 +6,11 @@ import { FaFacebook } from "react-icons/fa6";
 import { IconContext } from "react-icons/lib";
 import { useState } from "react";
 
-function LoginForm() {
+function LoginForm(props) {
   const [username, setUsername] = useState([]);
   const [password, setPassword] = useState([]);
+
+  const {show,onCancel}=props
 
   const login = async (username, password) => {
     fetch("http://localhost:8080/user/login", {
@@ -32,11 +34,11 @@ function LoginForm() {
     e.preventDefault();
     login(username, password);
   };
-  return (
+  return show?(
     <>
-      <div className="authFormContainer card">
-        <form onSubmit={handleSubmit} className="authForm">
-          <Button styleName="cross">
+      <div className="authFormContainer">
+        <form onSubmit={handleSubmit} className="authForm card">
+          <Button styleName="cross" onClick={onCancel}>
             <FaX />
           </Button>
           <h2 className="col-2">Login</h2>
@@ -93,7 +95,7 @@ function LoginForm() {
         </form>
       </div>
     </>
-  );
+  ):'';
 }
 
 
