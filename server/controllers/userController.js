@@ -5,7 +5,6 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { default: mongoose } = require("mongoose");
 
-
 //get users
 const getAllUsers = asyncHandler(async (req, res) => {
   const users = await User.find().select("-password").lean();
@@ -129,28 +128,8 @@ const deleteUser = asyncHandler(async (req, res) => {
 const loginUser = asyncHandler(async (req, res) => {
   try {
     const { username, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await User.findOne({ username }).select("-_id").lean();
-
-    const generateAccessToken = (user) => {
-      return jwt.sign(
-        {
-          firstName: user.firstName,
-          lastName: user.lastName,
-          username: user.username,
-          email: user.email,
-        },
-        process.env.ACCESS_TOKEN_SECRET,
-        {
-          expiresIn: "10s",
-        }
-      );
-    };
-
-    const generateRefreshToken = (user) => {
-      return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
-    };
 
     if (!user) return res.status(404).send("Username not found.");
 
@@ -160,7 +139,8 @@ const loginUser = asyncHandler(async (req, res) => {
 
       return res
         .status(200)
-        .json({ accessToken: accessToken, refreshToken: refreshToken });
+        .cookie('refreshToken',refreshToken,{httpOnly:true,sameSite:"strict"})
+        .json({ accessToken: accessToken });
     } else {
       return res.status(401).send("Authentication Failed.");
     }
@@ -169,11 +149,30 @@ const loginUser = asyncHandler(async (req, res) => {
     return res.status(500).send(err);
   }
 });
+const generateAccessToken = (user) => {
+  return jwt.sign(
+    {
+      userId: user._id,
+    },
+    process.env.ACCESS_TOKEN_SECRET,
+    {
+      expiresIn: "10s",
+    }
+  );
+};
 
+const generateRefreshToken = (user) => {
+  return jwt.sign( {
+      userId: user._id,
+    }, process.env.REFRESH_TOKEN_SECRET,{
+    expiresIn:
+      "15d"
+  });
+};
 const refreshToken = asyncHandler(async (req, res) => {
   const token = req.body.refreshToken;
   if (token == null) return res.status(401);
-  const refreshToken = Token.findOne({ token });
+  const refreshToken = await Token.findOne({ token });
   if (!refreshToken) return res.status(403);
 
   jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
