@@ -2,11 +2,11 @@ import "./PostCreator.css";
 import Input from "../../UI/FormControls/Input";
 import Select from "../../UI/FormControls/select";
 import Button from "../../UI/Button/Button";
-import { useRef, useEffect, useState, useContext } from "react";
-import { AppContext } from "../../../App";
+import { useRef, useEffect, useState } from "react";
+import useAppData from "../../../hooks/useAppData";
 
 const PostCreator = () => {
-  const { carSpecsData, loading } = useContext(AppContext);
+  const { carSpecsData, loading } = useAppData()
   const [selectedMake, setSelectedMake] = useState({});
 
   const [title, setTitle] = useState("");

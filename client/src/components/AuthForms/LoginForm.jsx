@@ -10,7 +10,7 @@ function LoginForm(props) {
   const [username, setUsername] = useState([]);
   const [password, setPassword] = useState([]);
 
-  const {show,onCancel}=props
+  const { show, onCancel } = props;
 
   const login = async (username, password) => {
     fetch("http://localhost:8080/user/login", {
@@ -26,15 +26,19 @@ function LoginForm(props) {
       .then((response) => {
         response.json();
       })
-      .catch((e) => {
-        console.log(e);
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
+        setUsername("");
+        setPassword("");
       });
   };
   const handleSubmit = (e) => {
     e.preventDefault();
     login(username, password);
   };
-  return show?(
+  return show ? (
     <>
       <div className="authFormContainer">
         <form onSubmit={handleSubmit} className="authForm card">
@@ -95,8 +99,9 @@ function LoginForm(props) {
         </form>
       </div>
     </>
-  ):'';
+  ) : (
+    ""
+  );
 }
-
 
 export default LoginForm;
