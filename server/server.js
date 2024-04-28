@@ -4,6 +4,7 @@ const PORT = process.env.PORT || 3500;
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser")
 
 //DB
 const { default: mongoose } = require("mongoose");
@@ -29,7 +30,7 @@ const corsOptions = {
   },
 };
 
-app.use(bodyParser.json(),cors());
+app.use(bodyParser.json(),cookieParser(),cors({ credentials: true, origin: 'http://localhost:8097' }));
 //Routes
 app.use("/", require("./routes/root"));
 app.use("/user", require("./routes/user"));

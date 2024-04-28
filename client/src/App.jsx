@@ -7,7 +7,9 @@ import PostSearchResult from "./components/pages/PostSearchResults/PostSearchRes
 
 import AuthProvider from "./context/AuthProvider";
 import AppDataProvider from "./context/AppDataProvider";
-
+import PersistLogin from "./components/persistLogin";
+import ReqAuth from "./components/ReqAuth";
+import UnAuthorized from "./components/pages/UnAuthorized/UnAuthorized";
 function App() {
   return (
     <AppDataProvider>
@@ -15,8 +17,14 @@ function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
-            <Route path="new-post" element={<PostCreator />} />
-            <Route path="posts" element={<PostSearchResult />} />
+
+            <Route element={<PersistLogin />}>
+              <Route element={<ReqAuth allowedRoles={["USER"]} />}>
+                <Route path="new-post" element={<PostCreator />} />
+                <Route path="posts" element={<PostSearchResult />} />
+              </Route>
+              <Route path="unAuthorized" element={<UnAuthorized />} />
+            </Route>
           </Route>
         </Routes>
       </AuthProvider>

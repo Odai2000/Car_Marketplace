@@ -13,7 +13,7 @@ const tokenSchema = new mongoose.Schema({
     createdAt:{
         type: Date,
         default: Date.now,
-        expires:3600 //1 hour
+        expires:15*(24*60*60)  //15 days 15*(secs in day)
     }
 })
 

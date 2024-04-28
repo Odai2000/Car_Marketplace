@@ -15,7 +15,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
 });
 
 const createUser = asyncHandler(async (req, res) => {
-  const { username, password, firstName, lastName, email, roles } = req.body;
+  const { username, password, firstName, lastName, email } = req.body;
 
   //confirm fields
   if (
@@ -45,7 +45,6 @@ const createUser = asyncHandler(async (req, res) => {
     firstName,
     lastName,
     email,
-    roles,
   };
 
   const user = await User.create(obj);
@@ -129,18 +128,35 @@ const loginUser = asyncHandler(async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    const user = await User.findOne({ username }).select("-_id").lean();
+    const user = await User.findOne({ username }).lean();
 
     if (!user) return res.status(404).send("Username not found.");
 
     if (await bcrypt.compare(password, user.password)) {
       const accessToken = generateAccessToken(user);
       const refreshToken = generateRefreshToken(user);
-
+      res.setHeader("Access-Control-Allow-Credentials", true);
+      res.setHeader(
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content-Type, Accept, authorization"
+      );
+      res.setHeader("Content-Type", "application/json");
+      res.setHeader("Access-Control-Allow-Origin", "http://localhost:8097");
+      res.setHeader(
+        "Access-Control-Allow-METHODS",
+        "GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS, PATCH"
+      );
+      console.log(user)
+      const token = await Token.create({ userID: user._id,token:refreshToken });
+      if (!token) return res.status(500).send("server Error")
       return res
         .status(200)
-        .cookie('refreshToken',refreshToken,{httpOnly:true,sameSite:"strict"})
-        .json({ accessToken: accessToken });
+        .cookie("refreshToken", refreshToken, {
+          httpOnly: true,
+          secure: false,
+          sameSite: "lax",
+        })
+        .json({ accessToken: accessToken,roles:user.roles });
     } else {
       return res.status(401).send("Authentication Failed.");
     }
@@ -162,24 +178,37 @@ const generateAccessToken = (user) => {
 };
 
 const generateRefreshToken = (user) => {
-  return jwt.sign( {
+  return jwt.sign(
+    {
       userId: user._id,
-    }, process.env.REFRESH_TOKEN_SECRET,{
-    expiresIn:
-      "15d"
-  });
+      roles:user.roles
+    },
+    process.env.REFRESH_TOKEN_SECRET,
+    {
+      expiresIn: "15d",
+    }
+  );
 };
 const refreshToken = asyncHandler(async (req, res) => {
-  const token = req.body.refreshToken;
-  if (token == null) return res.status(401);
-  const refreshToken = await Token.findOne({ token });
-  if (!refreshToken) return res.status(403);
+  try {
+    //get cookie from request
+    const token = await req.cookies.refreshToken;
+    console.log("token: ", token);
+    if (!token) return res.status(401).send();
+    //check if cookie exist in DB
+    const refreshToken = await Token.findOne({ token });
+    if (!refreshToken) return res.status(403).send("Invalid Token.");
+    //double verify the token
+    jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+      if (err) return res.status(403).send("Invalid Token.");
+      const accessToken = generateAccessToken(user);
 
-  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-    if (err) return res.status(403).send("Invalid Token.");
-    const accessToken = generateAccessToken(user);
-    res.json({ accessToken: accessToken });
-  });
+      res.status(200).json({ accessToken: accessToken,roles:user.roles });
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
 });
 
 module.exports = {

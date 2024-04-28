@@ -34,7 +34,7 @@ const {show,onCancel}=props
       body: JSON.stringify({
         firstName: firstName,
         lastName: lastName,
-        email: { email },
+        email:  email ,
         username: username,
         password: password,
       }),
