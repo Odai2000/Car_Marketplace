@@ -5,16 +5,21 @@
 }
 
 .post > .post-details{
-    display: grid;
-    grid-template-columns: auto auto auto auto;
-    gap: .5em;
+    display: inline-grid;
+    grid-template-columns: repeat(4, minmax(6rem, 1fr));
+    gap: 0.25em;
     padding: 0.5em;
-    
+    text-wrap: nowrap;
+}
+.post > .post-details > span{
+  justify-content: center;
 }
 
 .post > .post-img{
+  width: 12em;
+  height: 13em;
+  flex-shrink: 0;
   border: 1px solid lightgray;
-  width: 10em;
   position: relative;
 }
 

@@ -19,10 +19,11 @@ const useRefreshToken = () => {
           return {
             ...prev,
             accessToken: data.accessToken,
-            roles: ["USER"],
+            roles: data.roles,
           };
         });
-      console.log("Refreshed: ",auth)})
+        console.log("Refreshed: ", auth);
+      })
       .catch((error) => {
         console.log(error);
       });

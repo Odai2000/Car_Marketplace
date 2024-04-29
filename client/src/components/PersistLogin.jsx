@@ -7,6 +7,7 @@ const PersistLogin = () => {
   const { auth, persist } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const refresh = useRefreshToken();
+  
   useEffect(() => {
     let isMounted = true;
     console.log("mounted");

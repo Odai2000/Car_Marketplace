@@ -2,19 +2,23 @@ import "./Post.css";
 import { useRef } from "react";
 import Button from "../UI/Button/Button";
 import Carousel from "../UI/Carousel/Carousel";
-import { FaCamera } from "react-icons/fa6";
-import { FaCar } from "react-icons/fa6";
-import { FaCalendar } from "react-icons/fa6";
-import { FaPhone } from "react-icons/fa6";
-import { FaMessage } from "react-icons/fa6";
+import {
+  FaCamera,
+  FaCar,
+  FaCalendar,
+  FaRoad,
+  FaPhone,
+  FaMessage,
+  FaGasPump,
+} from "react-icons/fa6";
+import { TbManualGearbox } from "react-icons/tb";
 
 const Post = () => {
-  let items = ["1st","2nd","3th","4th"]
+  let items = ["1st", "2nd", "3th", "4th"];
   return (
     <div className="post ">
       <div className="post-img">
-        <Carousel single items={items}>
-        </Carousel>
+        <Carousel single items={items}></Carousel>
       </div>
 
       <div className="post-details">
@@ -25,14 +29,20 @@ const Post = () => {
         <span>
           <FaCar /> Make
         </span>
-        <span>Model</span>
+        <span> Model</span>
         <span>
           <FaCalendar /> 2010
         </span>
-        <span>Engine</span>
-        <span>Transmission</span>
-        <span>Mileage</span>
+        <span>
+          <FaRoad /> Mileage
+        </span>
+        <span>
+          <FaGasPump /> Fuel
+        </span>
         <span>HP</span>
+        <span>
+          <TbManualGearbox /> Transmission
+        </span>
         <span className="post-location col-2">City,Co</span>
         <Button variant="primary">
           <FaPhone /> Call

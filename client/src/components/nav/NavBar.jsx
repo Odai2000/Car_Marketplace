@@ -5,7 +5,7 @@ import { IconContext } from "react-icons/lib";
 import Button from "../UI/Button/Button";
 import RegisterForm from "../AuthForms/RegisterForm";
 import LoginForm from "../AuthForms/LoginForm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function disableScrolling() {
   document.body.style.overflow = "hidden";
@@ -16,26 +16,36 @@ function enableScrolling() {
 }
 
 function NavBar() {
-  const [showSign, setShowSign] = useState(false);
+  const [showSign, setShowSignup] = useState(false);
   const [showLog, setShowLog] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [isMobSize,setIsMobSize] = useState(false)
 
   function toggleSign() {
-    setShowSign(!showSign);
+    setShowSignup(!showSign);
   }
   function toggleLog() {
     setShowLog(!showLog);
   }
+
   (showSign || showLog) && disableScrolling();
   showSign || showLog || enableScrolling();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 65);
+    };
+    window.addEventListener("scroll", handleScroll);
+  }, [scrolled]);
   return (
     <>
-      <div className="nav-wrapper">
+      <div className={`${scrolled?'scrolled':''} nav-wrapper`}>
         <div className="nav-container">
           <div id="logo">
-            <img src="src/assets/logo-white.svg" alt="logo" />
+            <img src={scrolled?"src/assets/logo.svg":"src/assets/logo-white.svg"} alt="logo" />
           </div>
 
-          <nav className="nav">
+          <nav className={`nav`}>
             <ul>
               <Items />
             </ul>
@@ -44,7 +54,7 @@ function NavBar() {
 
         <div className="btn-group">
           <Button variant="secondary" styleName="login-btn" onClick={toggleLog}>
-            Log in
+            Login
           </Button>
           <Button variant="primary" styleName="signup-btn" onClick={toggleSign}>
             Sign up

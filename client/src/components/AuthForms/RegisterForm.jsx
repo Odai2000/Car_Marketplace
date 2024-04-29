@@ -1,4 +1,5 @@
 import "./style.css";
+import Input from "../UI/FormControls/Input"
 import Button from "../UI/Button/Button";
 import { FaX } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
@@ -57,7 +58,7 @@ const {show,onCancel}=props
           </Button>
           <h2 className="col-2">Register</h2>
 
-          <input
+          <Input
             type="text"
             name="firstName"
             value={firstName}
@@ -67,7 +68,7 @@ const {show,onCancel}=props
             placeholder="First Name"
           />
 
-          <input
+          <Input
             type="text"
             name="lastName"
             value={lastName}
@@ -77,7 +78,7 @@ const {show,onCancel}=props
             placeholder="Last Name"
           />
 
-          <input
+          <Input
             type="text"
             name="email"
             value={email}
@@ -88,7 +89,7 @@ const {show,onCancel}=props
             className="col-2"
           />
 
-          <input
+          <Input
             type="text"
             name="username"
             value={username}
@@ -99,7 +100,7 @@ const {show,onCancel}=props
             className="col-2"
           />
 
-          <input
+          <Input
             type="password"
             name="password"
             value={password}
@@ -109,7 +110,7 @@ const {show,onCancel}=props
             placeholder="Password"
           />
 
-          <input
+          <Input
             type="password"
             name="confirmPassword"
             value={ConfirmPassword}

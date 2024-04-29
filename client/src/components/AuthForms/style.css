@@ -13,9 +13,10 @@
 
 .authForm {
   position: relative;
-  max-width: 100vw;
   height: fit-content;
-  width: 33vw;
+  max-width: 100vw;
+  min-width: 24em;
+  width: 100vw;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1em;
@@ -37,7 +38,9 @@
 .col-2 {
   grid-column: span 2 !important;
 }
-
+.authForm > * {
+ min-width: 0px;
+}
 .authForm > h2 {
   text-align: center;
 }
@@ -75,9 +78,10 @@
 
 .container.alt > .btn {
   height: 4em;
+  min-width: 0px;
   display: flex;
   align-items: center;
-  font-size: 1em;
+  font-size: min(1em,1.5vw);
   font-weight: 500;
   padding: 0 1em;
   color: rgb(89, 86, 86);
@@ -85,4 +89,10 @@
 
 .container.alt > .btn > :first-child {
   margin-right: 0.25em;
+}
+
+@media(min-width:720px){
+  .authForm {
+    width: 33vw;
+  }
 }

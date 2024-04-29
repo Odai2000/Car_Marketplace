@@ -27,14 +27,14 @@
 }
 
 .AboutSection-container > .item > img {
-  height: max(8em,12vw);
+  height: max(8em,10vw);
 }
 
 .AboutSection-container > .item > p {
   padding: 0.5em;
   width: 28ch;
   
-  font-size: max(1em,2vw);
+  font-size: max(1.5em,2vw);
   text-align: center;
 }
 

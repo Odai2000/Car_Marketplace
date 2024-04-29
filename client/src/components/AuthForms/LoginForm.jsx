@@ -1,19 +1,20 @@
 import "./style.css";
+import Input from "../UI/FormControls/Input";
 import Button from "../UI/Button/Button";
 import { FaX } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa6";
 import { IconContext } from "react-icons/lib";
 import { useEffect, useState } from "react";
-import useAuth from "../../hooks/useAuth"
-import Input from "../UI/FormControls/Input"
+import useAuth from "../../hooks/useAuth";
+
 function LoginForm(props) {
   const [username, setUsername] = useState([]);
   const [password, setPassword] = useState([]);
 
   const { show, onCancel } = props;
-  const {setAuth,persist,setPersist} = useAuth()
- 
+  const { setAuth, persist, setPersist } = useAuth();
+
   const login = async (username, password) => {
     fetch("http://localhost:8080/user/login", {
       method: "POST",
@@ -29,8 +30,12 @@ function LoginForm(props) {
       .then((response) => {
         return response.json();
       })
-      .then((data) =>{
-        setAuth(prev=>({...prev,accessToken:data.accessToken,roles:["USER"]}))
+      .then((data) => {
+        setAuth((prev) => ({
+          ...prev,
+          accessToken: data.accessToken,
+          roles: data.roles,
+        }));
       })
       .catch((error) => {
         console.log(error);
@@ -44,13 +49,12 @@ function LoginForm(props) {
     e.preventDefault();
     login(username, password);
   };
-  const togglePersist = ()=>{
-    console.log(persist)
-     setPersist(prev=>!prev)
-  }
-  useEffect(()=>{
-    localStorage.setItem("persist",persist)
-  },[persist])
+  const togglePersist = () => {
+    setPersist((prev) => !prev);
+  };
+  useEffect(() => {
+    localStorage.setItem("persist", persist);
+  }, [persist]);
   return show ? (
     <>
       <div className="authFormContainer">
@@ -60,7 +64,7 @@ function LoginForm(props) {
           </Button>
           <h2 className="col-2">Login</h2>
 
-          <input
+          <Input
             type="text"
             name="username"
             value={username}
@@ -71,7 +75,7 @@ function LoginForm(props) {
             className="col-2"
           />
 
-          <input
+          <Input
             type="password"
             name="password"
             value={password}
@@ -86,9 +90,10 @@ function LoginForm(props) {
             Don't have an account? <Button variant="link">Sign up</Button>
           </span>
 
-          <div style={{display:"flex"}}><Input type="checkbox" onChange={togglePersist} checked={persist}/>
-          <label style={{textJustify:"center"}}>Remeber Me</label>
-            </div>
+          <div style={{ display: "flex" }}>
+            <Input type="checkbox" onChange={togglePersist} checked={persist} />
+            <label style={{ textJustify: "center" }}>Remeber Me</label>
+          </div>
 
           <Button type="submit" variant="primary" styleName="login-btn col-2">
             Login
@@ -107,7 +112,7 @@ function LoginForm(props) {
               </Button>
               <Button variant="secondary link round">
                 <FaFacebook
-                  style={{ color: " #4267B2", margin: "0 2px 2px" }}
+                  style={{ color: " #4267B2", margin: "0 2px 2px" ,minHeight:"1em"}}
                 />
                 Continue with Facebook
               </Button>
