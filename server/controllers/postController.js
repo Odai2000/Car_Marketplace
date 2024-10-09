@@ -8,70 +8,94 @@ const b2 = new B2({
   applicationKey: process.env.APPLICATION_KEY,
 });
 
-//WIP
-// const getPosts = asyncHandler(async (req, res) => {
-//   const {
-//     make,
-//     model,
-//     yearRange,
-//     type,
-//     transmission,
-//     mileageRange,
-//     condition,
-//     color,
-//     engineType,
-//     hpRange,
-//     priceRange,
-//   } = req.query;
-
-//   const posts = await Post.find({
-//     "car.make": make,
-//     "car.model": model,
-//     "car.type": type,
-//     "car.year": { $gte: yearRange.min, $lte: yearRange.max },
-//     "car.transmission": transmission,
-//     "car.mileage": { $gte: mileageRange.min, $lte: mileageRange.max },
-//     "car.condition": condition,
-//     "car.color": { $in: color },
-//     "car.engineType": engineType,
-//     "car.hp": { $gte: hpRange.min, $lte: hpRange.max },
-//     "car.price": { $gte: priceRange.min, $lte: priceRange.max },
-//   });
-
-//   if (!posts.length) {
-//     return res.status(400).json({ message: "No Posts found." });
-//   }
-
-//   res.status(200).json(posts);
-// });
-
-const getAllPosts = asyncHandler(async (req, res) => {
+const getPostById = asyncHandler(async (req, res) => {
   try {
-    const posts = await Post.find().lean().exec();
+    const post = await Post.findById(req.params.id).exec();
 
-    if (!posts.length) {
-      return res.status(400).json({ message: "No Posts found." });
+    if (!post) {
+      return res.status(400).json({ message: "No Post found." });
     }
 
-    for (const post of posts) {
-      if (post.imageIds) {
-        const imagesUrls = (await getDownloadImagesUrl(post.imageIds)) || [];
+    if (post.imageIds) {
+      const imagesUrls = (await getDownloadImagesUrl(post.imageIds)) || [];
 
-        if (!imagesUrls) {
-          return res.status(500);
-        }
-        delete post.imageIds;
-
-        post.imagesUrls = imagesUrls;
+      if (!imagesUrls) {
+        return res.status(500);
       }
+      delete post.imageIds;
+
+      post.imagesUrls = imagesUrls;
     }
 
-    return res.status(200).json(posts);
+    return res.status(200).json(post);
   } catch (error) {
     console.log(error);
     res.status(500);
   }
 });
+
+const getPosts = asyncHandler(async (req, res) => {
+  const {
+    make,
+    model,
+    yearMin,
+    yearMax,
+    body,
+    transmission,
+    mileageMin,
+    mileageMax,
+    condition,
+    colors = [],
+    engineType,
+    hpMin,
+    hpMax,
+    priceMin,
+    priceMax,
+  } = req.query;
+
+  const query = {
+    ...(make && { "car.make": make }),
+    ...(model && { "car.model": model }),
+    ...(body && { "car.type": body }),
+    ...(transmission && { "car.transmission": transmission }),
+    ...(condition && { "car.condition": condition }),
+    ...(colors.length && { "car.color": { $in: colors } }),
+    ...(engineType && { "car.engineType": engineType }),
+  };
+
+  if (yearMin || yearMax) {
+    query["car.year"] = {};
+    if (yearMin) query["car.year"].$gte = parseInt(yearMin);
+    if (yearMax) query["car.year"].$lte = parseInt(yearMax);
+  }
+
+  if (mileageMin || mileageMax) {
+    query["car.mileage"] = {};
+    if (mileageMin) query["car.mileage"].$gte = parseInt(mileageMin);
+    if (mileageMax) query["car.mileage"].$lte = parseInt(mileageMax);
+  }
+
+  if (hpMin || hpMax) {
+    query["car.hp"] = {};
+    if (hpMin) query["car.hp"].$gte = parseInt(hpMin);
+    if (hpMax) query["car.hp"].$lte = parseInt(hpMax);
+  }
+
+  if (priceMin || priceMax) {
+    query["car.price"] = {};
+    if (priceMin) query["car.price"].$gte = parseInt(priceMin);
+    if (priceMax) query["car.price"].$lte = parseInt(priceMax);
+  }
+
+  const posts = await Post.find(query);
+
+  console.log(query);
+  if (!posts.length) {
+    return res.status(400).json({ message: "No Posts found." });
+  }
+  res.status(200).json(posts);
+});
+
 
 const createPost = asyncHandler(async (req, res) => {
   try {
@@ -194,7 +218,8 @@ const getDownloadImagesUrl = asyncHandler(async (imageIds) => {
 });
 
 module.exports = {
-  getAllPosts,
+  getPosts,
+  getPostById,
   createPost,
   updatePost,
   deletePost,

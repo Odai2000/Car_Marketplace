@@ -30,7 +30,8 @@ const corsOptions = {
   },
 };
 
-app.use(bodyParser.json(),cookieParser(),cors({ credentials: true, origin: 'http://localhost:8097' }));
+app.use(bodyParser.json(),cookieParser(),cors({ credentials: true, origin: 'http://localhost:8097'}));
+
 //Routes
 app.use("/", require("./routes/root"));
 app.use("/user", require("./routes/user"));

@@ -8,9 +8,13 @@ const upload = multer({ inMemory: true });
 
 router
   .route("/")
-  .get(postController.getAllPosts)
+  .get(postController.getPosts)
   .post(upload.array("images"), postController.createPost)
   .patch(postController.updatePost)
   .delete(postController.deletePost);
+
+  
+router.route("/:id").get(postController.getPostById);
+
 
 module.exports = router;

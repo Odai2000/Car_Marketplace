@@ -155,6 +155,7 @@ const loginUser = asyncHandler(async (req, res) => {
           httpOnly: true,
           secure: false,
           sameSite: "lax",
+          maxAge: 15 * 24 * 60 * 60 * 1000 // 15 days
         })
         .json({ accessToken: accessToken,roles:user.roles });
     } else {
