@@ -16,15 +16,16 @@ function App() {
       <AuthProvider>
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
-
             <Route element={<PersistLogin />}>
+              <Route index element={<Home />} />
+              <Route path="posts" element={<PostSearchResult />} />
+
               <Route element={<ReqAuth allowedRoles={["USER"]} />}>
                 <Route path="new-post" element={<PostCreator />} />
-                <Route path="posts" element={<PostSearchResult />} />
               </Route>
-              <Route path="unAuthorized" element={<UnAuthorized />} />
             </Route>
+
+            <Route path="unAuthorized" element={<UnAuthorized />} />
           </Route>
         </Routes>
       </AuthProvider>

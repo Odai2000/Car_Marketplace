@@ -1,4 +1,3 @@
-import React from "react";
 import "./FormControls.css";
 
 const Input = ({ type, name, value, onChange, placeholder, styleName,...props }) => {

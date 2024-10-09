@@ -15,7 +15,7 @@
 .nav-wrapper.scrolled li a{
   color:var(--primary)
 }
-.nav-wrapper.scrolled .btn-group>.login-btn{
+.navBar-rightside> .btn.secondary{
   color:var(--primary)
 }
 .nav-container {
@@ -90,16 +90,16 @@ nav.open > ul > li {
   color: white;
 }
 
-.btn-group {
+.navBar-rightside {
   height: fit-content;
   display: flex;
   gap: 0.5em;
 }
 
-.nav-wrapper .btn-group .login-btn {
+.navBar-rightside> .btn.secondary {
   background-color: transparent;
   color: white;
-  padding: none;
+  padding:0em;
   border: none;
   
 }

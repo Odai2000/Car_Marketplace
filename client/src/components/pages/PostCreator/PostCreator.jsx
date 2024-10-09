@@ -59,7 +59,6 @@ const PostCreator = () => {
       setYear(yearsOptions[0].value);
     }
 
-    setTransmisson("Automatic");
   }, [carSpecsData]);
 
 

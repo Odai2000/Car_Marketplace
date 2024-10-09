@@ -1,4 +1,3 @@
-import React from "react";
 import HighlightedPosts from "../../HighlightedPosts/HighlightedPosts";
 import AboutSection from "../../AboutSection/AboutSection";
 

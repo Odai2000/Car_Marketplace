@@ -1,4 +1,3 @@
-import React from "react";
 import "./Button.css";
 
 function Button({styleName,id,variant, destructive, onClick, children, icon, ...props}) {

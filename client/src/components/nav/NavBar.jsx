@@ -1,4 +1,4 @@
-import { FaBars } from "react-icons/fa6";
+import { FaBars, FaUser } from "react-icons/fa6";
 import Items from "./Items";
 import "./style.css";
 import { IconContext } from "react-icons/lib";
@@ -6,7 +6,7 @@ import Button from "../UI/Button/Button";
 import RegisterForm from "../AuthForms/RegisterForm";
 import LoginForm from "../AuthForms/LoginForm";
 import { useEffect, useState } from "react";
-
+import useAuth from "../../hooks/useAuth";
 function disableScrolling() {
   document.body.style.overflow = "hidden";
 }
@@ -19,8 +19,7 @@ function NavBar() {
   const [showSign, setShowSignup] = useState(false);
   const [showLog, setShowLog] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [isMobSize,setIsMobSize] = useState(false)
-
+  const { auth } = useAuth();
   function toggleSign() {
     setShowSignup(!showSign);
   }
@@ -39,10 +38,15 @@ function NavBar() {
   }, [scrolled]);
   return (
     <>
-      <div className={`${scrolled?'scrolled':''} nav-wrapper`}>
+      <div className={`${scrolled ? "scrolled" : ""} nav-wrapper`}>
         <div className="nav-container">
           <div id="logo">
-            <img src={scrolled?"src/assets/logo.svg":"src/assets/logo-white.svg"} alt="logo" />
+            <img
+              src={
+                scrolled ? "src/assets/logo.svg" : "src/assets/logo-white.svg"
+              }
+              alt="logo"
+            />
           </div>
 
           <nav className={`nav`}>
@@ -52,13 +56,32 @@ function NavBar() {
           </nav>
         </div>
 
-        <div className="btn-group">
-          <Button variant="secondary" styleName="login-btn" onClick={toggleLog}>
-            Login
-          </Button>
-          <Button variant="primary" styleName="signup-btn" onClick={toggleSign}>
-            Sign up
-          </Button>
+        <div className="navBar-rightside">
+          {auth ? (
+            <>
+              <Button variant="secondary" styleName="logout-btn">
+                Logout
+              </Button>
+              <div className="profile-icon"><FaUser/></div>
+            </>
+          ) : (
+            <div className="btn-group">
+              <Button
+                variant="secondary"
+                styleName="login-btn"
+                onClick={toggleLog}
+              >
+                Login
+              </Button>
+              <Button
+                variant="primary"
+                styleName="signup-btn"
+                onClick={toggleSign}
+              >
+                Sign up
+              </Button>
+            </div>
+          )}
         </div>
 
         <IconContext.Provider value={{ className: "op" }}>
