@@ -18,7 +18,7 @@ REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET
 
 //CORS
 const cors = require("cors");
-const whitelist = ["http://localhost:8097"];
+const whitelist = ["http://localhost:8097","http://192.168.1.111:8097"];
 
 const corsOptions = {
   origin: function (origin, callback) {
@@ -28,10 +28,10 @@ const corsOptions = {
       callback(new Error("Not allowed by CORS"));
     }
   },
+  credentials:true
 };
 
-app.use(bodyParser.json(),cookieParser(),cors({ credentials: true, origin: 'http://localhost:8097'}));
-
+app.use(bodyParser.json(), cookieParser(), cors(corsOptions));
 //Routes
 app.use("/", require("./routes/root"));
 app.use("/user", require("./routes/user"));

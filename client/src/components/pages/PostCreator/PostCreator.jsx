@@ -6,7 +6,7 @@ import { useRef, useEffect, useState } from "react";
 import useAppData from "../../../hooks/useAppData";
 
 const PostCreator = () => {
-  const { carSpecsData, loading } = useAppData()
+  const { carSpecsData, loading } = useAppData();
   const [selectedMake, setSelectedMake] = useState({});
 
   const [title, setTitle] = useState("");
@@ -15,7 +15,7 @@ const PostCreator = () => {
   const [body, setBody] = useState("");
   const [year, setYear] = useState("");
   const [fuel, setFuel] = useState("");
-  const [transmisson, setTransmisson] = useState("Automatic");
+  const [transmission, setTransmission] = useState("Automatic");
   const [mileage, setMileage] = useState("");
   const [hp, setHp] = useState("");
   const [images, setImages] = useState([]);
@@ -58,9 +58,7 @@ const PostCreator = () => {
     if (yearsOptions) {
       setYear(yearsOptions[0].value);
     }
-
   }, [carSpecsData]);
-
 
   useEffect(() => {
     const handleResize = () => {
@@ -73,19 +71,17 @@ const PostCreator = () => {
   }, []);
   const handleSubmit = (e) => {
     e.preventDefault();
-    createPost(
-    );
+    createPost();
   };
 
-  const createPost = async (
-  ) => {
+  const createPost = async () => {
     const car = {
       make: make,
       model: model,
       body: body,
       year: year,
       fuel: fuel,
-      transmisson: transmisson,
+      transmisson: transmission,
       mileage: mileage,
       hp: hp,
       isNewCondition: true,
@@ -95,10 +91,10 @@ const PostCreator = () => {
     formData.append("title", title);
     formData.append("car", JSON.stringify(car));
     formData.append("user", "65f0765f39d8cc57da67e25b");
-    for (const image of images){
-      formData.append("images",image)
+    for (const image of images) {
+      formData.append("images", image);
     }
-    formData.append("images",images)
+    formData.append("images", images);
 
     await fetch("http://localhost:8080/post", {
       method: "POST",
@@ -200,10 +196,10 @@ const PostCreator = () => {
           </Select>
 
           <Select
-            name="transmisson"
-            value={transmisson}
-            label="Transmisson"
-            onChange={(e) => setTransmisson(e.target.value)}
+            name="transmission"
+            value={transmission}
+            label="transmission"
+            onChange={(e) => setTransmission(e.target.value)}
           >
             <option value="automatic">Automatic</option>
             <option value="manual">Manual</option>

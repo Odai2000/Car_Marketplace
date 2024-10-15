@@ -6,6 +6,10 @@
   background-color: rgba(0, 0, 0, 0.04);
 }
 
+.HighlightedPosts > .Carousel > .items {
+  overflow: scroll;
+}
+
 .HighlightedPosts > .Carousel > .carousel-btn {
   position: static;
   display: none;
@@ -15,8 +19,12 @@
   color: var(--primary);
 }
 
-@media (min-width: 700px) {
+@media (min-width: 768px) {
   .HighlightedPosts > .Carousel > .carousel-btn {
     display: block;
+  }
+
+  .HighlightedPosts > .Carousel > .items {
+    overflow: hidden;
   }
 }

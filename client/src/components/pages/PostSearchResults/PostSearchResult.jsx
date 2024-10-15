@@ -61,7 +61,7 @@ const PostSearchResult = () => {
         <Filter />
         <div className="post-results-container">
           {posts.length > 0 ? (
-            posts.map((post) => <Post key={post.id} {...post} />)
+            posts.map((post) => <Post key={post.id} data={post} />)
           ) : (
             <p>No posts found</p>
           )}

@@ -1,5 +1,5 @@
 import "./Post.css";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Button from "../UI/Button/Button";
 import Carousel from "../UI/Carousel/Carousel";
 import {
@@ -11,45 +11,69 @@ import {
   FaMessage,
   FaGasPump,
 } from "react-icons/fa6";
+import { PiEngineFill } from "react-icons/pi";
 import { TbManualGearbox } from "react-icons/tb";
 
-const Post = () => {
-  let items = ["1st", "2nd", "3th", "4th"];
+const Post = ({ data }) => {
+  
+  let items = null;
+
+  let defaultBlock = [
+    <div key="0" className="no-image" alt="No Photos">
+      <FaCamera style={{ height: "2em", width: "2em" }} /> No Photos
+    </div>,
+  ];
+
   return (
-    <div className="post ">
-      <div className="post-img">
-        <Carousel single items={items}></Carousel>
+    <div className="post" key={data?._id}>
+      <div className="post-img-container">
+        {items ? (
+          <Carousel single counter>
+            {items}
+          </Carousel>
+        ) : (
+          defaultBlock
+        )}
       </div>
 
       <div className="post-details">
-        <h3 className="post-title col-4">Title</h3>
+        <h3 className="post-title ">{data?.title}</h3>
 
-        <span className="post-price col-4">$$$</span>
+        <span className="post-price ">{data?.car ? "$" + data.car.price : ""}</span>
+
+        <span className="car-name">
+          {data?.car?.make + " " + data?.car?.model}
+        </span>
 
         <span>
-          <FaCar /> Make
-        </span>
-        <span> Model</span>
-        <span>
-          <FaCalendar /> 2010
+          <FaCar /> {data?.car?.type}
         </span>
         <span>
-          <FaRoad /> Mileage
+          <FaCalendar /> {data?.car?.year}
         </span>
         <span>
-          <FaGasPump /> Fuel
+          <FaRoad /> {data?.car?.mileage + ' km'}
         </span>
-        <span>HP</span>
         <span>
-          <TbManualGearbox /> Transmission
+          <FaGasPump /> {data?.car?.fuel}
         </span>
-        <span className="post-location col-2">City,Co</span>
-        <Button variant="primary">
-          <FaPhone /> Call
-        </Button>
-        <Button variant="primary">
-          <FaMessage /> Message
-        </Button>
+        <span><PiEngineFill/> {data?.car?.hp + " " + "hp"}</span>
+        <span>
+          <TbManualGearbox /> {data?.car?.transmission}
+        </span>
+
+        <div className="post-footer ">
+          <span className="post-location ">City,Co</span>
+
+          <div className="btn-group post-btn-group ">
+            <Button variant="primary">
+              <FaPhone /> Call
+            </Button>
+            <Button variant="primary">
+              <FaMessage /> Message
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -69,6 +69,7 @@ function HeroFilter() {
     if (!makeData) setMake("");
     else {
       setMake(makeData.name);
+      setModel('');
     }
     setSelectedMake(makeData);
   };
@@ -86,12 +87,6 @@ function HeroFilter() {
 
     navigate(`/posts?${query}`);
   };
-
-  useEffect(() => {
-    if (carSpecsData && carSpecsData.makes) {
-      setSelectedMake(carSpecsData.makes[0]);
-    }
-  }, [carSpecsData]);
 
   if (loading) {
     console.log("loading");

@@ -62,8 +62,17 @@ header.home-header {
 
 .col-1 {
   grid-column: span 1;
+}.col-2 {
+  grid-column: span 2;
 }
-
+.col-3 {
+  grid-column: span 3;
+}
 .col-4 {
   grid-column: span 4;
+}
+
+.btn-group{
+  display: flex;
+  gap: 0.5em;
 }
