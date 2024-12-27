@@ -1,8 +1,10 @@
 .post {
+  width:min();
   display: flex;
   flex-direction: column;
   border: 1px solid lightgray;
   background-color: #fff;
+  flex-grow: 1;
   flex-shrink: 0;
 }
 
@@ -12,7 +14,8 @@
   grid-template-columns: repeat(2, minmax(2rem, 1fr));
   padding: 0.75em;
   text-wrap: nowrap;
-  flex-shrink: 0;
+  flex-grow: 1;
+  flex-shrink: 1;
 }
 
 .post > .post-details > span {
@@ -21,8 +24,8 @@
 }
 
 .post-title {
-  grid-row: span 2;
-  grid-column: span 2;
+  grid-row: span 1;
+  grid-column: span 1;
   max-width: 38ch;
   overflow: hidden;
   font-weight: bold;
@@ -32,7 +35,7 @@
 
 .post-price {
   font-size: 1em;
-  grid-column: span 2;
+  grid-column: span 1;
   font-weight: bold;
   text-align: start;
   color: rgb(11, 65, 11);
@@ -55,7 +58,7 @@
 }
 
 .post-details .post-location {
-  width:21ch;
+  width: 21ch;
   overflow: hidden;
   justify-self: center;
   color: gray;
@@ -77,13 +80,14 @@
   grid-column: span 2;
 }
 
-.post .Carousel{
+.post .Carousel {
   position: absolute;
   object-fit: cover;
   width: 100%;
   top: 0;
   left: 0;
 }
+
 .no-image {
   position: absolute;
   top: 0;
@@ -98,14 +102,13 @@
   align-items: center;
   background-color: rgba(0, 0, 0, 0.05);
   color: rgba(0, 0, 0, 0.25);
-  padding: 0; /* Ensure no padding */
-  box-sizing: border-box; /* Include border in the element's total width and height */
+  box-sizing: border-box; 
 }
-
 
 @media (min-width: 768px) {
   .post {
     flex-direction: row;
+    height: 15em;
   }
 
   .post > .post-details {
@@ -129,7 +132,8 @@
   }
 
   .post > .post-img-container {
-    width: 18em;
+    width: max(18em,22vw);
+    height: 100%;
     padding-top: 0%;
   }
 
@@ -142,7 +146,7 @@
   .post-details .post-location {
     display: flex;
     align-items: center;
-    max-width:18ch;
+    max-width: 18ch;
     grid-column: span 1;
   }
 }

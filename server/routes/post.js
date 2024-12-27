@@ -4,7 +4,7 @@ const router = express.Router();
 
 const multer = require("multer");
 
-const upload = multer({ inMemory: true });
+const upload = multer({ dest: "temp/" });
 
 router
   .route("/")
@@ -13,8 +13,6 @@ router
   .patch(postController.updatePost)
   .delete(postController.deletePost);
 
-  
 router.route("/:id").get(postController.getPostById);
-
 
 module.exports = router;

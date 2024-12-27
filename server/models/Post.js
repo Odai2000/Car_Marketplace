@@ -19,12 +19,6 @@ const carSchema = new mongoose.Schema({
   mileage: {
     type: Number,
   },
-  isNewCondition: {
-    type: Boolean,
-  },
-  color: {
-    type: String,
-  },
   fuel: {
     type: String,
   },

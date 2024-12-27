@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import "./Carousel.css";
 import { Children, useRef, useState } from "react";
 import Button from "../Button/Button";

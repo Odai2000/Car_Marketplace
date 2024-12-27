@@ -16,7 +16,7 @@ import { TbManualGearbox } from "react-icons/tb";
 
 const Post = ({ data }) => {
   
-  let items = null;
+  let imageUrls = data?.imagesUrls;
 
   let defaultBlock = [
     <div key="0" className="no-image" alt="No Photos">
@@ -27,9 +27,14 @@ const Post = ({ data }) => {
   return (
     <div className="post" key={data?._id}>
       <div className="post-img-container">
-        {items ? (
+        {imageUrls ? (
           <Carousel single counter>
-            {items}
+            {
+                imageUrls.map( (url,index) => (
+                  <img key={index} src={url}/>
+                     
+                      ))
+                      }
           </Carousel>
         ) : (
           defaultBlock

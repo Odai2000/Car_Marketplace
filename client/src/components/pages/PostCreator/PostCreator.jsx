@@ -81,7 +81,7 @@ const PostCreator = () => {
       body: body,
       year: year,
       fuel: fuel,
-      transmisson: transmission,
+      transmission: transmission,
       mileage: mileage,
       hp: hp,
       isNewCondition: true,

@@ -1,12 +1,10 @@
 const Post = require("../models/Post");
 const asyncHandler = require("express-async-handler");
 
-const B2 = require("backblaze-b2");
+const pcloudSdk = require("pcloud-sdk-js");
+const client = pcloudSdk.createClient(process.env.PCLOUD_ACCESS_TOKEN);
 
-const b2 = new B2({
-  applicationKeyId: process.env.APPLICATION_KEY_ID,
-  applicationKey: process.env.APPLICATION_KEY,
-});
+global.locationid = 2;
 
 const getPostById = asyncHandler(async (req, res) => {
   try {
@@ -53,6 +51,9 @@ const getPosts = asyncHandler(async (req, res) => {
     priceMax,
   } = req.query;
 
+  client.listfolder(0).then((fileMetadata) => {
+    console.log(fileMetadata);
+  });
   const query = {
     ...(make && { "car.make": make }),
     ...(model && { "car.model": model }),
@@ -87,19 +88,34 @@ const getPosts = asyncHandler(async (req, res) => {
     if (priceMax) query["car.price"].$lte = parseInt(priceMax);
   }
 
-  const posts = await Post.find(query);
+  const posts = await Post.find(query).lean();
 
   console.log(query);
   if (!posts.length) {
     return res.status(400).json({ message: "No Posts found." });
   }
+  for (const post of posts) {
+    if (post.imageIds) {
+      try {
+        const imagesUrls = (await getDownloadImagesUrl(post.imageIds)) || [];
+        console.log("Fetched Image URLs:", imagesUrls);
+
+        delete post.imageIds;
+        post.imagesUrls = imagesUrls
+      } catch (error) {
+        console.log(error);
+        return res.status(500);
+      }
+    }
+  }
+
   res.status(200).json(posts);
 });
-
 
 const createPost = asyncHandler(async (req, res) => {
   try {
     let { title, desc = "", user, car } = req.body;
+
     const files = req.files;
     car = JSON.parse(car);
 
@@ -112,6 +128,7 @@ const createPost = asyncHandler(async (req, res) => {
     if (files) {
       //Upload images to cloud and store their Ids
       imageIds = await uploadImages(files);
+      console.log(imageIds);
     }
 
     //Add post to the DB
@@ -171,43 +188,31 @@ const deletePost = asyncHandler(async (req, res) => {
 
 const uploadImages = asyncHandler(async (images) => {
   try {
-    await b2.authorize();
     const imageIds = [];
 
     for (const image of images) {
-      const uploadUrl = await b2.getUploadUrl({
-        bucketId: process.env.BUCKET_ID,
-      });
-
-      const uploadResponse = await b2.uploadFile({
-        uploadUrl: uploadUrl.data.uploadUrl,
-        uploadAuthToken: uploadUrl.data.authorizationToken,
-        fileName: image.originalname,
-        data: image.buffer,
-        contentType: image.mimetype,
-        contentLength: 0,
-        onUploadProgress: null,
-      });
-
-      imageIds.push(uploadResponse.data.fileId);
+      const result = await client.upload(image.path, 0);
+      console.log(result);
+      if (result.metadata && result.metadata.fileid) {
+        imageIds.push(result.metadata.fileid);
+      }
     }
+
     return imageIds;
   } catch (error) {
-    console.log(error);
+    console.error("An unexpected error occurred:", error);
     return null;
   }
 });
 
+module.exports = uploadImages;
+
 const getDownloadImagesUrl = asyncHandler(async (imageIds) => {
   try {
-    const auth = await b2.authorize();
     const urls = [];
 
     for (const imageId of imageIds) {
-      urls.push({
-        url: `${auth.data.downloadUrl}/b2api/v3/b2_download_file_by_id?fileId=${imageId}`,
-        authorizationToken: auth.data.authorizationToken,
-      });
+      urls.push(await client.getfilelink(imageId));
     }
 
     return urls;

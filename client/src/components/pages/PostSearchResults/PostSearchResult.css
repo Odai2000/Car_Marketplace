@@ -1,22 +1,23 @@
-.PostSearchResult{
+.PostSearchResult {
   display: flex;
   gap: 1.5em;
-  margin: 0 2.5%;
+  padding: 0 1em;
+  overflow-x: scroll;
 }
 
-.post-results-container{
-  display: flex;
-  flex-direction: row;
- flex-grow: 1;
- flex-wrap: wrap;
- gap: 1em;
+.post-results-container {
+  display: grid;
+  gap: 1em;
+  flex-grow: 1;
 }
 
 /* Filter */
 
 .Filter {
-  display: block;
-  height: fit-content;
+  position: absolute;
+  display: none;
+  width: 100%;
+  height: 100vh;
   padding: 1em 2em;
   background-color: white;
 }
@@ -24,43 +25,33 @@
 .Filter h2 {
   width: 20ch;
   text-align: center;
-  font-weight:700;
+  font-weight: 700;
   color: rgb(11, 65, 11);
 }
 
 .Filter > form {
   display: grid;
-  grid-template-columns: repeat(2,minmax(6em,1fr));
+  grid-template-columns: repeat(2, minmax(6em, 1fr));
   grid-row-gap: 3em;
   padding: 1em 0;
 }
 
-.Filter > form > .form-control{
+.Filter > form > .form-control {
   border-radius: 0;
-}
-@media (max-width:700px)
-{
-  .Filter{
-    position: absolute;
-    width: 100vw;
-    height: 100vh;
-  }
 }
 
 /*Desktop screen*/
 
-@media (min-width:700px) {
+@media (min-width: 768px) {
+  .post-results-container {
+    display: grid;
+  }
 
-.post-results-container{
-    display: flex;
-    flex-direction: row;
-   flex-grow: 1;
-   flex-wrap: wrap;
-}
-
-/* Filter */
+  /* Filter */
   .Filter {
+    position: relative;
     display: block;
     border: 1px solid lightgray;
+    height: fit-content;
   }
 }
