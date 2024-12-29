@@ -1,10 +1,7 @@
 const Post = require("../models/Post");
 const asyncHandler = require("express-async-handler");
-
-const pcloudSdk = require("pcloud-sdk-js");
-const client = pcloudSdk.createClient(process.env.PCLOUD_ACCESS_TOKEN);
-
-global.locationid = 2;
+const CloudStorageManager = require("../modules/cloud_storage/cloudStorageManager");
+const cloudStorage = new CloudStorageManager("pcloud");
 
 const getPostById = asyncHandler(async (req, res) => {
   try {
@@ -15,8 +12,11 @@ const getPostById = asyncHandler(async (req, res) => {
     }
 
     if (post.imageIds) {
-      const imagesUrls = (await getDownloadImagesUrl(post.imageIds)) || [];
+      const imagesUrls = [];
 
+      for (const imageId of imageIds) {
+        imagesUrls.push(await cloudStorage.download(imageId));
+      }
       if (!imagesUrls) {
         return res.status(500);
       }
@@ -51,9 +51,6 @@ const getPosts = asyncHandler(async (req, res) => {
     priceMax,
   } = req.query;
 
-  client.listfolder(0).then((fileMetadata) => {
-    console.log(fileMetadata);
-  });
   const query = {
     ...(make && { "car.make": make }),
     ...(model && { "car.model": model }),
@@ -95,13 +92,16 @@ const getPosts = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "No Posts found." });
   }
   for (const post of posts) {
-    if (post.imageIds) {
+    const imageIds = post.imageIds;
+    if (imageIds) {
       try {
-        const imagesUrls = (await getDownloadImagesUrl(post.imageIds)) || [];
-        console.log("Fetched Image URLs:", imagesUrls);
+        const imagesUrls = [];
 
+        for (const imageId of imageIds) {
+          imagesUrls.push(await cloudStorage.download(imageId));
+        }
         delete post.imageIds;
-        post.imagesUrls = imagesUrls
+        post.imagesUrls = imagesUrls;
       } catch (error) {
         console.log(error);
         return res.status(500);
@@ -126,8 +126,11 @@ const createPost = asyncHandler(async (req, res) => {
 
     let imageIds = [];
     if (files) {
-      //Upload images to cloud and store their Ids
-      imageIds = await uploadImages(files);
+      //Upload images to cloud and store their
+      for (const file of files) {
+        imageIds.push(await cloudStorage.upload(file, 14517807595));
+      }
+
       console.log(imageIds);
     }
 
@@ -190,34 +193,9 @@ const uploadImages = asyncHandler(async (images) => {
   try {
     const imageIds = [];
 
-    for (const image of images) {
-      const result = await client.upload(image.path, 0);
-      console.log(result);
-      if (result.metadata && result.metadata.fileid) {
-        imageIds.push(result.metadata.fileid);
-      }
-    }
-
     return imageIds;
   } catch (error) {
     console.error("An unexpected error occurred:", error);
-    return null;
-  }
-});
-
-module.exports = uploadImages;
-
-const getDownloadImagesUrl = asyncHandler(async (imageIds) => {
-  try {
-    const urls = [];
-
-    for (const imageId of imageIds) {
-      urls.push(await client.getfilelink(imageId));
-    }
-
-    return urls;
-  } catch (error) {
-    console.log(error);
     return null;
   }
 });
