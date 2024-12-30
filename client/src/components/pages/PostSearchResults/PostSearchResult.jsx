@@ -54,12 +54,14 @@ const PostSearchResult = () => {
   }, [make, model, yearMin, yearMax, body, mileageMin, mileageMax, transmission, priceMin, priceMax]);
   return (
     <>
-      <Button variant="primary" styleName="filter-toggler">
-        Filter
-      </Button>
+     
       <div className="PostSearchResult">
+    
         <Filter />
         <div className="post-results-container">
+        <Button variant="primary" id="filter-toggle-btn">
+        Filter
+      </Button>
           {posts.length > 0 ? (
             posts.map((post) => <Post key={post.id} data={post} />)
           ) : (

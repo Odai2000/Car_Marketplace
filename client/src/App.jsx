@@ -4,12 +4,12 @@ import Layout from "./components/Layout";
 import Home from "./components/pages/Home/Home";
 import PostCreator from "./components/pages/PostCreator/PostCreator";
 import PostSearchResult from "./components/pages/PostSearchResults/PostSearchResult";
-
 import AuthProvider from "./context/AuthProvider";
 import AppDataProvider from "./context/AppDataProvider";
 import PersistLogin from "./components/persistLogin";
 import ReqAuth from "./components/ReqAuth";
 import UnAuthorized from "./components/pages/UnAuthorized/UnAuthorized";
+
 function App() {
   return (
     <AppDataProvider>

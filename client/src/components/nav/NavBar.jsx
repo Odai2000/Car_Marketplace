@@ -5,8 +5,10 @@ import { IconContext } from "react-icons/lib";
 import Button from "../UI/Button/Button";
 import RegisterForm from "../AuthForms/RegisterForm";
 import LoginForm from "../AuthForms/LoginForm";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useAuth from "../../hooks/useAuth";
+import { useLocation } from "react-router-dom";
+
 function disableScrolling() {
   document.body.style.overflow = "hidden";
 }
@@ -19,10 +21,15 @@ function NavBar() {
   const [showSign, setShowSignup] = useState(false);
   const [showLog, setShowLog] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
   const { auth } = useAuth();
+  const navRef = useRef(null);
+  const location = useLocation();
+
   function toggleSign() {
     setShowSignup(!showSign);
   }
+
   function toggleLog() {
     setShowLog(!showLog);
   }
@@ -32,18 +39,37 @@ function NavBar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 65);
+      setScrolled(window.scrollY > 125);
     };
     window.addEventListener("scroll", handleScroll);
   }, [scrolled]);
   return (
     <>
-      <div className={`${scrolled ? "scrolled" : ""} nav-wrapper`}>
+      <div
+        id="nav-fix-buffer"
+        style={{
+          display: scrolled ? "block" : "none",
+          height: navRef.current ? navRef.current.clientHeight : 0,
+        }}
+      ></div>
+
+      <div
+        className={`${
+          !scrolled && location.pathname == "/"
+            ? "style-transparent"
+            : scrolled
+            ? "scrolled"
+            : ""
+        } nav-wrapper`}
+        ref={navRef}
+      >
         <div className="nav-container">
           <div id="logo">
             <img
               src={
-                scrolled ? "src/assets/logo.svg" : "src/assets/logo-white.svg"
+                !scrolled && location.pathname == "/"
+                  ? "src/assets/logo-white.svg"
+                  : "src/assets/logo.svg"
               }
               alt="logo"
             />
@@ -62,7 +88,9 @@ function NavBar() {
               <Button variant="secondary" styleName="logout-btn">
                 Logout
               </Button>
-              <div className="profile-icon"><FaUser/></div>
+              <div className="profile-icon">
+                <FaUser />
+              </div>
             </>
           ) : (
             <div className="btn-group">

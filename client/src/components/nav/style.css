@@ -1,22 +1,32 @@
 .nav-wrapper {
   z-index: 2;
   display: flex;
-  position: fixed;
+  position: static;
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  background-color: transparent;
-  padding: 0.5em 1em ;
+  background-color: #fff;
+  color: var(--primary);
+  padding: 0.5em 1em;
 }
 
 .nav-wrapper.scrolled{
-  background-color: white;
+  position: fixed;
 }
-.nav-wrapper.scrolled li a{
-  color:var(--primary)
+
+.nav-wrapper.style-transparent {
+  position: absolute;
+  background-color: transparent;
 }
-.navBar-rightside> .btn.secondary{
-  color:var(--primary)
+
+.nav-wrapper.style-transparent {
+  background-color: transparent;
+}
+.nav-wrapper.style-transparent li a {
+  color: #fff;
+}
+.navBar-rightside > .btn.secondary {
+  color: var(--primary);
 }
 .nav-container {
   display: flex;
@@ -32,6 +42,7 @@ nav {
   display: none;
   height: 100%;
 }
+
 nav > ul {
   height: 100%;
   display: flex;
@@ -47,13 +58,15 @@ nav > ul > li {
   justify-content: center;
   color: black;
 }
+
 .nav > ul > li a {
   font-weight: 900;
   color: white;
 }
-nav > ul > li:hover  {
+
+nav > ul > li:hover {
   background-color: rgba(0, 0, 0, 0.1);
-  color:white
+  color: white;
 }
 
 nav.open {
@@ -96,12 +109,11 @@ nav.open > ul > li {
   gap: 0.5em;
 }
 
-.navBar-rightside> .btn.secondary {
+.navBar-rightside > .btn.secondary {
   background-color: transparent;
   color: white;
-  padding:0em;
+  padding: 0em;
   border: none;
-  
 }
 
 @media (min-width: 700px) {
@@ -124,14 +136,19 @@ nav.open > ul > li {
     font-size: 18px;
     padding: 0.75em;
     border-radius: 4px;
-    color: white;
     transition: background-color 0.4s ease-in-out;
   }
-  nav > ul > li:hover  {
+
+  .nav > ul > li > a {
+    color: var(--primary);
+  }
+  
+  nav > ul > li:hover {
     cursor: pointer;
     background-color: var(--primary);
   }
-  .nav > ul > li:hover > a  {
+
+  .nav > ul > li:hover > a {
     color: white;
   }
 

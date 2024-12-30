@@ -90,9 +90,9 @@ function LoginForm(props) {
             Don't have an account? <Button variant="link">Sign up</Button>
           </span>
 
-          <div style={{ display: "flex" }}>
+          <div id="remeber-me-container">
             <Input type="checkbox" onChange={togglePersist} checked={persist} />
-            <label style={{ textJustify: "center" }}>Remeber Me</label>
+            <label >Remeber Me</label>
           </div>
 
           <Button type="submit" variant="primary" styleName="login-btn col-2">

@@ -91,6 +91,16 @@
   margin-right: 0.25em;
 }
 
+#remeber-me-container{
+  display: flex;
+  gap:0.3em
+}
+
+#remeber-me-container > label{
+  display: flex;
+  align-items: center;
+}
+
 @media(min-width:720px){
   .authForm {
     width: 33vw;
