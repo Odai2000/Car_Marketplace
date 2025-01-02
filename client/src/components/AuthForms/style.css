@@ -44,10 +44,9 @@
 .authForm > h2 {
   text-align: center;
 }
-.authForm > input {
-  padding: 1em;
-  border-radius: 8px;
-  border: 1px solid #000;
+
+.authForm input {
+  margin-bottom: 0.2em;
 }
 
 .line-breaker {

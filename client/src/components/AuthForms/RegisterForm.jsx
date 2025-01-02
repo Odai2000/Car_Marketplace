@@ -86,7 +86,7 @@ const {show,onCancel}=props
               setEmail(e.target.value);
             }}
             placeholder="Email"
-            className="col-2"
+            styleName="col-2"
           />
 
           <Input
@@ -97,7 +97,7 @@ const {show,onCancel}=props
               setUsername(e.target.value);
             }}
             placeholder="Username"
-            className="col-2"
+            styleName="col-2"
           />
 
           <Input

@@ -1,12 +1,33 @@
-form .form-control {
-    height: 3em;
-    padding: 0 0.5em;
-    border: 1px rgba(88, 84, 84, 0.808) solid;
-    border-radius: 8px;
-    background-color: transparent; 
+form .form-control-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
 }
-form .form-control-container{
-    display: flex;
-    flex-direction: column;  
-    gap:.4em
-  }
+
+form .form-control {
+  height: 3.5em;
+  padding: 0 0.5em;
+  border: 1px rgba(88, 84, 84, 0.808) solid;
+  border-radius: 8px;
+  background-color: transparent;
+}
+
+form .form-control.error {
+  border-color: var(--destructive);
+}
+
+form .form-contol-error-message {
+  height: 1em;
+  position: absolute;
+  bottom: -1em;
+  color: var(--destructive);
+  padding: 0.25em;
+}
+
+.exclamation-icon {
+  position: absolute;
+  top: 1em;
+  right: 0.5em;
+  height: 1em;
+  color: var(--destructive);
+}

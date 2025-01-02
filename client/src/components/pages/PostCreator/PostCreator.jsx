@@ -18,6 +18,7 @@ const PostCreator = () => {
   const [transmission, setTransmission] = useState("Automatic");
   const [mileage, setMileage] = useState("");
   const [hp, setHp] = useState("");
+  const [price, setPrice] = useState("");
   const [images, setImages] = useState([]);
 
   const [isSmallScreen, setIsSmallScreen] = useState(false);
@@ -36,29 +37,13 @@ const PostCreator = () => {
     });
     setMake(makeData.name);
     setSelectedMake(makeData);
+    setModel(carSpecsData.makes[0].models[0]);
   };
 
   const imageInput = useRef();
   const handleImageInput = () => {
     imageInput.current.click();
   };
-
-  useEffect(() => {
-    if (carSpecsData && carSpecsData.makes) {
-      setSelectedMake(carSpecsData.makes[0]);
-      setMake(carSpecsData.makes[0].name);
-      setModel(carSpecsData.makes[0].models[0]);
-    }
-    if (carSpecsData && carSpecsData.bodyTypes) {
-      setBody(carSpecsData.bodyTypes[0]);
-    }
-    if (carSpecsData && carSpecsData.fuelTypes) {
-      setFuel(carSpecsData.fuelTypes[0]);
-    }
-    if (yearsOptions) {
-      setYear(yearsOptions[0].value);
-    }
-  }, [carSpecsData]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -108,7 +93,6 @@ const PostCreator = () => {
     console.log("loading");
     return <div>Loading.....</div>;
   }
-  console.log(selectedMake);
   return (
     <div className="PostCreator">
       <form onSubmit={handleSubmit} className="PostCreator-form">
@@ -130,16 +114,17 @@ const PostCreator = () => {
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Title"
             styleName={!isSmallScreen ? "col-2" : ""}
+            validationRules={{ required: true, minLength: 2, maxLength: 80 }}
           />
 
           <Select
             name="make"
             value={make}
-            label="Make"
             onChange={(e) => {
               handleMakeChange(e.target.value);
             }}
-            placeholder="Select Make"
+            defaultOption={{ label: "Select Make", value: '' }}
+            validationRules={{ required: true }}
           >
             {carSpecsData.makes.map((make, index) => (
               <option key={index} value={make.name}>
@@ -151,8 +136,9 @@ const PostCreator = () => {
           <Select
             name="model"
             value={model}
-            label="Model"
+            defaultOption={{ label: "Select Model", value: '' }}
             onChange={(e) => setModel(e.target.value)}
+            validationRules={{ required: true }}
           >
             {selectedMake?.models?.map((model, index) => (
               <option key={index} value={model}>
@@ -164,8 +150,9 @@ const PostCreator = () => {
           <Select
             name="body"
             value={body}
-            label="Body"
+            defaultOption={{ label: "Select Body", value: '' }}
             onChange={(e) => setBody(e.target.value)}
+            validationRules={{ required: true }}
           >
             {carSpecsData.bodyTypes.map((item, index) => (
               <option key={index} value={item}>
@@ -177,16 +164,18 @@ const PostCreator = () => {
           <Select
             name="year"
             value={year}
-            label="Register Year"
+            defaultOption={{ label: "Select Year", value: '' }}
             onChange={(e) => setYear(e.target.value)}
             options={yearsOptions}
+            validationRules={{ required: true }}
           />
 
           <Select
             name="fuel"
             value={fuel}
-            label="Fuel"
+            defaultOption={{ label: "Select Fuel", value: '' }}
             onChange={(e) => setFuel(e.target.value)}
+            validationRules={{ required: true }}
           >
             {carSpecsData.fuelTypes.map((item, index) => (
               <option key={index} value={item}>
@@ -198,8 +187,9 @@ const PostCreator = () => {
           <Select
             name="transmission"
             value={transmission}
-            label="transmission"
+            defaultOption={{ label: "Select Transmission", value: '' }}
             onChange={(e) => setTransmission(e.target.value)}
+            validationRules={{ required: true }}
           >
             <option value="automatic">Automatic</option>
             <option value="manual">Manual</option>
@@ -210,7 +200,8 @@ const PostCreator = () => {
             name="mileage"
             value={mileage}
             onChange={(e) => setMileage(e.target.value)}
-            placeholder="mileage"
+            validationRules={{ required: true, maxLength: 8,numeric: true }}
+            placeholder="Mileage"
           />
 
           <Input
@@ -218,7 +209,17 @@ const PostCreator = () => {
             name="hp"
             value={hp}
             onChange={(e) => setHp(e.target.value)}
-            placeholder="hp"
+            placeholder="HP"
+            validationRules={{ required: true, maxLength: 4, numeric: true }}
+          />
+
+          <Input
+            type="text"
+            name="price"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            placeholder="Price"
+            validationRules={{ required: true, maxLength: 9, numeric: true }}
           />
 
           <div className="m-post-img">

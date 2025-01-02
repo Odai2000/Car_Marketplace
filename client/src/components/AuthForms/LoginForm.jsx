@@ -72,7 +72,7 @@ function LoginForm(props) {
               setUsername(e.target.value);
             }}
             placeholder="Username"
-            className="col-2"
+            styleName="col-2"
           />
 
           <Input
@@ -83,7 +83,7 @@ function LoginForm(props) {
               setPassword(e.target.value);
             }}
             placeholder="Password"
-            className="col-2"
+            styleName="col-2"
           />
 
           <span className="col-2">
