@@ -113,12 +113,12 @@
 
   .post > .post-details {
     gap: 0.75em;
-    grid-template-columns: repeat(4, minmax(6rem, 1fr));
+    grid-template-columns: repeat(3, minmax(6rem, 1fr));
   }
 
   .post-title {
     grid-row: span 2;
-    grid-column: span 3;
+    grid-column: span 2;
   }
 
   .post-price {
@@ -128,7 +128,7 @@
   }
 
   .car-name {
-    grid-column: span 4;
+    grid-column: span 3;
   }
 
   .post > .post-img-container {
@@ -140,7 +140,7 @@
   .post-footer {
     flex-direction: row;
     justify-content: space-between;
-    grid-column: span 4;
+    grid-column: span 3;
   }
 
   .post-details .post-location {

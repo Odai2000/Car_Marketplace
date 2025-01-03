@@ -21,7 +21,7 @@ const PostSearchResult = () => {
   const model = query.get("model");
   const yearMin = query.get("yearMin");
   const yearMax = query.get("yearMax");
-  const body = query.get("body");
+  const bodyType = query.get("bodyType");
   const mileageMin = query.get("mileageMin");
   const mileageMax = query.get("mileageMax");
   const transmission = query.get("transmission");
@@ -35,7 +35,7 @@ const PostSearchResult = () => {
       ...(model && { model }),
       ...(yearMin && { yearMin }),
       ...(yearMax && { yearMax }),
-      ...(body && { body }),
+      ...(bodyType && { bodyType }),
       ...(mileageMin && { mileageMin }),
       ...(mileageMax && { mileageMax }),
       ...(transmission && { transmission }),
@@ -51,7 +51,7 @@ const PostSearchResult = () => {
     })
       .then((response) => response.json())
       .then((data) => setPosts(data));
-  }, [make, model, yearMin, yearMax, body, mileageMin, mileageMax, transmission, priceMin, priceMax]);
+  }, [make, model, yearMin, yearMax, bodyType, mileageMin, mileageMax, transmission, priceMin, priceMax]);
   return (
     <>
      

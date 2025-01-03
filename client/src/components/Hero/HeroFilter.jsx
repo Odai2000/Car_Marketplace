@@ -12,7 +12,7 @@ function HeroFilter() {
   const [make, setMake] = useState("");
   const [model, setModel] = useState("");
   const [yearMin, setYearMin] = useState("");
-  const [body, setBody] = useState("");
+  const [bodyType, setBodyType] = useState("");
   const [mileageMin, setMileageMin] = useState("");
   const [priceMax, setPriceMax] = useState("");
 
@@ -80,7 +80,7 @@ function HeroFilter() {
       make,
       model,
       yearMin,
-      body,
+      bodyType,
       mileageMin,
       priceMax,
     });
@@ -131,9 +131,9 @@ function HeroFilter() {
             defaultOption={{ label: "Registered from", value: "" }}
           />
           <Select
-            name="body"
-            value={body}
-            onChange={(e) => setBody(e.target.value)}
+            name="bodyType"
+            value={bodyType}
+            onChange={(e) => setBodyType(e.target.value)}
             options={bodyOptions}
             defaultOption={{ label: "Body type", value: "" }}
           ></Select>

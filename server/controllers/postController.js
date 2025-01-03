@@ -38,12 +38,12 @@ const getPosts = asyncHandler(async (req, res) => {
     model,
     yearMin,
     yearMax,
-    body,
+    bodyType,
     transmission,
     mileageMin,
     mileageMax,
-    condition,
-    colors = [],
+    // condition, //suspended
+    // colors = [],//suspended
     engineType,
     hpMin,
     hpMax,
@@ -54,10 +54,8 @@ const getPosts = asyncHandler(async (req, res) => {
   const query = {
     ...(make && { "car.make": make }),
     ...(model && { "car.model": model }),
-    ...(body && { "car.type": body }),
+    ...(bodyType && { "car.bodyType": bodyType }),
     ...(transmission && { "car.transmission": transmission }),
-    ...(condition && { "car.condition": condition }),
-    ...(colors.length && { "car.color": { $in: colors } }),
     ...(engineType && { "car.engineType": engineType }),
   };
 
@@ -187,17 +185,6 @@ const deletePost = asyncHandler(async (req, res) => {
   const queryResult = await Post.deleteOne({ _id: id }).lean().exce();
 
   res.status(200).json({ message: `Post with id: ${id} has been deleted` });
-});
-
-const uploadImages = asyncHandler(async (images) => {
-  try {
-    const imageIds = [];
-
-    return imageIds;
-  } catch (error) {
-    console.error("An unexpected error occurred:", error);
-    return null;
-  }
 });
 
 module.exports = {

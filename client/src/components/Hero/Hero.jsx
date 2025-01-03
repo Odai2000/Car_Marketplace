@@ -1,4 +1,3 @@
-import NavBar from "../nav/NavBar";
 import HeroFilter from "./HeroFilter";
 import "./style.css";
 

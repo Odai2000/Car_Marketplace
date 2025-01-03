@@ -10,7 +10,7 @@ const carSchema = new mongoose.Schema({
   year: {
     type: Number,
   },
-  type: {
+  bodyType: {
     type: String,
   },
   transmission: {

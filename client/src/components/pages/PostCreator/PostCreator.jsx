@@ -12,7 +12,7 @@ const PostCreator = () => {
   const [title, setTitle] = useState("");
   const [make, setMake] = useState("");
   const [model, setModel] = useState("");
-  const [body, setBody] = useState("");
+  const [bodyType, setBodyType] = useState("");
   const [year, setYear] = useState("");
   const [fuel, setFuel] = useState("");
   const [transmission, setTransmission] = useState("Automatic");
@@ -63,11 +63,12 @@ const PostCreator = () => {
     const car = {
       make: make,
       model: model,
-      body: body,
+      bodyType: bodyType,
       year: year,
       fuel: fuel,
       transmission: transmission,
       mileage: mileage,
+      price: price,
       hp: hp,
       isNewCondition: true,
     };
@@ -148,10 +149,10 @@ const PostCreator = () => {
           </Select>
 
           <Select
-            name="body"
-            value={body}
-            defaultOption={{ label: "Select Body", value: '' }}
-            onChange={(e) => setBody(e.target.value)}
+            name="bodyType"
+            value={bodyType}
+            defaultOption={{ label: "Select body type", value: '' }}
+            onChange={(e) => setBodyType(e.target.value)}
             validationRules={{ required: true }}
           >
             {carSpecsData.bodyTypes.map((item, index) => (

@@ -7,7 +7,7 @@ import RegisterForm from "../AuthForms/RegisterForm";
 import LoginForm from "../AuthForms/LoginForm";
 import { useEffect, useRef, useState } from "react";
 import useAuth from "../../hooks/useAuth";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 function disableScrolling() {
   document.body.style.overflow = "hidden";
@@ -25,6 +25,7 @@ function NavBar() {
   const { auth } = useAuth();
   const navRef = useRef(null);
   const location = useLocation();
+  const navigate = useNavigate();
 
   function toggleSign() {
     setShowSignup(!showSign);
@@ -65,17 +66,18 @@ function NavBar() {
       >
         <div className="nav-container">
           <div id="logo">
-            <img
+            <Link to='/'> <img
               src={
                 !scrolled && location.pathname == "/"
                   ? "src/assets/logo-white.svg"
                   : "src/assets/logo.svg"
               }
               alt="logo"
-            />
+            /></Link>
+           
           </div>
 
-          <nav className={`nav`}>
+          <nav className={'nav'}>
             <ul>
               <Items />
             </ul>

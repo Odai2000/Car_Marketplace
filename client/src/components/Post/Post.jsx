@@ -27,7 +27,7 @@ const Post = ({ data }) => {
   return (
     <div className="post" key={data?._id}>
       <div className="post-img-container">
-        {imageUrls ? (
+        {imageUrls && imageUrls.length>0 ? (
           <Carousel single counter>
             {
                 imageUrls.map( (url,index) => (
@@ -51,7 +51,7 @@ const Post = ({ data }) => {
         </span>
 
         <span>
-          <FaCar /> {data?.car?.type}
+          <FaCar /> {data?.car?.bodyType}
         </span>
         <span>
           <FaCalendar /> {data?.car?.year}
