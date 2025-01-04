@@ -44,7 +44,7 @@ const getPosts = asyncHandler(async (req, res) => {
     mileageMax,
     // condition, //suspended
     // colors = [],//suspended
-    engineType,
+    fuel,
     hpMin,
     hpMax,
     priceMin,
@@ -52,11 +52,11 @@ const getPosts = asyncHandler(async (req, res) => {
   } = req.query;
 
   const query = {
-    ...(make && { "car.make": make }),
-    ...(model && { "car.model": model }),
-    ...(bodyType && { "car.bodyType": bodyType }),
-    ...(transmission && { "car.transmission": transmission }),
-    ...(engineType && { "car.engineType": engineType }),
+    ...(make && { "car.make": { $regex: new RegExp(make, 'i') } }),
+    ...(model && { "car.model":{ $regex: new RegExp(model, 'i') }}),
+    ...(bodyType && { "car.bodyType": { $regex: new RegExp(bodyType, 'i') } }),
+    ...(transmission && { "car.transmission": { $regex: new RegExp(transmission, 'i') }}),
+    ...(fuel && { "car.fuel": { $regex: new RegExp(fuel, 'i') } }),
   };
 
   if (yearMin || yearMax) {

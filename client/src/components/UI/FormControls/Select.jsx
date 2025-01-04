@@ -61,7 +61,7 @@ const Select = ({
   return (
     <div className={`form-control-container ${styleName}`}>
       {label ? (
-        <label className="select-label" htmlFor={name}>
+        <label className="form-control-label select-label" htmlFor={name}>
           {label}
         </label>
       ) : (

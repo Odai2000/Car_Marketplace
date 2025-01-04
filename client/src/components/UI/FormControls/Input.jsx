@@ -57,7 +57,7 @@ const Input = ({
   return (
     <div className={`form-control-container ${styleName?styleName:''}`}>
       {label && (
-        <label className="input-label" htmlFor={name}>
+        <label className="form-control-label input-label" htmlFor={name}>
           {label}
         </label>
       )}

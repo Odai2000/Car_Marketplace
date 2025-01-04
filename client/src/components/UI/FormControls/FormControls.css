@@ -12,6 +12,10 @@ form .form-control {
   background-color: transparent;
 }
 
+form .form-control-label{
+  padding: 0.5em;
+}
+
 form .form-control.error {
   border-color: var(--destructive);
 }

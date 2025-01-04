@@ -9,24 +9,27 @@
   display: grid;
   gap: 1em;
   flex: 1 1 70%;
-  max-width: 120ch
+  max-width: 120ch;
 }
 
 /* Filter */
 
 .Filter {
   position: absolute;
+  top:0;
   display: none;
+  flex-direction: column;
   width: 100%;
-  height: 100vh;
   padding: 1em 2em;
   background-color: white;
+  border: 1px solid lightgray;
   flex: 1 1 30%;
-  max-width: 55ch
+  z-index: 2;
 }
 
 .Filter h2 {
-  width: 20ch;
+  width: 100%;
+  padding: 0 0 1em;
   text-align: center;
   font-weight: 700;
   color: rgb(11, 65, 11);
@@ -35,18 +38,22 @@
 .Filter > form {
   display: grid;
   grid-template-columns: repeat(2, minmax(6em, 1fr));
-  grid-row-gap: 3em;
-  padding: 1em 0;
+  gap: 3em 0.25em;
+  padding: 1em;
 }
 
 .Filter > form > .form-control {
   border-radius: 0;
 }
-#filter-toggle-btn{
+#filter-toggle-btn {
   max-width: 4em;
   margin-left: auto;
 }
 
+.Filter > form .form-control-label {
+  position: absolute;
+  translate: 0 -100%;
+}
 /*Desktop screen*/
 
 @media (min-width: 768px) {
@@ -57,12 +64,13 @@
   /* Filter */
   .Filter {
     position: relative;
-    display: block;
-    border: 1px solid lightgray;
-    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    max-width: 55ch;
   }
-  
-  #filter-toggle-btn{
+
+  #filter-toggle-btn {
     display: none;
   }
 }

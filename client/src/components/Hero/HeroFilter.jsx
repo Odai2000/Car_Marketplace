@@ -13,7 +13,7 @@ function HeroFilter() {
   const [model, setModel] = useState("");
   const [yearMin, setYearMin] = useState("");
   const [bodyType, setBodyType] = useState("");
-  const [mileageMin, setMileageMin] = useState("");
+  const [mileageMax, setMileageMax] = useState("");
   const [priceMax, setPriceMax] = useState("");
 
   const navigate = useNavigate();
@@ -69,7 +69,7 @@ function HeroFilter() {
     if (!makeData) setMake("");
     else {
       setMake(makeData.name);
-      setModel('');
+      setModel("");
     }
     setSelectedMake(makeData);
   };
@@ -81,7 +81,7 @@ function HeroFilter() {
       model,
       yearMin,
       bodyType,
-      mileageMin,
+      mileageMax,
       priceMax,
     });
 
@@ -138,9 +138,9 @@ function HeroFilter() {
             defaultOption={{ label: "Body type", value: "" }}
           ></Select>
           <Select
-            name="mileageMin"
-            value={mileageMin}
-            onChange={(e) => setMileageMin(e.target.value)}
+            name="mileageMax"
+            value={mileageMax}
+            onChange={(e) => setMileageMax(e.target.value)}
             options={mileageOptions}
             defaultOption={{ label: "Max mileage", value: "" }}
           />
