@@ -9,6 +9,7 @@ import AppDataProvider from "./context/AppDataProvider";
 import PersistLogin from "./components/persistLogin";
 import ReqAuth from "./components/ReqAuth";
 import UnAuthorized from "./components/pages/UnAuthorized/UnAuthorized";
+import UserAccount from "./components/pages/UserAccountPage/UserAccount";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
               <Route path="posts" element={<PostSearchResult />} />
 
               <Route element={<ReqAuth allowedRoles={["USER"]} />}>
+                <Route path="my-account/*" element={<UserAccount />} />
                 <Route path="new-post" element={<PostCreator />} />
               </Route>
             </Route>

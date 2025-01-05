@@ -1,0 +1,93 @@
+/* temp-fix */
+body{
+    
+  font-size: 0.75rem;
+  }
+
+
+.UserAccount, .EditUserAcount{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.user-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+  /* height: 33vh; */
+  /* background-color: var(--primary); */
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+.user-info .name {
+  font-size: min(2.5em,4vh);
+  font-weight: 800;
+  color:var(--primary)
+}
+.user-info .username {
+  font-size: 1em;
+  font-weight: 800;
+  color: #666;
+}
+.user-header .profile-image {
+  height: min(25vh,12em);
+  width: min(25vh,12em);
+  border: 0.25em #fff solid;
+  border-radius: 100%;
+  background-color: #ddd;
+}
+.user-header .default-profile-image {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 8em;
+}
+.UserAccount .edit-user-btn {
+  color: #fff;
+}
+
+/* Tabs */
+.UserAccount .tabs {
+  display: flex;
+  justify-content: center;
+  gap: 1em;
+}
+
+.UserAccount .tab {
+  padding: 1em;
+  color: var(--primary);
+}
+
+.UserAccount .tab:hover {
+  background-color: var(--primary);
+  color: #fff;
+  border-radius: 24px;
+}
+
+.edit-account-info{
+display: flex;
+flex-direction: column;
+gap: 1em;
+padding: 1em 2em;
+}
+.edit-account-info form{
+display: flex;
+flex-direction: column;
+gap: 1em;
+}
+
+/* temp-fix */
+@media(min-width:768px) {
+  body{
+    
+  font-size: 1rem;
+  }
+}

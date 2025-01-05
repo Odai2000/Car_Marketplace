@@ -66,18 +66,19 @@ function NavBar() {
       >
         <div className="nav-container">
           <div id="logo">
-            <Link to='/'> <img
-              src={
-                !scrolled && location.pathname == "/"
-                  ? "src/assets/logo-white.svg"
-                  : "src/assets/logo.svg"
-              }
-              alt="logo"
-            /></Link>
-           
+            <Link to="/">
+              <img
+                src={
+                  !scrolled && location.pathname == "/"
+                    ? "/src/assets/logo-white.svg"
+                    : "/src/assets/logo.svg"
+                }
+                alt="logo"
+              />
+            </Link>
           </div>
 
-          <nav className={'nav'}>
+          <nav className={"nav"}>
             <ul>
               <Items />
             </ul>
@@ -90,9 +91,11 @@ function NavBar() {
               <Button variant="secondary" styleName="logout-btn">
                 Logout
               </Button>
+              <Link to="/my-account">
               <div className="profile-icon">
                 <FaUser />
               </div>
+              </Link>
             </>
           ) : (
             <div className="btn-group">
