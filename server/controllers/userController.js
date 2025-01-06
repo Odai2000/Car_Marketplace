@@ -14,6 +14,23 @@ const getAllUsers = asyncHandler(async (req, res) => {
   res.status(200).json(users);
 });
 
+// *check how to combine these two
+const getUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.body.userId).select("-password").lean();
+
+  if (!user) return res.status(400).json({ message: "No user found" });
+
+  res.status(200).json(user);
+});
+
+const getUserPersonalData = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user.userId).select("-password").lean();
+
+  if (!user) return res.status(400).json({ message: "No user found" });
+
+  res.status(200).json(user);
+});
+
 const createUser = asyncHandler(async (req, res) => {
   const { username, password, firstName, lastName, email } = req.body;
 
@@ -146,18 +163,21 @@ const loginUser = asyncHandler(async (req, res) => {
         "Access-Control-Allow-METHODS",
         "GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS, PATCH"
       );
-      console.log(user)
-      const token = await Token.create({ userID: user._id,token:refreshToken });
-      if (!token) return res.status(500).send("server Error")
+      console.log(user);
+      const token = await Token.create({
+        userID: user._id,
+        token: refreshToken,
+      });
+      if (!token) return res.status(500).send("server Error");
       return res
         .status(200)
         .cookie("refreshToken", refreshToken, {
           httpOnly: true,
           secure: false,
           sameSite: "lax",
-          maxAge: 15 * 24 * 60 * 60 * 1000 // 15 days
+          maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
         })
-        .json({ accessToken: accessToken,roles:user.roles });
+        .json({ accessToken: accessToken, roles: user.roles });
     } else {
       return res.status(401).send("Authentication Failed.");
     }
@@ -183,7 +203,6 @@ const generateRefreshToken = (user) => {
   return jwt.sign(
     {
       userId: user._id,
-      roles:user.roles
     },
     process.env.REFRESH_TOKEN_SECRET,
     {
@@ -191,21 +210,27 @@ const generateRefreshToken = (user) => {
     }
   );
 };
+
+//generate access token
 const refreshToken = asyncHandler(async (req, res) => {
   try {
     //get cookie from request
     const token = await req.cookies.refreshToken;
-    console.log("token: ", token);
-    if (!token) return res.status(401).send();
+
+    console.log("token: ", token); 
+    
     //check if cookie exist in DB
+    if (!token) return res.status(401).send();
     const refreshToken = await Token.findOne({ token });
-    if (!refreshToken) return res.status(403).send("Invalid Token.");
+
     //double verify the token
+    if (!refreshToken) return res.status(403).send("Invalid Token.");
+
     jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
       if (err) return res.status(403).send("Invalid Token.");
       const accessToken = generateAccessToken(user);
 
-      res.status(200).json({ accessToken: accessToken,roles:user.roles });
+      res.status(200).json({ accessToken: accessToken, roles: user.roles });
     });
   } catch (error) {
     console.log(error);
@@ -215,6 +240,8 @@ const refreshToken = asyncHandler(async (req, res) => {
 
 module.exports = {
   getAllUsers,
+  getUser,
+  getUserPersonalData,
   createUser,
   updateUser,
   deleteUser,

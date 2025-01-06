@@ -1,23 +1,24 @@
 const userController = require("../controllers/userController");
+const authenticateToken = require("../middleware/authenticateToken");
 const express = require("express");
 const router = express.Router();
 
 router
   .route("/")
-  .get(userController.getAllUsers)
+  .get(authenticateToken, userController.getAllUsers)
+  .get(authenticateToken, userController.getUserPersonalData)
   .post(userController.createUser)
-  .patch(userController.updateUser)
-  
+  .patch(authenticateToken, userController.updateUser);
+
 router
   .route("/:id")
-  .delete(userController.deleteUser)
+  .get(authenticateToken, userController.getUserByid)
+  .delete(authenticateToken, userController.deleteUser);
 
-  router
-  .route("/login")
-  .post(userController.loginUser)
+router.route("/me").get(authenticateToken, userController.getUserPersonalData);
 
-  router
-  .route("/token")
-  .post(userController.refreshToken)
-  
+router.route("/login").post(userController.loginUser);
+
+router.route("/token").post(userController.refreshToken);
+
 module.exports = router;
