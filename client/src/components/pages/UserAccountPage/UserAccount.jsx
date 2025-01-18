@@ -3,11 +3,40 @@ import Button from "../../UI/Button/Button";
 import Input from "../../UI/FormControls/Input";
 import "./UserAccount.css";
 import { Link, useLocation } from "react-router-dom";
+import {  useEffect, useState } from "react";
+import useAuth from "../../../hooks/useAuth";
+
+
+const serverUrl = import.meta.env.VITE_SERVER_URL;
+
 
 const UserAccount = () => {
-  const fetchUserData = () => {};
+  const [userData, setUserData] = useState(null);
+  
+  const { auth } = useAuth();
+  useEffect(() => {
+    fetch(`${serverUrl}/user/me`,{
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${auth.accessToken}`
+      }})
+      .then((response) => {
+        console.log(response)
+        response.json()
+        .then((data) => {
+          setUserData(data);
+          console.log("data",data)
+        })   .catch((err) => {
+          console.error("Error fetching user data:", err);
+        });
+      })
+  }, [auth]);
+
   const location = useLocation();
-  return (
+  if(!userData) return 'loading...'
+    
+    return (
     <>
       <div className="UserAccount">
         <div className="user-header">
@@ -17,8 +46,8 @@ const UserAccount = () => {
             </div>
           </div>
           <div className="user-info">
-            <div className="name">John Smith</div>
-            <div className="username">@Username</div>
+            <div className="name">{`${userData?.firstName} ${userData?.lastName}`}</div>
+            <div className="username">{userData?.username}</div>
 
             {location.pathname === "/my-account" ? (
               <Link to="/my-account/edit">

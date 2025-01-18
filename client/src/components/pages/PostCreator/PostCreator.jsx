@@ -84,6 +84,7 @@ const PostCreator = () => {
 
     await fetch("http://localhost:8080/post", {
       method: "POST",
+      credentials: "include",
       body: formData,
     })
       .then((response) => response.json())

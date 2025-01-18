@@ -88,13 +88,17 @@ function NavBar() {
         <div className="navBar-rightside">
           {auth ? (
             <>
+            <Link to="/new-post">
+              <Button variant="primary" styleName="new-post-btn">
+                New Post
+              </Button></Link>
               <Button variant="secondary" styleName="logout-btn">
                 Logout
               </Button>
               <Link to="/my-account">
-              <div className="profile-icon">
-                <FaUser />
-              </div>
+                <div className="profile-icon">
+                  <FaUser style={{ color: "var(--primary)" }} />
+                </div>
               </Link>
             </>
           ) : (
