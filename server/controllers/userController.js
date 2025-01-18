@@ -203,6 +203,7 @@ const generateRefreshToken = (user) => {
   return jwt.sign(
     {
       userId: user._id,
+      roles:user.roles
     },
     process.env.REFRESH_TOKEN_SECRET,
     {
@@ -211,8 +212,8 @@ const generateRefreshToken = (user) => {
   );
 };
 
-//generate access token
-const refreshToken = asyncHandler(async (req, res) => {
+//generate access token; refresh is a verb
+const refreshTheToken = asyncHandler(async (req, res) => {
   try {
     //get cookie from request
     const token = await req.cookies.refreshToken;
@@ -224,13 +225,13 @@ const refreshToken = asyncHandler(async (req, res) => {
     const refreshToken = await Token.findOne({ token });
 
     //double verify the token
-    if (!refreshToken) return res.status(403).send("Invalid Token.");
+    if (!refreshToken) return res.status(403).send(`Invalid token: ${refreshToken}`); 
 
-    jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-      if (err) return res.status(403).send("Invalid Token.");
-      const accessToken = generateAccessToken(user);
+    jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (err, data) => {
+      if (err) return res.status(403).send(`Invalid token: ${err}`); 
+      const accessToken = generateAccessToken({'_id':data.userId});
 
-      res.status(200).json({ accessToken: accessToken, roles: user.roles });
+      res.status(200).json({ accessToken: accessToken, roles: data.roles });
     });
   } catch (error) {
     console.log(error);
@@ -246,5 +247,5 @@ module.exports = {
   updateUser,
   deleteUser,
   loginUser,
-  refreshToken,
+  refreshTheToken,
 };

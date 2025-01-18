@@ -6,19 +6,18 @@ const router = express.Router();
 router
   .route("/")
   .get(authenticateToken, userController.getAllUsers)
-  .get(authenticateToken, userController.getUserPersonalData)
   .post(userController.createUser)
   .patch(authenticateToken, userController.updateUser);
 
+router.route("/me").get(authenticateToken, userController.getUserPersonalData);
 router
   .route("/:id")
-  .get(authenticateToken, userController.getUserByid)
+  .get(authenticateToken, userController.getUser)
   .delete(authenticateToken, userController.deleteUser);
 
-router.route("/me").get(authenticateToken, userController.getUserPersonalData);
 
 router.route("/login").post(userController.loginUser);
 
-router.route("/token").post(userController.refreshToken);
+router.route("/token").post(userController.refreshTheToken);
 
 module.exports = router;
