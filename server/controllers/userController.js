@@ -75,6 +75,9 @@ const updateUser = asyncHandler(async (req, res) => {
   const { id, username, password, email, firstName, lastName, roles } =
     req.body;
 
+  if (!req.user._id === id || !req.user.roles.includes("ADMIN"))
+    return res.status(403).send("Forbidden");
+  
   if (
     !id ||
     !username ||
@@ -203,7 +206,7 @@ const generateRefreshToken = (user) => {
   return jwt.sign(
     {
       userId: user._id,
-      roles:user.roles
+      roles: user.roles,
     },
     process.env.REFRESH_TOKEN_SECRET,
     {
@@ -218,18 +221,19 @@ const refreshTheToken = asyncHandler(async (req, res) => {
     //get cookie from request
     const token = await req.cookies.refreshToken;
 
-    console.log("token: ", token); 
-    
+    console.log("token: ", token);
+
     //check if cookie exist in DB
     if (!token) return res.status(401).send();
     const refreshToken = await Token.findOne({ token });
 
     //double verify the token
-    if (!refreshToken) return res.status(403).send(`Invalid token: ${refreshToken}`); 
+    if (!refreshToken)
+      return res.status(403).send(`Invalid token: ${refreshToken}`);
 
     jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (err, data) => {
-      if (err) return res.status(403).send(`Invalid token: ${err}`); 
-      const accessToken = generateAccessToken({'_id':data.userId});
+      if (err) return res.status(403).send(`Invalid token: ${err}`);
+      const accessToken = generateAccessToken({ _id: data.userId });
 
       res.status(200).json({ accessToken: accessToken, roles: data.roles });
     });

@@ -52,11 +52,13 @@ const getPosts = asyncHandler(async (req, res) => {
   } = req.query;
 
   const query = {
-    ...(make && { "car.make": { $regex: new RegExp(make, 'i') } }),
-    ...(model && { "car.model":{ $regex: new RegExp(model, 'i') }}),
-    ...(bodyType && { "car.bodyType": { $regex: new RegExp(bodyType, 'i') } }),
-    ...(transmission && { "car.transmission": { $regex: new RegExp(transmission, 'i') }}),
-    ...(fuel && { "car.fuel": { $regex: new RegExp(fuel, 'i') } }),
+    ...(make && { "car.make": { $regex: new RegExp(make, "i") } }),
+    ...(model && { "car.model": { $regex: new RegExp(model, "i") } }),
+    ...(bodyType && { "car.bodyType": { $regex: new RegExp(bodyType, "i") } }),
+    ...(transmission && {
+      "car.transmission": { $regex: new RegExp(transmission, "i") },
+    }),
+    ...(fuel && { "car.fuel": { $regex: new RegExp(fuel, "i") } }),
   };
 
   if (yearMin || yearMax) {
@@ -112,11 +114,12 @@ const getPosts = asyncHandler(async (req, res) => {
 
 const createPost = asyncHandler(async (req, res) => {
   try {
-    let { title, desc = "", user, car } = req.body;
+    let { title, desc = "", car } = req.body;
+    const user = req.user._id;
 
     const files = req.files;
     car = JSON.parse(car);
-
+    
     //confirm data
     if (!title || !user || !car) {
       return res.status(400).json({ message: "All fields are required" });

@@ -10,11 +10,11 @@ router
   .patch(authenticateToken, userController.updateUser);
 
 router.route("/me").get(authenticateToken, userController.getUserPersonalData);
+
 router
   .route("/:id")
   .get(authenticateToken, userController.getUser)
   .delete(authenticateToken, userController.deleteUser);
-
 
 router.route("/login").post(userController.loginUser);
 
