@@ -19,7 +19,7 @@ const Input = ({
     const { required, minLength, maxLength, regex, customValidator, numeric } =
       validationRules;
 
-    if (required && (value === '' || value === null)) {
+    if (required && (value === "" || value === null)) {
       return `${label ? label : "This field"}  is required.`;
     }
 
@@ -43,7 +43,10 @@ const Input = ({
       return `${label ? label : "This field"} must be a numeric value.`;
     }
 
-    // TODO: custom validtor function
+    if (customValidator ) {
+      return customValidator(value)
+    }
+
 
     return ""; // no errors
   };
@@ -55,7 +58,7 @@ const Input = ({
     setErrorMessage(errorMessage);
   };
   return (
-    <div className={`form-control-container ${styleName?styleName:''}`}>
+    <div className={`form-control-container ${styleName ? styleName : ""}`}>
       {label && (
         <label className="form-control-label input-label" htmlFor={name}>
           {label}

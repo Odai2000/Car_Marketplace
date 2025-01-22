@@ -95,7 +95,7 @@ function NavBar() {
               <Button variant="secondary" styleName="logout-btn">
                 Logout
               </Button>
-              <Link to="/my-account">
+              <Link to="/me">
                 <div className="profile-icon">
                   <FaUser style={{ color: "var(--primary)" }} />
                 </div>

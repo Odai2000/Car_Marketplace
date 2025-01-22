@@ -22,7 +22,7 @@ function App() {
               <Route path="posts" element={<PostSearchResult />} />
 
               <Route element={<ReqAuth allowedRoles={["USER"]} />}>
-                <Route path="my-account/*" element={<UserAccount />} />
+                <Route path="me/*" element={<UserAccount />} />
                 <Route path="new-post" element={<PostCreator />} />
               </Route>
             </Route>

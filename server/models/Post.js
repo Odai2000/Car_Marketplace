@@ -68,11 +68,7 @@ const carSchema = new mongoose.Schema({
     min: 0,
   },
 });
-carSchema.pre("validate", async function (next) {
-  if (this.make && this.model) {
-    const make = await Make.findOne({ name: this.make });
-  }
-});
+
 const postSchema = new mongoose.Schema(
   {
     title: {
