@@ -1,10 +1,31 @@
 require("dotenv").config();
 const PORT = process.env.PORT || 3500;
+
+// Core 
+const http = require('http')
+
 //Express
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser")
+
+const server = http.createServer(app)
+
+//socket.io 
+const { Server } = require('socket.io');
+const io = new Server(server,{
+  cors: {
+    origin: ["http://localhost:8097", "http://192.168.1.101:8097"],
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+})
+
+io.on('connection', (socket) => {
+  console.log('a user connected');
+});
+
 
 //DB
 const { default: mongoose } = require("mongoose");
@@ -13,8 +34,8 @@ connectDB();
 
 //JWT
 const jwt = require('jsonwebtoken')
-ACCESS_TOKEN_SECRET =process.env.ACCESS_TOKEN_SECRET
-REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET
+const ACCESS_TOKEN_SECRET =process.env.ACCESS_TOKEN_SECRET
+const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET
 
 //CORS
 const cors = require("cors");
@@ -40,5 +61,5 @@ app.use("/post", require("./routes/post"));
 app.use("/data",require("./routes/data"))
 
 mongoose.connection.once("open", () => {
-  app.listen(PORT, () => console.log(`server running on port ${PORT}`));
+  server.listen(PORT, () => console.log(`server running on port ${PORT}`));
 });
