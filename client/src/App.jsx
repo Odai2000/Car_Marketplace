@@ -10,6 +10,7 @@ import PersistLogin from "./components/persistLogin";
 import ReqAuth from "./components/ReqAuth";
 import UnAuthorized from "./components/pages/UnAuthorized/UnAuthorized";
 import UserAccount from "./components/pages/UserAccountPage/UserAccount";
+import Chat from "./components/Chat/Chat";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
               <Route element={<ReqAuth allowedRoles={["USER"]} />}>
                 <Route path="me/*" element={<UserAccount />} />
                 <Route path="new-post" element={<PostCreator />} />
+                <Route path="chat" element={<Chat />} />
               </Route>
             </Route>
 

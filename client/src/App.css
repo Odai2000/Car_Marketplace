@@ -77,3 +77,13 @@ header.home-header {
   display: flex;
   gap: 0.5em;
 }
+
+/* flex shortcuts classes */
+.flex-col{
+  display: flex;
+  flex-direction: column;
+}
+
+.flex{
+  display: flex;
+}

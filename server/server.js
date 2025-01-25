@@ -13,6 +13,8 @@ const cookieParser = require("cookie-parser")
 const server = http.createServer(app)
 
 //socket.io 
+const chatSocket = require("./sockets/chatSocket");
+const authenticateSocket = require('./middleware/authenticateSocket')
 const { Server } = require('socket.io');
 const io = new Server(server,{
   cors: {
@@ -22,10 +24,14 @@ const io = new Server(server,{
   },
 })
 
+io.use(authenticateSocket)
 io.on('connection', (socket) => {
   console.log('a user connected');
 });
 
+io.on('join_room',(socket)=>{
+  chatSocket
+})
 
 //DB
 const { default: mongoose } = require("mongoose");
@@ -59,7 +65,11 @@ app.use("/", require("./routes/root"));
 app.use("/user", require("./routes/user"));
 app.use("/post", require("./routes/post"));
 app.use("/data",require("./routes/data"))
+// app.use("/chat",require("./routes/chat"))
+
 
 mongoose.connection.once("open", () => {
   server.listen(PORT, () => console.log(`server running on port ${PORT}`));
 });
+
+
