@@ -1,6 +1,5 @@
 import { FaUser } from "react-icons/fa6";
 import Button from "../../UI/Button/Button";
-import Input from "../../UI/FormControls/Input";
 import "./UserAccount.css";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -18,23 +17,7 @@ const UserAccount = () => {
 
   const { auth } = useAuth();
   const navigate = useNavigate;
-  const update = async () => {
-    await fetch(`${serverUrl}/user/update`, {
-      method: "PATCH",
-      headers: {
-        "content-Type": "application/json",
-        Authorization: `Bearer ${auth.accessToken}`,
-      },
-      body: JSON.stringify({
-        firstName: firstName,
-        lastName: lastName,
-        password: password,
-        email: email,
-      }).then((response) => {
-        if (response.ok) navigate("/me");
-      }),
-    });
-  };
+
 
   useEffect(() => {
     fetch(`${serverUrl}/user/me`, {
@@ -72,7 +55,7 @@ const UserAccount = () => {
             <div className="username">{userData?.username}</div>
 
             {location.pathname === "/me" ? (
-              <Link to="/me/details">
+              <Link to="/me/settings">
                 <Button styleName="edit-user-btn" variant="primary">
                   Edit details
                 </Button>
@@ -103,41 +86,7 @@ const UserAccount = () => {
         ) : (
           ""
         )}
-        {location.pathname === "/me/details" ? (
-          <div className="edit-account-info">
-            <form>
-              <Input
-                label="First Name"
-                name="firstName"
-                value={userData.firstName}
-                placeholder="Enter First name"
-              >
-                {firstName}
-              </Input>
-              <Input
-                label="Last Name"
-                name="lastName"
-                placeholder="Enter Last name"
-              />
-              <Input label="Email" name="email" placeholder="Enter email" />
-              {/* <Input
-                label="Mobile Number"
-                name="mobileNo"
-                placeholder="Enter mobile number"
-              /> */}
-              <div className="save-btn-container" onClick={update}>
-                <Button variant="primary">Save</Button>
-              </div>
-            </form>
-            <div className="delete-btn-container">
-              <Button variant="primary" destructive>
-                Delete Account
-              </Button>
-            </div>
-          </div>
-        ) : (
-          ""
-        )}
+
       </div>
     </>
   );

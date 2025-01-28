@@ -1,5 +1,5 @@
 const userController = require("../controllers/userController");
-const authenticateToken = require("../middleware/authenticateSocket");
+const authenticateToken = require("../middleware/authenticateToken");
 const express = require("express");
 const router = express.Router();
 

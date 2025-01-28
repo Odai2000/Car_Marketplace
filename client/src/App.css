@@ -16,10 +16,7 @@
   --warning: #f6ff52;
 }
 #root {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  
+  display: contents;
 }
 img {
   height: 100%;

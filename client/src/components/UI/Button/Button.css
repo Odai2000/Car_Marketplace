@@ -32,9 +32,9 @@
     text-decoration: underline;
   }
   
-  .destructive {
-    color: white;
-  }
+  /* .destructive {
+    color: var(--destructive);
+  } */
   
   .primary.destructive {
     background-color: var(--destructive);
@@ -67,3 +67,5 @@
   .round {
     border-radius: 64px;
   }
+
+ 
