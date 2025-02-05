@@ -12,9 +12,21 @@ router
 router.route("/me").get(authenticateToken, userController.getUserPersonalData);
 
 router
-  .route("/:id")
+  .route("/me/change-password")
+  .patch(authenticateToken, userController.changePassword);
+
+router
+  .route("/:_id")
   .get(authenticateToken, userController.getUser)
   .delete(authenticateToken, userController.deleteUser);
+
+ router
+  .route("/:_id/verify-email/:token")
+  .get(userController.verifyEmail)
+  
+router
+  .route("/:_id/resend-email-verification")
+  .get(authenticateToken, userController.resendEmailVerification)
 
 router.route("/login").post(userController.loginUser);
 

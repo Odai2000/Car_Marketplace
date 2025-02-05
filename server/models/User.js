@@ -39,6 +39,12 @@ const userSchema = new mongoose.Schema(
       required: true,
       min: 2,
     },
+    profileImageId: { type: String },
+    status: {
+      type: [String],
+      enum: ["offline", "online","soft_deleted"],
+      default: ["offline"],
+    },
     roles: {
       type: [String],
       enum: ["USER", "ADMIN"],
