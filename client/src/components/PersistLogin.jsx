@@ -10,7 +10,6 @@ const PersistLogin = () => {
   
   useEffect(() => {
     let isMounted = true;
-    console.log("mounted");
     const verifyLogin = async () => {
       try {
         await refresh();

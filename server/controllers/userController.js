@@ -18,15 +18,16 @@ const getAllUsers = asyncHandler(async (req, res) => {
 
 // *check how to combine these two
 const getUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.body.userId).select("-password").lean();
+  const user = await User.findById(req.body._id).select("-password").lean();
 
   if (!user) return res.status(400).json({ message: "No user found" });
 
   res.status(200).json(user);
 });
 
+// obsolete, might remove later
 const getUserPersonalData = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user.userId).select("-password").lean();
+  const user = await User.findById(req.user._id).select("-password").lean();
 
   if (!user) return res.status(400).json({ message: "No user found" });
 
@@ -76,50 +77,44 @@ const createUser = asyncHandler(async (req, res) => {
 });
 
 const updateUser = asyncHandler(async (req, res) => {
-  const { id, username, email, firstName, lastName, roles } = req.body;
+  const { _id, username, email, firstName, lastName, roles } = req.body;
 
-  if (!req.user._id === id || !req.user.roles.includes("ADMIN"))
+  if (req.user._id !== _id && !req.user.roles.includes("ADMIN")) {
+    console.log(`${req.user._id} === ${_id} `);
     return res.status(403).send("Forbidden");
-
-  if (
-    !id ||
-    !username ||
-    !email ||
-    !firstName ||
-    !lastName ||
-    (!Array.isArray(roles) && res.status(400).json({ message: roles }))
-  ) {
-    return res.status(400).json({ message: "All fields are required" });
   }
 
-  const user = await User.findById(id);
+  const user = await User.findById(_id);
 
   if (!user) {
     return res
       .status(400)
-      .json({ message: `No user with id: ${id} was found` });
+      .send( `No user with id: ${_id} was found` );
   }
 
   //Check for username duplicate
-  const duplicate = await User.findOne({ username }).lean().exec();
-
-  if (duplicate && duplicate?._id.toString() !== id.toString()) {
-    return res.status(400).json({ message: "Username already exists" });
+  if (username) {
+    const duplicate = await User.findOne({ username }).lean();
+    if (duplicate && duplicate?._id.toString() !== _id.toString()) {
+      return res.status(400).send("Username already exists");
+    }
   }
 
-  user.username = username;
-  user.firstName = firstName;
-  user.lastName = lastName;
-  user.email = email;
-  user.roles = roles;
+  Object.assign(user, {
+    ...(username && { username }),
+    ...(firstName && { firstName }),
+    ...(lastName && { lastName }),
+    ...(email && { email }),
+    ...(roles && { roles }),
+  });
 
   const updatedUser = await user.save();
 
   if (!updatedUser) {
-    return res.status(400).json({ message: "Update failed" });
+    return res.status(400).send("Update failed");
   }
 
-  res.status(200).json({ message: "User updated." });
+  res.status(200).json({ message: "User updated.", updatedUser: updatedUser });
 });
 
 const changePassword = asyncHandler(async (req, res) => {
@@ -197,12 +192,23 @@ const loginUser = asyncHandler(async (req, res) => {
         "Access-Control-Allow-METHODS",
         "GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS, PATCH"
       );
-      console.log(user);
+
       const token = await Token.create({
         userID: user._id,
         token: refreshToken,
       });
+
       if (!token) return res.status(500).send("server Error");
+      const userData = {
+        _id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        username: user.username,
+        email: user.email,
+        emailVert: user.emailVert,
+        profileImageId: user.profileImageId,
+        roles: user.roles,
+      };
       return res
         .status(200)
         .cookie("refreshToken", refreshToken, {
@@ -211,7 +217,7 @@ const loginUser = asyncHandler(async (req, res) => {
           sameSite: "lax",
           maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
         })
-        .json({ accessToken: accessToken, roles: user.roles });
+        .json({ accessToken: accessToken, userData: userData });
     } else {
       return res.status(401).send("Authentication Failed.");
     }
@@ -254,7 +260,8 @@ const verifyEmail = asyncHandler(async (req, res) => {
 const generateAccessToken = (user) => {
   return jwt.sign(
     {
-      userId: user._id,
+      _id: user._id,
+      roles: user.roles,
     },
     process.env.ACCESS_TOKEN_SECRET,
     {
@@ -266,7 +273,7 @@ const generateAccessToken = (user) => {
 const generateRefreshToken = (user) => {
   return jwt.sign(
     {
-      userId: user._id,
+      _id: user._id,
       roles: user.roles,
     },
     process.env.REFRESH_TOKEN_SECRET,
@@ -309,11 +316,26 @@ const refreshTheToken = asyncHandler(async (req, res) => {
     if (!refreshToken)
       return res.status(403).send(`Invalid token: ${refreshToken}`);
 
-    jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (err, data) => {
+    jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, async (err, data) => {
       if (err) return res.status(403).send(`Invalid token: ${err}`);
-      const accessToken = generateAccessToken({ _id: data.userId });
 
-      res.status(200).json({ accessToken: accessToken, roles: data.roles });
+      const user = await User.findById(data._id).lean();
+      const accessToken = generateAccessToken(user);
+
+      if (!user) res.status(403).send(`Invalid token: ${err}`);
+
+      const userData = {
+        _id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        username: user.username,
+        email: user.email,
+        emailVert: user.emailVert,
+        profileImageId: user.profileImageId,
+        roles: user.roles,
+      };
+
+      res.status(200).json({ accessToken: accessToken, userData: userData });
     });
   } catch (error) {
     console.log(error);

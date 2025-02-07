@@ -9,8 +9,8 @@ import { useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 
 function LoginForm(props) {
-  const [username, setUsername] = useState([]);
-  const [password, setPassword] = useState([]);
+  const [username, setUsername] = useState();
+  const [password, setPassword] = useState();
 
   const { show, onCancel } = props;
   const { setAuth, persist, setPersist } = useAuth();
@@ -28,13 +28,17 @@ function LoginForm(props) {
       },
     })
       .then((response) => {
+        if (!response.ok) {
+          throw new Error("Login failed");
+        }
         return response.json();
       })
       .then((data) => {
         setAuth((prev) => ({
           ...prev,
           accessToken: data.accessToken,
-          roles: data.roles,
+          roles: data.userData.roles,
+          userData: data.userData,
         }));
       })
       .catch((error) => {
@@ -92,7 +96,7 @@ function LoginForm(props) {
 
           <div id="remeber-me-container">
             <Input type="checkbox" onChange={togglePersist} checked={persist} />
-            <label >Remeber Me</label>
+            <label>Remeber Me</label>
           </div>
 
           <Button type="submit" variant="primary" styleName="login-btn col-2">
@@ -112,7 +116,11 @@ function LoginForm(props) {
               </Button>
               <Button variant="secondary link round">
                 <FaFacebook
-                  style={{ color: " #4267B2", margin: "0 2px 2px" ,minHeight:"1em"}}
+                  style={{
+                    color: " #4267B2",
+                    margin: "0 2px 2px",
+                    minHeight: "1em",
+                  }}
                 />
                 Continue with Facebook
               </Button>
