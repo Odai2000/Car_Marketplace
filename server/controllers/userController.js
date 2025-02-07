@@ -54,7 +54,7 @@ const createUser = asyncHandler(async (req, res) => {
   if (duplicate)
     return res.status(400).json({ message: "Username already exists" });
 
-  if (!password.length >= 8)
+  if (password.length < 8)
     return res.status("400").json({ message: "Password is too short!" });
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -87,9 +87,7 @@ const updateUser = asyncHandler(async (req, res) => {
   const user = await User.findById(_id);
 
   if (!user) {
-    return res
-      .status(400)
-      .send( `No user with id: ${_id} was found` );
+    return res.status(400).send(`No user with id: ${_id} was found`);
   }
 
   //Check for username duplicate
@@ -114,17 +112,18 @@ const updateUser = asyncHandler(async (req, res) => {
     return res.status(400).send("Update failed");
   }
 
+  if (email && email !== user.email) {
+    sendVerificationLink(user);
+  }
+
   res.status(200).json({ message: "User updated.", updatedUser: updatedUser });
 });
 
 const changePassword = asyncHandler(async (req, res) => {
   const _id = req.user._id;
-
-  if (
-    !password ||
-    (!Array.isArray(roles) && res.status(400).json({ message: roles }))
-  ) {
-    return res.status(400).json({ message: "All fields are required" });
+  const { password, newPassword } = req.body;
+  if (!password || !newPassword) {
+    return res.status(400).send("All fields are required");
   }
 
   const user = await User.findById(_id);
@@ -132,38 +131,36 @@ const changePassword = asyncHandler(async (req, res) => {
   if (!user) {
     return res
       .status(400)
-      .json({ message: `No user with id: ${id} was found` });
+      .json({ message: `No user with id: ${_id} was found` });
+  }
+  if (!(await bcrypt.compare(password, user.password))) {
+    return res.status(400).send("Authentication failed");
   }
 
-  if (!password >= 8) {
-    res.send
-      .status(400)
-      .json({ message: "password must be at least 8 characters long" });
-    user.password = await bcrypt.hash(password, 10);
+  if (newPassword < 8) {
+    res.status(400).send("password must be at least 8 characters long");
   }
+
+  user.password = await bcrypt.hash(newPassword, 10);
 
   const updatedUser = await user.save();
-
   if (!updatedUser) {
-    return res.status(400).json({ message: "Password update failed" });
+    return res.status(400).json({ message: "Password change failed" });
   }
-
-  sendVerificationLink(user);
 
   res.status(200).json({ message: "Password changed." });
 });
 
 const deleteUser = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  console.log(id);
-  const user = await User.findById(id).lean().exec();
+  const { _id } = req.body;
 
-  if (!user) {
-    return res
-      .status(404)
-      .json({ message: `No user with id: ${id} was found.` });
+  if (req.user._id !== _id && !req.user.roles.includes("ADMIN")) {
+    console.log(`${req.user._id} === ${_id} `);
+    return res.status(403).send("Forbidden");
   }
-  const queryResult = await User.deleteOne({ _id: id }).exec();
+  
+
+  const queryResult = await User.findByIdAndDelete(_id).lean();
 
   res.json({
     message: `User ${queryResult.username} with id: ${queryResult._id} deleted.`,

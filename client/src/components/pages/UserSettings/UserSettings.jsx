@@ -3,7 +3,7 @@ import Button from "../../UI/Button/Button";
 import "./UserSettings.css";
 import Input from "../../UI/FormControls/Input";
 import useAuth from "../../../hooks/useAuth";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   FaAddressCard,
   FaArrowRightFromBracket,
@@ -15,51 +15,106 @@ const serverUrl = import.meta.env.VITE_SERVER_URL;
 
 const UserSettings = () => {
   const [view, setView] = useState("profile");
-  // const [view, setView] = useState("personalInformation");
-  const [userData, setUserData] = useState("personalInformation");
+  // const [userData, setUserData] = useState({});
 
-  const [firstName, setFirstName] = useState(null);
-  const [lastName, setLastName] = useState(null);
-  const [password, setPassword] = useState(null);
-  const [email, setEmail] = useState(null);
+  const [firstName, setFirstName] = useState("");
+  const [username, setUsername] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
 
-  const { auth } = useAuth();
-  const update = async () => {
-    await fetch(`${serverUrl}/user/update`, {
+  const [password, setPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const { auth, setAuth } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSave = async (e) => {
+    e.preventDefault();
+    await fetch(`${serverUrl}/user`, {
       method: "PATCH",
       headers: {
         "content-Type": "application/json",
         Authorization: `Bearer ${auth.accessToken}`,
       },
       body: JSON.stringify({
+        _id: auth.userData._id,
         firstName: firstName,
         lastName: lastName,
         password: password,
         email: email,
-      }).then((response) => {
-        if (response.ok) navigate("/me");
       }),
-    });
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+      })
+      .then((data) => {
+        setAuth((prev) => ({
+          ...prev,
+          userData: data.updatedUser,
+        }));
+        // navigate("/me");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
-  useEffect(() => {
-    fetch(`${serverUrl}/user/me`, {
-      method: "GET",
+  const handlePasswordChange = async (e) => {
+    e.preventDefault();
+    await fetch(`${serverUrl}/me/change-password`, {
+      method: "PATCH",
       headers: {
-        "Content-Type": "application/json",
+        "content-Type": "application/json",
         Authorization: `Bearer ${auth.accessToken}`,
       },
-    }).then((response) => {
-      response
-        .json()
-        .then((data) => {
-          setUserData(data);
-        })
-        .catch((err) => {
-          console.error("Error fetching user data:", err);
-        });
-    });
+      body: JSON.stringify({
+        password: password,
+        newPassword: newPassword,
+        confirmPassword: confirmPassword,
+      }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          navigate("/me/settings");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const handleAccountDelete = async (e) => {
+    e.preventDefault();
+    await fetch(`${serverUrl}/user`, {
+      method: "DELETE",
+      credentials: "include",
+      headers: {
+        "content-Type": "application/json",
+        Authorization: `Bearer ${auth.accessToken}`,
+        
+      },
+      body: JSON.stringify({
+        _id: auth.userData._id,
+      }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  useEffect(() => {
+    setFirstName(auth.userData.firstName);
+    setLastName(auth.userData.lastName);
+    setUsername(auth.userData.username);
+    setEmail(auth.userData.email);
   }, [auth]);
+
   return (
     <>
       <div className="UserSettings">
@@ -108,9 +163,7 @@ const UserSettings = () => {
                   <FaUser style={{ color: "#fff" }} />
                 </div>
               </div>
-              <div className="name">
-                {userData.firstName + " " + userData.lastName}
-              </div>
+              <div className="name">{firstName + " " + lastName}</div>
             </div>
             <div className="logout-icon">
               <FaArrowRightFromBracket />
@@ -120,9 +173,14 @@ const UserSettings = () => {
         <div className="config-panel">
           {view === "profile" ? (
             <div className="view profile-config">
-              <Button>Verify Email</Button>
-              <Button>Change password</Button>
-              <Button variant="primary" destructive>
+              <Button
+                onClick={() => {
+                  setView("changePassword");
+                }}
+              >
+                Change password
+              </Button>
+              <Button variant="primary" onClick={handleAccountDelete} destructive>
                 Delete Account
               </Button>
             </div>
@@ -136,40 +194,86 @@ const UserSettings = () => {
                 <Input
                   label="First Name"
                   name="firstName"
-                  value={userData.firstName}
-                  // onChange={(e) => setFirstName(e.target.value)}
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
                   placeholder="Enter First name"
-                >
-                  {firstName}
-                </Input>
+                  validationRules={{
+                    required: true,
+                    minLength: 2,
+                    maxLength: 24,
+                  }}
+                ></Input>
                 <Input
                   label="Last Name"
                   name="lastName"
-                  value={userData.lastName}
+                  value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                   placeholder="Enter Last name"
+                  validationRules={{
+                    required: true,
+                    minLength: 2,
+                    maxLength: 24,
+                  }}
                 />
                 <Input
                   label="Email"
                   name="email"
-                  value={userData.email}
-                  onChange={(e) => setEmail(e.target.email)}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter email"
+                  validationRules={{ required: true, email: true }}
                 />
                 {/* <Input
                 label="Mobile Number"
                 name="mobileNo"
                 placeholder="Enter mobile number"
               /> */}
-                <div className="save-btn-container" onClick={""}>
-                  <Button variant="primary" onClick={update}>Save</Button>
+                <div className="save-btn-container">
+                  <Button variant="primary" onClick={handleSave}>
+                    Save
+                  </Button>
                 </div>
               </form>
-              <div className="delete-btn-container">
-                <Button variant="primary" destructive>
-                  Delete Account
-                </Button>
-              </div>
+            </div>
+          ) : (
+            ""
+          )}
+
+          {view === "changePassword" ? (
+            <div className="change-password ">
+              <h2>Change Password</h2>
+              <form>
+                <Input
+                  label="Current Password"
+                  name="password"
+                  type="password"
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter password..."
+                  validationRules={{ required: true, minLength: 8 }}
+                />
+                <Input
+                  label="New Password"
+                  name="newPassword"
+                  type="password"
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="Enter new password..."
+                  validationRules={{ required: true, minLength: 8 }}
+                />
+                <Input
+                  label="Confirm Password"
+                  name="confirmPassword"
+                  type="password"
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="confirm password..."
+                  validationRules={{ required: true, minLength: 8 }}
+                />
+
+                <div className="change-btn-container">
+                  <Button variant="primary" onClick={handlePasswordChange}>
+                    Change
+                  </Button>
+                </div>
+              </form>
             </div>
           ) : (
             ""

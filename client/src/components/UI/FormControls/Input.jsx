@@ -16,7 +16,7 @@ const Input = ({
   const [errorMessage, setErrorMessage] = useState("");
 
   const validate = (value) => {
-    const { required, minLength, maxLength, regex, customValidator, numeric } =
+    const { required, minLength, maxLength, regex, customValidator, numeric,email } =
       validationRules;
 
     if (required && (value === "" || value === null)) {
@@ -41,6 +41,9 @@ const Input = ({
 
     if (numeric && isNaN(value)) {
       return `${label ? label : "This field"} must be a numeric value.`;
+    }
+    if (email && !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)) {
+      return `Enter valid email address.`;
     }
 
     if (customValidator ) {

@@ -7,9 +7,12 @@ router
   .route("/")
   .get(authenticateToken, userController.getAllUsers)
   .post(userController.createUser)
-  .patch(authenticateToken, userController.updateUser);
+  .patch(authenticateToken, userController.updateUser)
+  .delete(authenticateToken, userController.deleteUser);
 
-router.route("/me").get(authenticateToken, userController.getUserPersonalData);
+router
+  .route("/me")
+  .get(authenticateToken, userController.getUserPersonalData)
 
 router
   .route("/me/change-password")
@@ -18,15 +21,12 @@ router
 router
   .route("/:_id")
   .get(authenticateToken, userController.getUser)
-  .delete(authenticateToken, userController.deleteUser);
 
- router
-  .route("/:_id/verify-email/:token")
-  .get(userController.verifyEmail)
-  
+router.route("/:_id/verify-email/:token").get(userController.verifyEmail);
+
 router
   .route("/:_id/resend-email-verification")
-  .get(authenticateToken, userController.resendEmailVerification)
+  .get(authenticateToken, userController.resendEmailVerification);
 
 router.route("/login").post(userController.loginUser);
 

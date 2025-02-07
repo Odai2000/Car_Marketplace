@@ -3,14 +3,7 @@ body {
   font-size: 0.75rem;
 }
 
-.UserAccount,
-.EditUserAcount {
-  width: 100%;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background-color: #e0e6e0;
-}
+
 
 .user-header {
   display: flex;
