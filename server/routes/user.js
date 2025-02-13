@@ -22,7 +22,7 @@ router
   .route("/:_id")
   .get(authenticateToken, userController.getUser)
 
-router.route("/:_id/verify-email/:token").get(userController.verifyEmail);
+router.route("/:_id/verify-email").post(userController.verifyEmail);
 
 router
   .route("/:_id/resend-email-verification")

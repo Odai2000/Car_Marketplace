@@ -19,6 +19,6 @@ const authenticateToken = (req, res, next) => {
   } catch (error) {
     res.status(403).json({ message: "Invalid token",error:error });
   }
-};
+}; 
 
 module.exports = authenticateToken;
