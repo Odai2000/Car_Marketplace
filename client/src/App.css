@@ -12,8 +12,10 @@
 
 :root {
   --primary: #257b27;
+  --success: #28a745;
   --destructive: #de0d0d;
   --warning: #f6ff52;
+  --info: #6c757d; 
 }
 #root {
   display: contents;

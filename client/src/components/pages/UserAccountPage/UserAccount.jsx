@@ -8,38 +8,26 @@ import useAuth from "../../../hooks/useAuth";
 const serverUrl = import.meta.env.VITE_SERVER_URL;
 
 const UserAccount = () => {
-  const [userData, setUserData] = useState(null);
 
   const [firstName, setFirstName] = useState(null);
   const [lastName, setLastName] = useState(null);
+  const [username, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
   const [email, setEmail] = useState(null);
+  const [emailVert, setEmailVert] = useState(null);
 
   const { auth } = useAuth();
   const navigate = useNavigate;
 
-
   useEffect(() => {
-    fetch(`${serverUrl}/user/me`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${auth.accessToken}`,
-      },
-    }).then((response) => {
-      response
-        .json()
-        .then((data) => {
-          setUserData(data);
-        })
-        .catch((err) => {
-          console.error("Error fetching user data:", err);
-        });
-    });
+    setFirstName(auth.userData.firstName);
+    setLastName(auth.userData.lastName);
+    setUsername(auth.userData.username);
+    setEmail(auth.userData.email);
+    setEmailVert(auth.userData.emailVert);
   }, [auth]);
 
   const location = useLocation();
-  if (!userData) return "loading...";
 
   return (
     <>
@@ -51,8 +39,8 @@ const UserAccount = () => {
             </div>
           </div>
           <div className="user-info">
-            <div className="name">{`${userData?.firstName} ${userData?.lastName}`}</div>
-            <div className="username">{userData?.username}</div>
+            <div className="name">{`${firstName} ${lastName}`}</div>
+            <div className="username">{username}</div>
 
             {location.pathname === "/me" ? (
               <Link to="/me/settings">

@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import Button from "../../UI/Button/Button";
+
 import "./UserSettings.css";
 import Input from "../../UI/FormControls/Input";
+import useToast from "../../../hooks/useToast";
 import useAuth from "../../../hooks/useAuth";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -10,6 +12,7 @@ import {
   FaGear,
   FaUser,
 } from "react-icons/fa6";
+
 
 const serverUrl = import.meta.env.VITE_SERVER_URL;
 
@@ -27,6 +30,8 @@ const UserSettings = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const { auth, setAuth } = useAuth();
+  
+  const {showToast} = useToast()
   const navigate = useNavigate();
 
   const handleSave = async (e) => {
@@ -41,7 +46,7 @@ const UserSettings = () => {
         _id: auth.userData._id,
         firstName: firstName,
         lastName: lastName,
-        password: password,
+        password: password, 
         email: email,
       }),
     })
@@ -53,8 +58,9 @@ const UserSettings = () => {
       .then((data) => {
         setAuth((prev) => ({
           ...prev,
-          userData: data.updatedUser,
+          userData: data.userData,
         }));
+        showToast('Your infromation updated.','success')
         // navigate("/me");
       })
       .catch((error) => {
@@ -113,7 +119,7 @@ const UserSettings = () => {
     setLastName(auth.userData.lastName);
     setUsername(auth.userData.username);
     setEmail(auth.userData.email);
-  }, [auth]);
+  }, []);
 
   return (
     <>
