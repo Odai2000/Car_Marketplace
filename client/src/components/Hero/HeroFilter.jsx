@@ -94,7 +94,7 @@ function HeroFilter() {
   }
   return (
     <>
-      <div className="herofilter-container form">
+      <div className="herofilter-container">
         <h1>Look for your next car now.</h1>
         <form onSubmit={handlesubmit}>
           <Select

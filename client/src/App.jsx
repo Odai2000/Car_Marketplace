@@ -32,12 +32,12 @@ function App() {
 
                   <Route element={<ReqAuth allowedRoles={["USER"]} />}>
                     <Route path="new-post" element={<PostCreator />} />
+                    <Route path="me" element={<UserAccount />} />
                   </Route>
                 </Route>
 
                 <Route>
                   <Route element={<ReqAuth allowedRoles={["USER"]} />}>
-                    <Route path="me" element={<UserAccount />} />
                     <Route path="me/settings" element={<UserSettings />} />
                     <Route path="chat" element={<Chat />} />
                   </Route>

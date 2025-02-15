@@ -40,7 +40,7 @@ const UserAccount = () => {
           </div>
           <div className="user-info">
             <div className="name">{`${firstName} ${lastName}`}</div>
-            <div className="username">{username}</div>
+            <div className="username">@{username}</div>
 
             {location.pathname === "/me" ? (
               <Link to="/me/settings">

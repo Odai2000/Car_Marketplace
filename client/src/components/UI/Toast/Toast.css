@@ -8,16 +8,16 @@
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   background-color: #fff;
+  z-index: 5;
 }
 
 .toast-icon {
   margin-right: 0.5em;
   font-size: 1em;
   padding: 0.5em;
+  padding-top: 0.6em;
   font-size: 1.2em;
   color: #fff;
-}
-.toast-icon * {
 }
 
 .Toast.success .toast-icon{
@@ -43,9 +43,9 @@
 .toast-close button{
   border-left:1px solid #bbb;
   margin-left: 0.5em;
-  padding:0.5;
+  padding:0.5em;
   font-size: 1.1em;
   background-color: transparent;
-
+  cursor:pointer;
 }
 

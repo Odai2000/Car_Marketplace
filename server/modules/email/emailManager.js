@@ -4,13 +4,13 @@ const nodeMailer = require("nodemailer");
 class EmailManager {
   constructor(provider) {
     provider = provider.toLowerCase();
+    
     if (provider === "brevo") {
       this.transporter = nodeMailer.createTransport({
         host: "smtp-relay.brevo.com",
         port: 587,
         auth: {
           user: process.env.BREVO_USER,
-
           pass: process.env.BREVO_SMTP_KEY,
         },
         secure: false,

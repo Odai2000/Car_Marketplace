@@ -22,7 +22,7 @@ function NavBar() {
   const [showLog, setShowLog] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  const { auth } = useAuth();
+  const { auth, logout } = useAuth();
   const navRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
@@ -88,11 +88,18 @@ function NavBar() {
         <div className="navBar-rightside">
           {auth ? (
             <>
-            <Link to="/new-post">
-              <Button variant="primary" styleName="new-post-btn">
-                New Post
-              </Button></Link>
-              <Button variant="secondary" styleName="logout-btn">
+              <Link to="/new-post">
+                <Button variant="primary" styleName="new-post-btn">
+                  New Post
+                </Button>
+              </Link>
+              <Button
+                variant={`link ${
+                  !scrolled && location.pathname == "/" && "inverse"
+                }`}
+                styleName="logout-btn"
+                onClick={logout}
+              >
                 Logout
               </Button>
               <Link to="/me">
@@ -104,7 +111,9 @@ function NavBar() {
           ) : (
             <div className="btn-group">
               <Button
-                variant="secondary"
+                variant={`secondary ${
+                  !scrolled && location.pathname == "/" && "inverse"
+                }`}
                 styleName="login-btn"
                 onClick={toggleLog}
               >

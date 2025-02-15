@@ -115,12 +115,12 @@ const updateUser = asyncHandler(async (req, res) => {
   // If email is being updated, set emailVert to false
   if (email && email !== user.email) {
     user.emailVert = false;
-  }
 
-  try {
-    await sendVerificationLink(user);
-  } catch (error) {
-    console.error("Error sending verification email:", error);
+    try {
+      await sendVerificationLink(user);
+    } catch (error) {
+      console.error("Error sending verification email:", error);
+    }
   }
 
   const updatedUser = await user.save();
@@ -129,7 +129,17 @@ const updateUser = asyncHandler(async (req, res) => {
     return res.status(400).send("Update failed");
   }
 
-  res.status(200).json({ message: "User updated" });
+  const userData = {
+    _id: updatedUser._id,
+    firstName: updatedUser.firstName,
+    lastName: updatedUser.lastName,
+    username: updatedUser.username,
+    email: updatedUser.email,
+    emailVert: updatedUser.emailVert,
+    profileImageId: updatedUser.profileImageId,
+    roles: updatedUser.roles,
+  };
+  res.status(200).json({ message: "User updated", userData: userData });
 });
 
 const changePassword = asyncHandler(async (req, res) => {
@@ -274,7 +284,7 @@ const generateAccessToken = (user) => {
     },
     process.env.ACCESS_TOKEN_SECRET,
     {
-      expiresIn: "120s",
+      expiresIn: "600s",
     }
   );
 };

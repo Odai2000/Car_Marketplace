@@ -1,22 +1,24 @@
 import "./style.css";
-import Input from "../UI/FormControls/Input"
+import Input from "../UI/FormControls/Input";
 import Button from "../UI/Button/Button";
 import { FaX } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa6";
 import { IconContext } from "react-icons/lib";
 import { useEffect, useState } from "react";
+import useToast from "../../hooks/useToast";
 
 const RegisterForm = (props) => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [ConfirmPassword, setConfirmpassword] = useState('');
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [ConfirmPassword, setConfirmpassword] = useState("");
 
-const {show,onCancel}=props
+  const { show, onCancel } = props;
 
+  const {showToast} = useToast()
   const handleSubmit = (e) => {
     e.preventDefault();
     password !== ConfirmPassword
@@ -35,7 +37,7 @@ const {show,onCancel}=props
       body: JSON.stringify({
         firstName: firstName,
         lastName: lastName,
-        email:  email ,
+        email: email,
         username: username,
         password: password,
       }),
@@ -43,13 +45,20 @@ const {show,onCancel}=props
         "Content-type": "application/json; charset=UTF-8",
       },
     })
-      .then((respose) => respose.json())
-      .catch((e) => {
-        console.log(e);
+      .then((respose) => {
+        if (!respose.ok) {
+          if (respose.status == 400) throw new Error("Invalid input data");
+          else throw new Error("Registeration failure");
+        }
+       return respose.json();
+      })
+      .catch((error) => {
+        console.log(error);
+        showToast(error.message, "error");
       });
   };
   useEffect(() => {}, []);
-  return show?(
+  return show ? (
     <>
       <div className="authFormContainer ">
         <form className="authForm card" onSubmit={handleSubmit}>
@@ -152,7 +161,9 @@ const {show,onCancel}=props
         </form>
       </div>
     </>
-  ):'';
+  ) : (
+    ""
+  );
 };
 
 export default RegisterForm;

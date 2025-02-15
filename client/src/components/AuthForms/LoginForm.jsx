@@ -7,6 +7,7 @@ import { FaFacebook } from "react-icons/fa6";
 import { IconContext } from "react-icons/lib";
 import { useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
+import useToast from "../../hooks/useToast";
 
 function LoginForm(props) {
   const [username, setUsername] = useState();
@@ -14,6 +15,7 @@ function LoginForm(props) {
 
   const { show, onCancel } = props;
   const { setAuth, persist, setPersist } = useAuth();
+  const { showToast } = useToast();
 
   const login = async (username, password) => {
     fetch("http://localhost:8080/user/login", {
@@ -29,6 +31,9 @@ function LoginForm(props) {
     })
       .then((response) => {
         if (!response.ok) {
+          if (response.status === 401) {
+            throw new Error("Incorrect username or password.");
+          }
           throw new Error("Login failed");
         }
         return response.json();
@@ -43,6 +48,7 @@ function LoginForm(props) {
       })
       .catch((error) => {
         console.log(error);
+        showToast(error.message, "error");
       })
       .finally(() => {
         setUsername("");

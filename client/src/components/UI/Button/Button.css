@@ -21,13 +21,20 @@
     border: 1px solid var(--primary);
   }
 
+  .secondary.inverse {
+    color: #fff;
+    border: none
+  }
+
   .link{
     padding: 0;
     background-color: transparent;
     color: var(--primary);
     border-radius: 0;
   }
-
+  .link.inverse {
+    color: #fff;
+  }
   .link:hover{
     text-decoration: underline;
   }

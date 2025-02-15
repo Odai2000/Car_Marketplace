@@ -13,12 +13,10 @@ import {
   FaUser,
 } from "react-icons/fa6";
 
-
 const serverUrl = import.meta.env.VITE_SERVER_URL;
 
 const UserSettings = () => {
   const [view, setView] = useState("profile");
-  // const [userData, setUserData] = useState({});
 
   const [firstName, setFirstName] = useState("");
   const [username, setUsername] = useState("");
@@ -29,9 +27,9 @@ const UserSettings = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const { auth, setAuth } = useAuth();
-  
-  const {showToast} = useToast()
+  const { auth, setAuth, logout } = useAuth();
+
+  const { showToast } = useToast();
   const navigate = useNavigate();
 
   const handleSave = async (e) => {
@@ -46,25 +44,27 @@ const UserSettings = () => {
         _id: auth.userData._id,
         firstName: firstName,
         lastName: lastName,
-        password: password, 
+        password: password,
         email: email,
       }),
     })
       .then((response) => {
-        if (response.ok) {
-          return response.json();
+        if (!response.ok) {
+          throw new Error();
         }
+        return response.json();
       })
       .then((data) => {
         setAuth((prev) => ({
           ...prev,
           userData: data.userData,
         }));
-        showToast('Your infromation updated.','success')
+        showToast("Changes saved.", "success");
         // navigate("/me");
       })
       .catch((error) => {
         console.log(error);
+        showToast("Failed to save changes.", "error");
       });
   };
 
@@ -83,12 +83,16 @@ const UserSettings = () => {
       }),
     })
       .then((response) => {
-        if (response.ok) {
-          navigate("/me/settings");
+        if (!response.ok) {
+          throw new Error();
         }
+        navigate("/me/settings");
+        showToast("Password changed.", "success");
+
       })
       .catch((error) => {
         console.log(error);
+        showToast("Password change failed", "error");
       });
   };
   const handleAccountDelete = async (e) => {
@@ -99,19 +103,20 @@ const UserSettings = () => {
       headers: {
         "content-Type": "application/json",
         Authorization: `Bearer ${auth.accessToken}`,
-        
       },
       body: JSON.stringify({
         _id: auth.userData._id,
       }),
     })
       .then((response) => {
-        if (response.ok) {
-          return response.json();
+        if (!response.ok) {
+          throw new Error();
         }
+        showToast("Account deleted.", "success");
       })
       .catch((error) => {
         console.log(error);
+        showToast("Failed to delete account", "error");
       });
   };
   useEffect(() => {
@@ -171,7 +176,7 @@ const UserSettings = () => {
               </div>
               <div className="name">{firstName + " " + lastName}</div>
             </div>
-            <div className="logout-icon">
+            <div className="logout-icon" onClick={logout}>
               <FaArrowRightFromBracket />
             </div>
           </div>
@@ -186,7 +191,11 @@ const UserSettings = () => {
               >
                 Change password
               </Button>
-              <Button variant="primary" onClick={handleAccountDelete} destructive>
+              <Button
+                variant="primary"
+                onClick={handleAccountDelete}
+                destructive
+              >
                 Delete Account
               </Button>
             </div>

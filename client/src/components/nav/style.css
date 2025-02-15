@@ -109,12 +109,6 @@ nav.open > ul > li {
   gap: 0.5em;
 }
 
-.navBar-rightside > .btn.secondary {
-  background-color: transparent;
-  color: white;
-  padding: 0em;
-  border: none;
-}
 
 @media (min-width: 700px) {
   .btn-group {
