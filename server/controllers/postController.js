@@ -88,9 +88,11 @@ const getPosts = asyncHandler(async (req, res) => {
   const posts = await Post.find(query).lean();
 
   console.log(query);
+
   if (!posts.length) {
     return res.status(400).json({ message: "No Posts found." });
   }
+  
   for (const post of posts) {
     const imageIds = post.imageIds;
     if (imageIds) {

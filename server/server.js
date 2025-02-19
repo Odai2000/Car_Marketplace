@@ -65,7 +65,7 @@ app.use("/", require("./routes/root"));
 app.use("/user", require("./routes/user"));
 app.use("/post", require("./routes/post"));
 app.use("/data",require("./routes/data"))
-// app.use("/chat",require("./routes/chat"))
+app.use("/chat",require("./routes/chat"))
 
 
 mongoose.connection.once("open", () => {

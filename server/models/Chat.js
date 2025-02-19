@@ -16,7 +16,7 @@ const messageSchema = new mongoose.Schema(
 );
 
 const chatSchema = new mongoose.Schema({
-  partications: {
+  participations: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: "User",
     required:true,

@@ -7,7 +7,7 @@ const chatSocket = (io, socket) => {
             
         const chat = await Chat.findById(chatId).exec();
     
-        if (!chat.particapations.includes(socket.userId))
+        if (!chat.participations.includes(socket.userId))
           return socket.emit("error", "Unauthorized access.");
     
         socket.join(chatId)
@@ -17,8 +17,27 @@ const chatSocket = (io, socket) => {
         }
       });
 
-      socket.on("send_message", ({ chatId, message }) => {
-        io.broadcast.to(chatId).emit("receive_message", message);
+      socket.on("send_message", async({ chatId, message }) => {
+        try{
+          const chat = await Chat.findById(chatId).exec();
+
+          if(!chat) return socket.emit('error', "Chat not found.");
+
+          if(!chat.participations.includes(socket.userId)) return socket.emit('error', "Unauthorized access.");
+
+          const newMessage = {
+            sender: socket.userId,
+            content: message
+          };
+          
+          chat.messages.push(newMessage);
+          await chat.save();
+
+          io.to(chatId).emit("receive_message", message);
+        } catch (error) {
+          console.log(error)
+          return socket.emit('error',error.message)
+        }
       });
   
       socket.on("disconnect", () => {
