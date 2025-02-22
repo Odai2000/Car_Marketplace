@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./EmailVerification.css";
 import { useParams, useLocation } from "react-router-dom";
-import { useConfig } from "../../context/configProvider";
+import  useConfig  from "../../hooks/useConfig";
 
 const EmailVerification = () => {
   const [isSuccess, setIsSuccess] = useState("");

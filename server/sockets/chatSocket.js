@@ -2,38 +2,38 @@ const Chat = require("../models/Chat");
 
 const chatSocket = (io, socket) => {
 
-    socket.on("join_room", async (chatId) => {
+    socket.on("join-room", async (chat_id) => {
         try {
-            
-        const chat = await Chat.findById(chatId).exec();
-    
-        if (!chat.participations.includes(socket.userId))
-          return socket.emit("error", "Unauthorized access.");
-    
-        socket.join(chatId)
-        socket.emit('joined_room',chatId)
+        const chat = await Chat.findById(chat_id).lean();
+
+        if (!chat.participants.map(id=>id.toString()).includes(socket.user_id)){
+          return socket.emit("error", "Unauthorized access to room.");
+        }
+        socket.join(chat_id)
+        console.log(`User ${socket.user_id} joined room ${chat_id}`);
+        socket.emit('joined-room',chat_id)
         } catch (error) {
             return socket.emit('error',error.message)
         }
       });
 
-      socket.on("send_message", async({ chatId, message }) => {
+      socket.on("send-message", async({ chat_id, message }) => {
         try{
-          const chat = await Chat.findById(chatId).exec();
+          const chat = await Chat.findById(chat_id).exec();
 
           if(!chat) return socket.emit('error', "Chat not found.");
 
-          if(!chat.participations.includes(socket.userId)) return socket.emit('error', "Unauthorized access.");
+          if(!chat.participants.map(id=>id.toString()).includes(socket.user_id)) return socket.emit('error', "Unauthorized access..");
 
           const newMessage = {
-            sender: socket.userId,
+            sender_id: socket.user_id,
             content: message
           };
           
-          chat.messages.push(newMessage);
+          chat.messages.push(newMessage); 
           await chat.save();
 
-          io.to(chatId).emit("receive_message", message);
+          socket.to(chat_id).emit("receive-message", newMessage);
         } catch (error) {
           console.log(error)
           return socket.emit('error',error.message)
@@ -41,7 +41,7 @@ const chatSocket = (io, socket) => {
       });
   
       socket.on("disconnect", () => {
-        console.log(`User disconnected: ${socket.userId}`);
+        console.log(`User disconnected: ${socket.user_id}`);
       });
   
 };

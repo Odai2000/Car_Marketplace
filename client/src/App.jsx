@@ -11,10 +11,10 @@ import { ToastProvider } from "./context/ToastProvider";
 import ReqAuth from "./components/ReqAuth";
 import UnAuthorized from "./components/pages/UnAuthorized/UnAuthorized";
 import UserAccount from "./components/pages/UserAccountPage/UserAccount";
-import Chat from "./components/Chat/Chat";
+import Chat from "./components/pages/Chat/Chat";
 import UserSettings from "./components/pages/UserSettings/UserSettings";
 import EmailVerification from "./components/EmailVerification/EmailVerification";
-import { ConfigProvider } from "./context/configProvider";
+import { ConfigProvider } from "./context/ConfigProvider";
 
 function App() {
   return (
@@ -22,31 +22,35 @@ function App() {
       <AppDataProvider>
         <AuthProvider>
           <ToastProvider>
-          <Routes>
-            <Route path="/">
-              <Route element={<PersistLogin />}>
-                <Route element={<Layout />}>
-                  <Route index element={<Home />} />
-                  <Route path="posts" element={<PostSearchResult />} />
-              <Route path="user/:_id/verify-email" element={<EmailVerification />} />
+            <Routes>
+              <Route path="/">
+                <Route element={<PersistLogin />}>
+                  <Route element={<Layout />}>
+                    <Route index element={<Home />} />
+                    <Route path="posts" element={<PostSearchResult />} />
+                    <Route
+                      path="user/:_id/verify-email"
+                      element={<EmailVerification />}
+                    />
 
-                  <Route element={<ReqAuth allowedRoles={["USER"]} />}>
-                    <Route path="new-post" element={<PostCreator />} />
-                    <Route path="me" element={<UserAccount />} />
+                    <Route element={<ReqAuth allowedRoles={["USER"]} />}>
+                      <Route path="new-post" element={<PostCreator />} />
+                      <Route path="me" element={<UserAccount />} />
+                    </Route>
+                  </Route>
+
+                  <Route>
+                    <Route element={<ReqAuth allowedRoles={["USER"]} />}>
+                      <Route path="me/settings" element={<UserSettings />} />
+                      <Route path="chat" element={<Chat />} />
+                      <Route path="chat/:peer_id" element={<Chat />} />
+                    </Route>
                   </Route>
                 </Route>
 
-                <Route>
-                  <Route element={<ReqAuth allowedRoles={["USER"]} />}>
-                    <Route path="me/settings" element={<UserSettings />} />
-                    <Route path="chat" element={<Chat />} />
-                  </Route>
-                </Route>
+                <Route path="unAuthorized" element={<UnAuthorized />} />
               </Route>
-
-              <Route path="unAuthorized" element={<UnAuthorized />} />
-            </Route>
-          </Routes>
+            </Routes>
           </ToastProvider>
         </AuthProvider>
       </AppDataProvider>

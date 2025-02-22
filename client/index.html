@@ -10,11 +10,5 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
-    <script>
-      const socket = io("http://localhost:8080");
-      socket.on("connect", () => {
-        console.log("Connected to server");
-      });
-    </script>
   </body>
 </html>

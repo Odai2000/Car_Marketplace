@@ -4,9 +4,11 @@ import Select from "../../UI/FormControls/select";
 import Button from "../../UI/Button/Button";
 import { useRef, useEffect, useState } from "react";
 import useAppData from "../../../hooks/useAppData";
+import useAuth from "../../../hooks/useAuth";
 
 const PostCreator = () => {
   const { carSpecsData, loading } = useAppData();
+  const { auth } = useAuth();
   const [selectedMake, setSelectedMake] = useState({});
 
   const [title, setTitle] = useState("");
@@ -76,7 +78,7 @@ const PostCreator = () => {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("car", JSON.stringify(car));
-    formData.append("user", "65f0765f39d8cc57da67e25b");
+    formData.append("user", auth.userData._id);
     for (const image of images) {
       formData.append("images", image);
     }
@@ -84,7 +86,9 @@ const PostCreator = () => {
 
     await fetch("http://localhost:8080/post", {
       method: "POST",
-      credentials: "include",
+      headers: {
+        Authorization: `Bearer ${auth.accessToken}`,
+      },
       body: formData,
     })
       .then((response) => response.json())
@@ -125,7 +129,7 @@ const PostCreator = () => {
             onChange={(e) => {
               handleMakeChange(e.target.value);
             }}
-            defaultOption={{ label: "Select Make", value: '' }}
+            defaultOption={{ label: "Select Make", value: "" }}
             validationRules={{ required: true }}
           >
             {carSpecsData.makes.map((make, index) => (
@@ -138,7 +142,7 @@ const PostCreator = () => {
           <Select
             name="model"
             value={model}
-            defaultOption={{ label: "Select Model", value: '' }}
+            defaultOption={{ label: "Select Model", value: "" }}
             onChange={(e) => setModel(e.target.value)}
             validationRules={{ required: true }}
           >
@@ -152,7 +156,7 @@ const PostCreator = () => {
           <Select
             name="bodyType"
             value={bodyType}
-            defaultOption={{ label: "Select body type", value: '' }}
+            defaultOption={{ label: "Select body type", value: "" }}
             onChange={(e) => setBodyType(e.target.value)}
             validationRules={{ required: true }}
           >
@@ -166,7 +170,7 @@ const PostCreator = () => {
           <Select
             name="year"
             value={year}
-            defaultOption={{ label: "Select Year", value: '' }}
+            defaultOption={{ label: "Select Year", value: "" }}
             onChange={(e) => setYear(e.target.value)}
             options={yearsOptions}
             validationRules={{ required: true }}
@@ -175,7 +179,7 @@ const PostCreator = () => {
           <Select
             name="fuel"
             value={fuel}
-            defaultOption={{ label: "Select Fuel", value: '' }}
+            defaultOption={{ label: "Select Fuel", value: "" }}
             onChange={(e) => setFuel(e.target.value)}
             validationRules={{ required: true }}
           >
@@ -189,7 +193,7 @@ const PostCreator = () => {
           <Select
             name="transmission"
             value={transmission}
-            defaultOption={{ label: "Select Transmission", value: '' }}
+            defaultOption={{ label: "Select Transmission", value: "" }}
             onChange={(e) => setTransmission(e.target.value)}
             validationRules={{ required: true }}
           >
@@ -202,7 +206,7 @@ const PostCreator = () => {
             name="mileage"
             value={mileage}
             onChange={(e) => setMileage(e.target.value)}
-            validationRules={{ required: true, maxLength: 8,numeric: true }}
+            validationRules={{ required: true, maxLength: 8, numeric: true }}
             placeholder="Mileage"
           />
 

@@ -40,7 +40,7 @@ const carSchema = new mongoose.Schema({
   transmission: {
     type: String,
     required: true,
-    enum: ["Automatic", "Manaul"],
+    enum: ["automatic", "manaul"],
   },
   mileage: {
     type: Number,

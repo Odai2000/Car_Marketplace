@@ -1,5 +1,4 @@
 import "./Post.css";
-import { useRef, useState } from "react";
 import Button from "../UI/Button/Button";
 import Carousel from "../UI/Carousel/Carousel";
 import {
@@ -13,13 +12,19 @@ import {
 } from "react-icons/fa6";
 import { PiEngineFill } from "react-icons/pi";
 import { TbManualGearbox } from "react-icons/tb";
+import { useNavigate } from "react-router-dom";
 
 const Post = ({ data }) => {
-  
+  const navigate = useNavigate();
+
+  const handleMessage = () => {
+    navigate(`/chat/${data?.user}`);
+  };
+
   let imageUrls = data?.imagesUrls;
 
   let defaultBlock = [
-    <div key="0" className="no-image" alt="No Photos">
+    <div key="0" className="no-image" alt="No Photos" onClick={handleMessage}>
       <FaCamera style={{ height: "2em", width: "2em" }} /> No Photos
     </div>,
   ];
@@ -27,14 +32,11 @@ const Post = ({ data }) => {
   return (
     <div className="post" key={data?._id}>
       <div className="post-img-container">
-        {imageUrls && imageUrls.length>0 ? (
+        {imageUrls && imageUrls.length > 0 ? (
           <Carousel single counter>
-            {
-                imageUrls.map( (url,index) => (
-                  <img key={index} src={url}/>
-                     
-                      ))
-                      }
+            {imageUrls.map((url, index) => (
+              <img key={index} src={url} />
+            ))}
           </Carousel>
         ) : (
           defaultBlock
@@ -44,7 +46,9 @@ const Post = ({ data }) => {
       <div className="post-details">
         <h3 className="post-title ">{data?.title}</h3>
 
-        <span className="post-price ">{data?.car ? "$" + data.car.price : ""}</span>
+        <span className="post-price ">
+          {data?.car ? "$" + data.car.price : ""}
+        </span>
 
         <span className="car-name">
           {data?.car?.make + " " + data?.car?.model}
@@ -57,12 +61,14 @@ const Post = ({ data }) => {
           <FaCalendar /> {data?.car?.year}
         </span>
         <span>
-          <FaRoad /> {data?.car?.mileage + ' km'}
+          <FaRoad /> {data?.car?.mileage + " km"}
         </span>
         <span>
           <FaGasPump /> {data?.car?.fuel}
         </span>
-        <span><PiEngineFill/> {data?.car?.hp + " " + "hp"}</span>
+        <span>
+          <PiEngineFill /> {data?.car?.hp + " " + "hp"}
+        </span>
         <span>
           <TbManualGearbox /> {data?.car?.transmission}
         </span>
@@ -74,7 +80,11 @@ const Post = ({ data }) => {
             <Button variant="primary">
               <FaPhone /> Call
             </Button>
-            <Button variant="primary">
+            <Button
+              variant="primary"
+              value={data?.user}
+              onClick={handleMessage}
+            >
               <FaMessage /> Message
             </Button>
           </div>

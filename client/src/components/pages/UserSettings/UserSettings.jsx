@@ -5,6 +5,7 @@ import "./UserSettings.css";
 import Input from "../../UI/FormControls/Input";
 import useToast from "../../../hooks/useToast";
 import useAuth from "../../../hooks/useAuth";
+import useConfig from "../../../hooks/useConfig";
 import { Link, useNavigate } from "react-router-dom";
 import {
   FaAddressCard,
@@ -13,7 +14,6 @@ import {
   FaUser,
 } from "react-icons/fa6";
 
-const serverUrl = import.meta.env.VITE_SERVER_URL;
 
 const UserSettings = () => {
   const [view, setView] = useState("profile");
@@ -28,13 +28,13 @@ const UserSettings = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const { auth, setAuth, logout } = useAuth();
-
+  const { config } = useConfig();
   const { showToast } = useToast();
   const navigate = useNavigate();
 
   const handleSave = async (e) => {
     e.preventDefault();
-    await fetch(`${serverUrl}/user`, {
+    await fetch(`${config.serverUrl}/user`, {
       method: "PATCH",
       headers: {
         "content-Type": "application/json",

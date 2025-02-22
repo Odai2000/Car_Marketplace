@@ -1,6 +1,6 @@
-import { createContext,useContext,useState } from "react";
+import { createContext,useState } from "react";
 
-const ConfigContext = createContext();
+export const ConfigContext = createContext();
 
 export const ConfigProvider = ({children})=>{
     const [config,setConfig] = useState({
@@ -8,12 +8,8 @@ export const ConfigProvider = ({children})=>{
     });
 
     return(
-        <ConfigContext.Provider value={config}>
+        <ConfigContext.Provider value={{config}}>
             {children}
         </ConfigContext.Provider>
     )
-}
-
-export const useConfig = ()=>{
-    return useContext(ConfigContext);
 }

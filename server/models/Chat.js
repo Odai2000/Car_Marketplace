@@ -6,7 +6,7 @@ const messageSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    senderId: {
+    sender_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
@@ -16,7 +16,7 @@ const messageSchema = new mongoose.Schema(
 );
 
 const chatSchema = new mongoose.Schema({
-  participations: {
+  participants: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: "User",
     required:true,
@@ -28,6 +28,7 @@ const chatSchema = new mongoose.Schema({
   },
   messages: {
     type: [messageSchema],
+    default: [],
   },
 },{timestamps:true});
 

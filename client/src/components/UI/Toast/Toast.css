@@ -1,7 +1,8 @@
 .Toast {
-  position: absolute;
-  top:1em;
+  position: fixed;
+  bottom:1em;
   left:1em;
+  min-width: 14em;
   display: flex;
   align-items: center;
   justify-content: space-between;
