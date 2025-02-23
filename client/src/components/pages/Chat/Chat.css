@@ -1,0 +1,137 @@
+.Chat {
+  height: 100%;
+  width: 100%;
+}
+
+.Chat > * {
+  display: none;
+  flex-direction: column;
+  height: 100%;
+  flex: 1;
+}
+
+/* Contact List view */
+.contact-list-view {
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+
+}
+
+.contact-list-header {
+  justify-content: left;
+  gap: 2em;
+  padding: 0.5em 2em;
+}
+.contact-list-header h2 {
+display: flex;
+align-self: center;
+}
+.Chat .btn.icon {
+  font-size: 1.5em;
+}
+
+.contact-list-header button {
+}
+.contact-list-view .contacts{
+    padding: 0 0.5em;
+    gap: 0.5em;
+}
+.contact-list-view .contact {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  padding: 1em;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 1.75em;
+  cursor: pointer;
+}
+.contact-list-view .contact:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.Chat .profile-image {
+  height: 4em;
+  width: 4em;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 3em;
+  overflow: clip;
+}
+.Chat .contact-name {
+  color: var(--primary);
+}
+/* Chat view */
+.chat-view {
+  flex: 2;
+}
+.chat-view {
+  display: none;
+}
+.chat-view .chat-header {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  padding: 1em;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.chat-view .chat-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  padding: 1em;
+  overflow-y: scroll;
+  /* background-color: #d2ffdb; */
+  background: linear-gradient(0deg, #1b6523c4, #4caf50);
+}
+
+.chat-view .chat-body .chat-message {
+  max-width: 50ch;
+  width: fit-content;
+  display: flex;
+  gap: 0.5em;
+  padding: 1em;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 2em;
+  font-size: 1.25em;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+.chat-view .chat-body .chat-message.right {
+  align-self: flex-end;
+  background-color: var(--primary);
+  color: #fff;
+}
+.chat-view .chat-body .chat-message .time {
+  font-size: 0.55em;
+  align-self: end;
+  color: rgba(0, 0, 0, 0.8);
+}
+.chat-view .chat-body .chat-message.right .time {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.chat-view .chat-footer {
+  width: 100%;
+  display: flex;
+  gap: 1em;
+  padding: 1em 2em;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.chat-view .chat-footer .message-box {
+  width: 100%;
+}
+
+.chat-view .chat-footer input {
+  flex: 1;
+  padding: 1em;
+  border-radius: 1em;
+}
+
+.Chat .toggled {
+  display: flex;
+}
+
+@media (min-width: 748px) {
+  .Chat > * {
+    display: flex;
+  }
+}

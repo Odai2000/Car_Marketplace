@@ -17,7 +17,6 @@ const getChats = asyncHandler(async (req, res) => {
           (id) => id.toString() !== req.user._id.toString()
         );
 
-
         const peerUser = await User.findById(peerId)
           .select("firstName lastName profileImageId")
           .lean();
@@ -52,7 +51,7 @@ const getOrCreateChat = asyncHandler(async (req, res) => {
 
     let chat = await Chat.findOne({
       participants: { $all: [req.user._id, peerId] },
-    }).exec();
+    }).lean();
 
     if (!chat) {
       chat = new Chat({
@@ -61,7 +60,22 @@ const getOrCreateChat = asyncHandler(async (req, res) => {
       await chat.save();
     }
 
-    res.status(200).send(chat);
+    const peerUser = await User.findById(peerId)
+      .select("firstName lastName profileImageId")
+      .lean();
+
+    const profileImageUrl = await cloudStorage.download(
+      peerUser.profileImageId
+    );
+
+    res.status(200).send({
+      ...chat,
+      peer: {
+        peer_id: peerUser._id,
+        name: peerUser.firstName + peerUser.lastName,
+        profileImageUrl: profileImageUrl,
+      },
+    });
   } catch (error) {
     console.log(error);
     res.status(500).send(error.message);
