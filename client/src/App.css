@@ -60,6 +60,10 @@ header.home-header {
   padding: 1em;
 }
 
+.icon{
+  font-size: 1.2em;
+  cursor: pointer;
+}
 .col-1 {
   grid-column: span 1;
 }.col-2 {

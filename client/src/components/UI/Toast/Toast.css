@@ -7,16 +7,21 @@
   align-items: center;
   justify-content: space-between;
   border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
   background-color: #fff;
   z-index: 5;
+  min-width: 32ch;
+  font-size: 1.2em;
 }
 
 .toast-icon {
+  height:100%;
+  display: flex;
+  align-items: center;
   margin-right: 0.5em;
-  font-size: 1em;
-  padding: 0.5em;
-  padding-top: 0.6em;
+  font-size: 1.2em;
+  padding: 1em;
+  padding-top: 1.1em;
   font-size: 1.2em;
   color: #fff;
 }
@@ -45,7 +50,7 @@
   border-left:1px solid #bbb;
   margin-left: 0.5em;
   padding:0.5em;
-  font-size: 1.1em;
+  font-size: 1.2em;
   background-color: transparent;
   cursor:pointer;
 }

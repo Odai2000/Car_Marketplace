@@ -88,11 +88,10 @@ function NavBar() {
         <div className="navBar-rightside">
           {auth ? (
             <>
-              <Link to="/new-post">
-                <Button variant="primary" styleName="new-post-btn">
+                <Button variant="primary" styleName="new-post-btn" onClick={()=>{navigate("/new-post")}}>
                   New Post
                 </Button>
-              </Link>
+            
               <Button
                 variant={`link ${
                   !scrolled && location.pathname == "/" && "inverse"
@@ -102,11 +101,9 @@ function NavBar() {
               >
                 Logout
               </Button>
-              <Link to="/me">
-                <div className="profile-icon">
+                <div className="profile-icon icon" onClick={()=>{navigate("/me")}}>
                   <FaUser style={{ color: "var(--primary)" }} />
                 </div>
-              </Link>
             </>
           ) : (
             <div className="btn-group">

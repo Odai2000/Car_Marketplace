@@ -4,8 +4,6 @@
   flex-direction: column;
   border: 1px solid lightgray;
   background-color: #fff;
-  flex-grow: 1;
-  flex-shrink: 0;
 }
 
 .post > .post-details {

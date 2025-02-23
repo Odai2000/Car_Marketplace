@@ -50,7 +50,6 @@ const Input = ({
       return customValidator(value)
     }
 
-
     return ""; // no errors
   };
 
@@ -61,7 +60,7 @@ const Input = ({
     setErrorMessage(errorMessage);
   };
   return (
-    <div className={`form-control-container ${styleName ? styleName : ""}`}>
+    <div className={`form-control-container input ${styleName ? styleName : ""}`}>
       {label && (
         <label className="form-control-label input-label" htmlFor={name}>
           {label}

@@ -6,7 +6,8 @@
 }
 
 .post-results-container {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 1em;
   flex: 1 1 70%;
   max-width: 120ch;
@@ -57,9 +58,7 @@
 /*Desktop screen*/
 
 @media (min-width: 768px) {
-  .post-results-container {
-    display: grid;
-  }
+
 
   /* Filter */
   .Filter {

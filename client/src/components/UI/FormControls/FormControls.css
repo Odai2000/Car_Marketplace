@@ -2,10 +2,11 @@ form .form-control-container {
   position: relative;
   display: flex;
   flex-direction: column;
+  --control-height:3rem;
 }
 
 form .form-control {
-  height: 3.5em;
+  height: var(--control-height);
   padding: 0 0.5em;
   border: 1px rgba(88, 84, 84, 0.808) solid;
   border-radius: 8px;
@@ -30,8 +31,13 @@ form .form-contol-error-message {
 
 .exclamation-icon {
   position: absolute;
-  top: 1em;
-  right: 0.5em;
+  bottom: calc(var(--control-height)/2);
+  right: 1.25em;
+  transform: translateY(50%);
   height: 1em;
   color: var(--destructive);
+}
+
+.form-control-container.input .exclamation-icon {
+  right: 1em;
 }
