@@ -129,7 +129,7 @@ const createPost = asyncHandler(async (req, res) => {
 
     let imageIds = [];
     if (files) {
-      //Upload images to cloud and store their
+      //Upload images to cloud at specified folder and store their ids in the DB 
       for (const file of files) {
         imageIds.push(await cloudStorage.upload(file, 14517807595));
       }

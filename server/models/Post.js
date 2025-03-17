@@ -1,12 +1,16 @@
 // TODO:
-// Refactor location.
 // Normalize make
 // consider indexing
 const mongoose = require("mongoose");
 
+// models
 const Make = require("./Make");
-const bodyTypesData = require('../data/bodyTypes.json')
-const fuelTypesData = require('../data/fuelTypes.json')
+const Country = require("./Country");
+
+// json data
+const bodyTypesData = require("../data/bodyTypes.json");
+const fuelTypesData = require("../data/fuelTypes.json");
+
 const carSchema = new mongoose.Schema({
   make: {
     type: String,
@@ -35,12 +39,12 @@ const carSchema = new mongoose.Schema({
   bodyType: {
     type: String,
     required: true,
-    enum: bodyTypesData.types
+    enum: bodyTypesData.types,
   },
   transmission: {
     type: String,
     required: true,
-    enum: ["automatic", "manaul"],
+    enum: ["automatic", "manual"],
   },
   mileage: {
     type: Number,
@@ -57,16 +61,41 @@ const carSchema = new mongoose.Schema({
     required: true,
     min: 0,
   },
-  location: {
-    country: String,
-    state: String,
-    city: String,
-  },
+
   price: {
     type: Number,
     required: true,
     min: 0,
   },
+});
+
+const locationSchema = new mongoose.Schema({
+  latitude: { type: Number },
+  longitude: { type: Number },
+  countryCode: {
+    type: String,
+    required: true,
+    validate: {
+      validator: async (countryCode) => {
+        return await Country.exists({ code: countryCode }).lean();
+      },
+    },
+  },
+  stateCode: {
+    type: String,
+    required: true,
+    validate: {
+      validator: async (stateCode) => {
+        const countryCode = this.countryCode;
+        const country = await Country.findOne({ code: countryCode });
+
+        return country.states.some((state) => state.code === stateCode);
+      },
+    },
+  },
+  address:{
+    type:String
+  }
 });
 
 const postSchema = new mongoose.Schema(
@@ -94,6 +123,10 @@ const postSchema = new mongoose.Schema(
     car: {
       type: carSchema,
       required: false,
+    },
+    location: {
+      type: locationSchema,
+      required: true,
     },
   },
 
