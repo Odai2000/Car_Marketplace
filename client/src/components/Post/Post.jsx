@@ -47,7 +47,7 @@ const Post = ({ data }) => {
         <h3 className="post-title ">{data?.title}</h3>
 
         <span className="post-price ">
-          {data?.car ? "$" + data.car.price : ""}
+          {data? "$" + data.price : ""}
         </span>
 
         <span className="car-name">

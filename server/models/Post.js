@@ -62,11 +62,6 @@ const carSchema = new mongoose.Schema({
     min: 0,
   },
 
-  price: {
-    type: Number,
-    required: true,
-    min: 0,
-  },
 });
 
 const locationSchema = new mongoose.Schema({
@@ -127,6 +122,11 @@ const postSchema = new mongoose.Schema(
     location: {
       type: locationSchema,
       required: true,
+    },
+    price: {
+      type: Number,
+      required: true,
+      min: 0,
     },
   },
 

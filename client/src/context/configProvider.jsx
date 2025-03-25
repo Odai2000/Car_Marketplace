@@ -4,7 +4,7 @@ export const ConfigContext = createContext();
 
 export const ConfigProvider = ({children})=>{
     const [config,setConfig] = useState({
-        serverUrl:import.meta.env.VITE_SERVER_URL
+        serverURL:import.meta.env.VITE_SERVER_URL
     });
 
     return(

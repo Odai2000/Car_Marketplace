@@ -4,7 +4,7 @@ function Button({styleName,id,variant, destructive, onClick, children, icon, ...
   const className = `btn ${variant} ${destructive ? "destructive" : ""} `;
 
   return (
-    <button id ={id} className={className + (styleName?styleName:'') } onClick={onClick} {...props}>
+    <button type="button" id ={id} className={className + (styleName?styleName:'') } onClick={onClick} {...props}>
       {icon && <i className={icon}/>} {children}
     </button>
   );

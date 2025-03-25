@@ -1,46 +1,49 @@
 .PostCreator {
+  width: 100%;
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   flex-grow: 1;
-  padding: 5vh 10vw;
+  gap: 1em;
 }
 .PostCreator-form {
   width: 100%;
-  height: 100%;
-  display: grid;
-  grid-template-rows: 1fr 3fr 2fr;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
   gap: 1em;
 }
-.PostCreator-form > div {
+/* .PostCreator-form > div {
   align-self: flex-start;
-}
+} */
 .form-header {
   text-align: center;
   color: var(--primary);
 }
-.PostCreator-form > .post-img {
+.PostCreator-form .post-img {
   height: 100%;
-  grid-row: 2 / span 1;
   display: none;
   justify-content: center;
   border-radius: 8px;
   background-color: lightgray;
 }
-.PostCreator-form  .m-post-img{
+.PostCreator-form .m-post-img {
   display: flex;
   gap: 1em;
 }
-.PostCreator-form  .m-post-img > span{
+.PostCreator-form .m-post-img > span {
   display: inline;
   vertical-align: baseline;
 }
 .PostCreator-form > .post-img > .btn {
   align-self: center;
 }
+
 .PostCreator-form > .post-data {
-  display: grid;
-  grid-template-rows: 1fr;
-  grid-template-columns: 1fr;
-  gap: 1.75em;
-  grid-row: 2 / span 2;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
 }
 .PostCreator-form > .post-data > select {
   height: 3em;
@@ -56,25 +59,65 @@
   border-radius: 4px;
   background-color: transparent;
 }
-.form-button > .btn {
-  width: 100%;
+.PostCreator-form > .btn-group  {
+  flex-direction:column-reverse;
+}
+.PostCreator-form > .btn-group .btn {
+  flex: 1;
 }
 
-@media(min-width:700px){
-  .PostCreator-form{
-    grid-template-columns: 1fr 2fr;
-  }
-  .PostCreator-form > .post-data{
+/* form progress indicator */
+.form-progress {
+  gap: 1em;
+}
+.form-progress .step-tab {
+  gap: 0.5em;
+}
+.form-progress .step-tab.completed:hover {
+  text-decoration: underline;
+}
+.form-progress .step-tab.active,
+.form-progress .step-tab.completed {
+  color: var(--primary);
+  cursor: pointer;
+}
+.form-progress .step-tab .icon {
+  font-size: 1.4em;
+  font-weight: 800;
+}
+.form-progress .step-tab.active .icon {
+  color: #333;
+}
 
+@media (min-width: 700px) {
+  .PostCreator {
+    padding: 2em;
+  }
+  .PostCreator-form {
+    width: 66%;
+    gap: 1em;
+  }
+
+  .PostCreator-form .post-data {
+    display: grid;
     grid-template-columns: 1fr 1fr;
+    gap: 1em;
   }
-  .PostCreator-form .form-button {
-    grid-column: 2/span 1;
-  }
-  .PostCreator-form > .post-img{
+  .PostCreator-form .post-img {
     display: flex;
+    grid-column: span 2;
   }
-  .PostCreator-form .m-post-img{
+  .PostCreator-form .m-post-img {
     display: none;
+  }
+  .PostCreator-form .post {
+    grid-column: span 2;
+  }
+  .PostCreator-form > .btn-group {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+  .PostCreator-form > .btn-group .btn {
+    flex: 0 1;
   }
 }

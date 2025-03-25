@@ -92,7 +92,7 @@ const getPosts = asyncHandler(async (req, res) => {
   if (!posts.length) {
     return res.status(400).json({ message: "No Posts found." });
   }
-  
+
   for (const post of posts) {
     const imageIds = post.imageIds;
     if (imageIds) {
@@ -116,20 +116,20 @@ const getPosts = asyncHandler(async (req, res) => {
 
 const createPost = asyncHandler(async (req, res) => {
   try {
-    let { title, desc = "", car } = req.body;
+    let { title, desc = "", car, price } = req.body;
     const user = req.user._id;
 
     const files = req.files;
     car = JSON.parse(car);
-    
+
     //confirm data
-    if (!title || !user || !car) {
+    if (!title || !user || !car || !price) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
     let imageIds = [];
     if (files) {
-      //Upload images to cloud at specified folder and store their ids in the DB 
+      //Upload images to cloud at specified folder and store their ids in the DB
       for (const file of files) {
         imageIds.push(await cloudStorage.upload(file, 14517807595));
       }
@@ -138,7 +138,7 @@ const createPost = asyncHandler(async (req, res) => {
     }
 
     //Add post to the DB
-    const obj = { title, desc, imageIds, car, user };
+    const obj = { title, desc, imageIds, car, price, user };
     const post = await Post.create(obj);
 
     if (!post) {
@@ -154,9 +154,9 @@ const createPost = asyncHandler(async (req, res) => {
 
 const updatePost = asyncHandler(async (req, res) => {
   try {
-    const { id, title, desc, user, car } = req.body;
+    const { id, title, desc, user, car, price } = req.body;
 
-    if (!id || !title || !desc || !user || !car) {
+    if (!id || !title || !desc || !user || !car || !price) {
       return res.status(400).json({ message: "All fields are required" });
     }
     const post = await Post.findById(id).lean().exec();
@@ -169,8 +169,15 @@ const updatePost = asyncHandler(async (req, res) => {
     post.desc = desc;
     post.user = user;
     post.car = car;
+    post.price = price;
 
     const updatedPost = await post.save();
+
+    if (!updatedPost) {
+      return res.status(400).send("Update failed");
+    }
+
+    res.status(201).send("Post updated.");
   } catch (error) {
     console.log(error);
     return res.status(500);

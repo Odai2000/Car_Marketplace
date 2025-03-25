@@ -10,32 +10,32 @@
     cursor:pointer;
   }
   
-  .primary {
+  .btn.primary {
     background-color: var(--primary);
     color: white;
   }
   
-  .secondary {
+  .btn.secondary {
     background-color: transparent;
     color: var(--primary);
     border: 1px solid var(--primary);
   }
 
-  .secondary.inverse {
+  .btn.secondary.inverse {
     color: #fff;
     border: none
   }
 
-  .link{
+  .btn.link{
     padding: 0;
     background-color: transparent;
     color: var(--primary);
     border-radius: 0;
   }
-  .link.inverse {
+  .btn.link.inverse {
     color: #fff;
   }
-  .link:hover{
+  .btn.link:hover{
     text-decoration: underline;
   }
   
@@ -43,44 +43,44 @@
     color: var(--destructive);
   } */
   
-  .primary.destructive {
+ .btn.primary.destructive {
     background-color: var(--destructive);
   }
   
-  .secondary.destructive {
+  .btn.secondary.destructive {
     background-color: transparent;
     color:  var(--destructive);
     border-color:  var(--destructive);
   }
 
-  .link.destructive{
+  .btn.link.destructive{
     color: var(--destructive);
   }
 
-  .disabled{
+  .btn.disabled{
     color:white;
   }
 
-  .primary.disabled{
+  .btn.primary:disabled{
     background-color: gray;
   }
 
-  .secondary.disabled {
+  .btn.secondary.disabled {
     background-color: transparent;
     color:  gray;
     border-color:  gray;
   }
 
-  .round {
+  .btn.round {
     border-radius: 64px;
   }
 
-  .icon{
+  .btn.icon{
     padding: 0.5em;
     color: var(--primary);
     background-color: transparent;
   } 
 
-  .icon.inverse{
+  .btn.icon.inverse{
     color: white;
   }

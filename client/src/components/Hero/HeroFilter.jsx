@@ -6,7 +6,7 @@ import useAppData from "../../hooks/useAppData";
 import Select from "../UI/FormControls/select";
 
 function HeroFilter() {
-  const { carSpecsData, loading } = useAppData();
+  const { carSpecsData, loadingCarSpecs } = useAppData();
   const [selectedMake, setSelectedMake] = useState({});
 
   const [make, setMake] = useState("");
@@ -88,7 +88,7 @@ function HeroFilter() {
     navigate(`/posts?${query}`);
   };
 
-  if (loading) {
+  if (loadingCarSpecs) {
     console.log("loading");
     return <div>Loading.....</div>;
   }
