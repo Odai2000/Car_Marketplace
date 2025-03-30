@@ -5,13 +5,14 @@ useState;
 const Input = ({
   type,
   name,
-  value,
+  value='',
   onChange,
+  onBlur,
+  onKeyDown,
   label,
   placeholder,
   styleName,
   validationRules,
-  formValidate,
   onValidationChange,
   ...props
 }) => {
@@ -79,6 +80,9 @@ const Input = ({
     if (onValidationChange) {
       onValidationChange(!errorMessage);
     }
+    if (onBlur) {
+      onBlur(e); 
+    }
   };
   return (
     <div
@@ -95,7 +99,8 @@ const Input = ({
         id={name}
         value={value}
         onChange={onChange}
-        onBlur={handleBlur}
+        onBlur={handleBlur} //can't be overridden
+        onKeyDown={onKeyDown}
         placeholder={placeholder}
         className={`form-control input-field ${errorMessage ? "error" : ""} `}
         {...props}

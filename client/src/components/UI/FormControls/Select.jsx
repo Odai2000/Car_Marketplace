@@ -18,33 +18,13 @@ const Select = ({
   const [errorMessage, setErrorMessage] = useState("");
 
   const validate = (value) => {
-    const { required, minLength, maxLength, regex, customValidator, numeric } =
+    const { required, customValidator} =
       validationRules;
 
     if (required && value == "") {
       return `${label ? label : "This field"}  is required.`;
     }
-
-    if (minLength && value.length < minLength) {
-      return `${
-        label ? label : "This field"
-      }  must be at least ${minLength} characters long.`;
-    }
-
-    if (maxLength && value.length > maxLength) {
-      return `${
-        label ? label : "This field"
-      }  must be at most ${maxLength} characters long.`;
-    }
-
-    if (regex && !new RegExp(regex).test(value)) {
-      return `${label ? label : "This field"}  format is invalid.`;
-    }
-
-    if (numeric && isNaN(value)) {
-      return `${label ? label : "This field"} must be a numeric value.`;
-    }
-
+    
     if (customValidator ) {
       return customValidator(value)
     }

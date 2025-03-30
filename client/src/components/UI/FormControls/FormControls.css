@@ -2,7 +2,7 @@ form .form-control-container {
   position: relative;
   display: flex;
   flex-direction: column;
-  --control-height:3rem;
+  --control-height: 3rem;
 }
 
 form .form-control {
@@ -13,7 +13,7 @@ form .form-control {
   background-color: transparent;
 }
 
-form .form-control-label{
+form .form-control-label {
   padding: 0.5em;
 }
 
@@ -31,7 +31,7 @@ form .form-contol-error-message {
 
 .exclamation-icon {
   position: absolute;
-  bottom: calc(var(--control-height)/2);
+  bottom: calc(var(--control-height) / 2);
   right: 1.25em;
   transform: translateY(50%);
   height: 1em;
@@ -40,4 +40,32 @@ form .form-contol-error-message {
 
 .form-control-container.input .exclamation-icon {
   right: 1em;
+}
+
+/* Autocomplete */
+/* .Autocomplete input{
+  border-bottom-right-radius: 2px;
+  border-bottom-left-radius: 2px;
+  } */
+.Autocomplete {
+  /* border: 1px solid black; */
+  position: relative;
+  /* bottom: 1em; */
+  border-radius: 1em;
+}
+.Autocomplete .autocomplete-dropdown {
+  position: absolute;
+  top:  calc(100% + 0.5em);
+  padding: 0.25em 0;
+
+  border: 1px solid #ccc;
+  border-radius: .5em;
+}
+.Autocomplete .autocomplete-dropdown li {
+  padding: 0.5em;
+}
+
+.Autocomplete .autocomplete-dropdown li:hover,
+.Autocomplete .autocomplete-dropdown li.active {
+  background-color: #ddd;
 }

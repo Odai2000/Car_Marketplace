@@ -43,7 +43,7 @@
 .PostCreator-form > .post-data {
   display: flex;
   flex-direction: column;
-  gap: 1em;
+  gap: 1.75em;
 }
 .PostCreator-form > .post-data > select {
   height: 3em;
@@ -101,7 +101,7 @@
   .PostCreator-form .post-data {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1em;
+    gap: 1.75em;
   }
   .PostCreator-form .post-img {
     display: flex;
