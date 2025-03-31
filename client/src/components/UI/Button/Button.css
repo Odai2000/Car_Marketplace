@@ -75,12 +75,13 @@
     border-radius: 64px;
   }
 
-  .btn.icon{
+  .btn .icon{
     padding: 0.5em;
     color: var(--primary);
     background-color: transparent;
   } 
+  
 
-  .btn.icon.inverse{
+  .btn .icon.inverse{
     color: white;
   }

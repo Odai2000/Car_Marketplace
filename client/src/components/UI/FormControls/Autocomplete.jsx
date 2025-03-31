@@ -6,9 +6,10 @@ const Autocomplete = ({
   fetchData,
   data,
   value,
-  minLength = 2,
   onChange,
+  minLength = 2,
   getDisplayValue,
+  onSelection,
   ...props
 }) => {
   const [userInput, setUserInput] = useState(value || "");
@@ -18,11 +19,14 @@ const Autocomplete = ({
 
   const handleChange = (e) => {
     setUserInput(e.target.value);
-    onChange(e.target.value);
+    onChange(e);
   };
-  const handleSelection = (value) => {
+  
+  const handleSelection = (selection) => {
     setSuggestions([]);
-    setUserInput(getDisplayValue(value)||value);
+
+    setUserInput(getDisplayValue(selection)||selection.display);
+    onSelection(selection)
   };
 
   const handleKeyDown = (e) => {
@@ -72,7 +76,7 @@ const Autocomplete = ({
     <>
       <div className="Autocomplete">
         <Input
-          value={userInput}
+          value={value}
           onChange={(e) => handleChange(e)}
           onKeyDown={handleKeyDown}
           onBlur={handleBlur}
@@ -82,7 +86,7 @@ const Autocomplete = ({
         {suggestions?.length > 0 && (
           <ul className="autocomplete-dropdown">
             {suggestions.map((suggestion, index) => (
-              <li className={index===currentIndex && 'active'} key={index} onClick={() => handleSelection(suggestion.display)}>
+              <li className={index===currentIndex && 'active'} key={index} onClick={() => handleSelection(suggestion)}>
                 {suggestion.display}
               </li>
             ))}

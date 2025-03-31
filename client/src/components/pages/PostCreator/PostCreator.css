@@ -59,8 +59,8 @@
   border-radius: 4px;
   background-color: transparent;
 }
-.PostCreator-form > .btn-group  {
-  flex-direction:column-reverse;
+.PostCreator-form > .btn-group {
+  flex-direction: column-reverse;
 }
 .PostCreator-form > .btn-group .btn {
   flex: 1;
@@ -87,6 +87,10 @@
 }
 .form-progress .step-tab.active .icon {
   color: #333;
+}
+
+.PostCreator-form .post-data .geolocation-btn {
+  font-size: 1em;
 }
 
 @media (min-width: 700px) {
@@ -119,5 +123,9 @@
   }
   .PostCreator-form > .btn-group .btn {
     flex: 0 1;
+  }
+
+  .PostCreator-form .post-data .geolocation-btn {
+    width: fit-content;
   }
 }

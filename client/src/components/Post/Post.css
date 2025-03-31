@@ -142,9 +142,10 @@
   }
 
   .post-details .post-location {
+    flex: 1;
     display: flex;
     align-items: center;
-    max-width: 18ch;
-    grid-column: span 1;
+    width: 32ch;
+    font-size: 0.75em;
   }
 }

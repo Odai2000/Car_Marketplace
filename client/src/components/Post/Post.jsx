@@ -13,9 +13,11 @@ import {
 import { PiEngineFill } from "react-icons/pi";
 import { TbManualGearbox } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
+import useMap from "../../hooks/useMap";
 
 const Post = ({ data }) => {
   const navigate = useNavigate();
+  const { getMapURL } = useMap();
 
   const handleMessage = () => {
     navigate(`/chat/${data?.user}`);
@@ -46,9 +48,7 @@ const Post = ({ data }) => {
       <div className="post-details">
         <h3 className="post-title ">{data?.title}</h3>
 
-        <span className="post-price ">
-          {data? "$" + data.price : ""}
-        </span>
+        <span className="post-price ">{data ? "$" + data.price : ""}</span>
 
         <span className="car-name">
           {data?.car?.make + " " + data?.car?.model}
@@ -74,7 +74,20 @@ const Post = ({ data }) => {
         </span>
 
         <div className="post-footer ">
-          <span className="post-location ">City,Co</span>
+          <span className="post-location ">
+            {data.location.longitude && data.location.latitude ? (
+              <a
+                href={getMapURL({
+                  longitude: data.location.longitude,
+                  latitude: data.location.latitude,
+                })}
+              >
+                {data.location.address}
+              </a>
+            ) : (
+              data.location.address
+            )}
+          </span>
 
           <div className="btn-group post-btn-group ">
             <Button variant="primary">
