@@ -1,0 +1,61 @@
+.DragAndDrop {
+  width: 700px;
+  height: 500px;
+  padding: 8px;
+  background-color: #f8f8f8;
+  border-radius: 16px;
+  font-size: 1.15em;
+  color: #202020;
+}
+.DragAndDrop:has(.dragging-over) {
+  background-color: #f0f8f0;
+  /* border: 2px solid var(--primary); */
+}
+
+.DragAndDrop .drop-target {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+  border: 2px dashed var(--primary);
+  border-radius: 16px;
+  padding: 2em;
+}
+
+.DragAndDrop .drop-target * {
+  pointer-events: none;
+}
+
+.DragAndDrop .drop-target.dragging-over {
+  border: none;
+  border: 2px solid var(--primary);
+}
+.DragAndDrop .drop-target .upload-icon {
+  font-size: 5em;
+  color: lightgray;
+  display: flex;
+  justify-content: center;
+}
+.DragAndDrop .drop-target.dragging-over .upload-icon {
+  color: var(--primary);
+}
+
+.DragAndDrop .drop-target .btn {
+  width: 12em;
+}
+
+.DragAndDrop .or-broder {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  color: #8f8f8f;
+}
+.DragAndDrop .or-broder .line {
+  width: 4em;
+  height: 1px;
+  border-radius: 2px;
+  background-color: #8f8f8f;
+}

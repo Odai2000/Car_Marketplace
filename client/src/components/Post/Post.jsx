@@ -75,7 +75,7 @@ const Post = ({ data }) => {
 
         <div className="post-footer ">
           <span className="post-location ">
-            {data.location.longitude && data.location.latitude ? (
+            {data?.location.longitude && data?.location.latitude ? (
               <a
                 href={getMapURL({
                   longitude: data.location.longitude,
@@ -85,7 +85,7 @@ const Post = ({ data }) => {
                 {data.location.address}
               </a>
             ) : (
-              data.location.address
+              data?.location?.address
             )}
           </span>
 
