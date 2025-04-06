@@ -151,11 +151,11 @@ function HeroFilter() {
             options={priceOptions}
             defaultOption={{ label: "Budget", value: "" }}
           />
-          <Button variant="link" id="hero-advanced-btn">
+          <Button type="submit" variant="link" id="hero-advanced-btn">
             Advanced search
             <FaAngleRight />
           </Button>
-          <Button id="hero-btn" variant="primary">
+          <Button type="submit" id="hero-btn" variant="primary">
             Search
           </Button>
         </form>

@@ -7,8 +7,9 @@ import { FaFacebook } from "react-icons/fa6";
 import { IconContext } from "react-icons/lib";
 import { useEffect, useState } from "react";
 import useToast from "../../hooks/useToast";
+import useAuth from "../../hooks/useAuth";
 
-const RegisterForm = (props) => {
+const RegisterForm = ({ show, onCancel }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -16,47 +17,27 @@ const RegisterForm = (props) => {
   const [password, setPassword] = useState("");
   const [ConfirmPassword, setConfirmpassword] = useState("");
 
-  const { show, onCancel } = props;
+  const { register } = useAuth();
+  const { showToast } = useToast();
 
-  const {showToast} = useToast()
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    password !== ConfirmPassword
-      ? console.log("Passwords don't match!")
-      : registerUser(firstName, lastName, email, username, password);
+    if (password !== ConfirmPassword) {
+      console.log("Passwords don't match!");
+      return;
+    }
+
+ const result=  await register(firstName, lastName, email, username, password);
+
+ if (result.success) {
+  setUsername("");
+  setPassword("");
+  showToast('User registered. Pls login by urself for now', "success");
+} else {
+  showToast(result.errorMsg, "error");
+}
   };
-  const registerUser = async (
-    firstName,
-    lastName,
-    email,
-    username,
-    password
-  ) => {
-    await fetch("http://localhost:8080/user", {
-      method: "Post",
-      body: JSON.stringify({
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        username: username,
-        password: password,
-      }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
-      .then((respose) => {
-        if (!respose.ok) {
-          if (respose.status == 400) throw new Error("Invalid input data");
-          else throw new Error("Registeration failure");
-        }
-       return respose.json();
-      })
-      .catch((error) => {
-        console.log(error);
-        showToast(error.message, "error");
-      });
-  };
+
   useEffect(() => {}, []);
   return show ? (
     <>

@@ -1,6 +1,6 @@
 import { FaBars, FaUser } from "react-icons/fa6";
 import Items from "./Items";
-import "./style.css";
+import "./NavBar.css";
 import { IconContext } from "react-icons/lib";
 import Button from "../UI/Button/Button";
 import RegisterForm from "../AuthForms/RegisterForm";
@@ -8,6 +8,7 @@ import LoginForm from "../AuthForms/LoginForm";
 import { useEffect, useRef, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import DefaultProfile from "../UI/Utility/DefaultProfile/DefaultProfile";
 
 function disableScrolling() {
   document.body.style.overflow = "hidden";
@@ -101,9 +102,10 @@ function NavBar() {
               >
                 Logout
               </Button>
-                <div className="profile-icon icon" onClick={()=>{navigate("/me")}}>
-                  <FaUser style={{ color: "var(--primary)" }} />
-                </div>
+                <div className="profile-image" onClick={()=>{navigate("/me")}}>
+                  <DefaultProfile size="1em" />
+              </div>
+                
             </>
           ) : (
             <div className="btn-group">

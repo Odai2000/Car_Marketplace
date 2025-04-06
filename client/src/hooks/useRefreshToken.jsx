@@ -1,10 +1,12 @@
 import useAuth from "./useAuth";
+import useConfig from "./useConfig";
 
 const useRefreshToken = () => {
-  const { auth, setAuth } = useAuth();
+  const { setAuth } = useAuth();
+  const { config } = useConfig();
 
   const refresh = async () => {
-    await fetch("http://localhost:8080/user/token", {
+    await fetch(`${config.serverURL}/user/token`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -23,7 +25,6 @@ const useRefreshToken = () => {
             userData:data.userData
           };
         });
-        console.log("Refreshed: ", auth);
       })
       .catch((error) => {
         console.log(error);

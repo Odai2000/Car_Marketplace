@@ -11,14 +11,21 @@
 }
 
 :root {
-  --primary: #257b27;
+  --primary: hsl(121, 54%, 31%);
   --success: #28a745;
   --destructive: #de0d0d;
   --warning: #f6ff52;
-  --info: #6c757d; 
+  --info: #6c757d;
+
+  --disabled-gray: hsl(0, 0%, 60%);
+
+  /* primary hsl breakdown */
+  --primary-h: 121;
+  --primary-s: 54%;
+  --primary-l: 31%;
 }
 #root {
-    display: contents;
+  display: contents;
 }
 img {
   height: 100%;
@@ -60,13 +67,14 @@ header.home-header {
   padding: 1em;
 }
 
-.icon{
+.icon {
   font-size: 1.2em;
   cursor: pointer;
 }
 .col-1 {
   grid-column: span 1;
-}.col-2 {
+}
+.col-2 {
   grid-column: span 2;
 }
 .col-3 {
@@ -76,17 +84,17 @@ header.home-header {
   grid-column: span 4;
 }
 
-.btn-group{
+.btn-group {
   display: flex;
   gap: 0.5em;
 }
 
 /* flex shortcuts classes */
-.flex-col{
+.flex-col {
   display: flex;
   flex-direction: column;
 }
 
-.flex{
+.flex {
   display: flex;
 }

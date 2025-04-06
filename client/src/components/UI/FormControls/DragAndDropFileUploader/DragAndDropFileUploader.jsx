@@ -17,7 +17,7 @@ const DragAndDrop = ({
   customStyleClass,
   ...props
 }) => {
-  const [uploadFiles, setUploadFiles] = useState([]);
+  const [uploadFiles, setUploadFiles] = useState(value||[]);
   const [isDragOver, setIsDragOver] = useState(false);
   const imageInput = useRef();
 
@@ -72,6 +72,11 @@ const DragAndDrop = ({
     onChange(uploadFiles);
   }, [uploadFiles]);
 
+  useEffect(() => {
+    if (onValidationChange) {
+      onValidationChange(!errorMessage);
+    }
+  }, []);
   useEffect(() => {
     if (onValidationChange) {
       onValidationChange(!errorMessage);

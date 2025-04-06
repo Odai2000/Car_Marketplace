@@ -7,14 +7,14 @@ const EmailVerification = () => {
   const [isSuccess, setIsSuccess] = useState("");
   const { _id } = useParams();
   const location = useLocation();
-  const { serverUrl } = useConfig();
+  const { config } = useConfig();
 
   const verifyEmail = async () => {
     try {
       const query = new URLSearchParams(location.search);
       const token = decodeURIComponent(query.get('token'));
       
-      const response = await fetch(`${serverUrl}/user/${_id}/verify-email`, {
+      const response = await fetch(`${config.serverURL}/user/${_id}/verify-email`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'

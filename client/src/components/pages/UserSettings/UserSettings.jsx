@@ -13,7 +13,7 @@ import {
   FaGear,
   FaUser,
 } from "react-icons/fa6";
-
+import DefaultProfile from "../../UI/Utility/DefaultProfile/DefaultProfile";
 
 const UserSettings = () => {
   const [view, setView] = useState("profile");
@@ -34,17 +34,16 @@ const UserSettings = () => {
 
   const handleSave = async (e) => {
     e.preventDefault();
-    await fetch(`${config.serverUrl}/user`, {
+    await fetch(`${config.serverURL}/user`, {
       method: "PATCH",
       headers: {
-        "content-Type": "application/json",
+        "Content-Type": "application/json",
         Authorization: `Bearer ${auth.accessToken}`,
       },
       body: JSON.stringify({
         _id: auth.userData._id,
         firstName: firstName,
         lastName: lastName,
-        password: password,
         email: email,
       }),
     })
@@ -70,7 +69,7 @@ const UserSettings = () => {
 
   const handlePasswordChange = async (e) => {
     e.preventDefault();
-    await fetch(`${serverUrl}/me/change-password`, {
+    await fetch(`${config.serverURL}/me/change-password`, {
       method: "PATCH",
       headers: {
         "content-Type": "application/json",
@@ -88,7 +87,6 @@ const UserSettings = () => {
         }
         navigate("/me/settings");
         showToast("Password changed.", "success");
-
       })
       .catch((error) => {
         console.log(error);
@@ -97,7 +95,7 @@ const UserSettings = () => {
   };
   const handleAccountDelete = async (e) => {
     e.preventDefault();
-    await fetch(`${serverUrl}/user`, {
+    await fetch(`${config.serverURL}/user`, {
       method: "DELETE",
       credentials: "include",
       headers: {
@@ -170,9 +168,7 @@ const UserSettings = () => {
           <div className="footer flex">
             <div className="profile-container flex">
               <div className="profile-image">
-                <div className="default-profile-image">
-                  <FaUser style={{ color: "#fff" }} />
-                </div>
+                  <DefaultProfile size="1em" />
               </div>
               <div className="name">{firstName + " " + lastName}</div>
             </div>

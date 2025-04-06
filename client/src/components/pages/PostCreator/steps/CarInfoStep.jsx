@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import useAppData from "../../../../hooks/useAppData";
 import Input from "../../../UI/FormControls/Input";
 import Select from "../../../UI/FormControls/select";
@@ -13,6 +13,7 @@ const CarInfoStep = ({
   const { carSpecsData, loadingCarSpecs } = useAppData();
   const [selectedMake, setSelectedMake] = useState({});
 
+
   useEffect(() => {
     setControlsValidity({
       make: !!formData.car.make,
@@ -26,7 +27,9 @@ const CarInfoStep = ({
     });
 
     if (formData.car.make && carSpecsData?.makes) {
-      const make = carSpecsData.makes.find((make) => make.name === formData.car.make);
+      const make = carSpecsData.makes.find(
+        (make) => make.name === formData.car.make
+      );
       setSelectedMake(make || {});
     }
   }, []);
@@ -48,7 +51,7 @@ const CarInfoStep = ({
       ...prev,
       car: {
         ...prev.car,
-        make: makeData.name,
+        make: makeData?.name,
       },
     }));
   };
@@ -202,6 +205,6 @@ const CarInfoStep = ({
       />
     </>
   );
-};
+}
 
 export default CarInfoStep;

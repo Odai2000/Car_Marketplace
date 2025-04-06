@@ -18,7 +18,8 @@
 .Filter {
   position: absolute;
   top:0;
-  display: none;
+  height:fit-content;
+  display: flex;
   flex-direction: column;
   width: 100%;
   padding: 1em 2em;
@@ -63,8 +64,6 @@
   /* Filter */
   .Filter {
     position: relative;
-    display: flex;
-    flex-direction: column;
     gap: 1em;
     max-width: 55ch;
   }

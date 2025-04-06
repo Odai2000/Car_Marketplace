@@ -12,7 +12,17 @@
   
   .btn.primary {
     background-color: var(--primary);
-    color: white;
+    color: #fff;
+
+    transition: background-color ease-in 0.3s;
+  }
+  
+  .btn.primary:hover {
+    background-color: hsl(
+      var(--primary-h),
+      var(--primary-s),
+      calc(var(--primary-l) + 4%)
+    );
   }
   
   .btn.secondary {
@@ -57,31 +67,28 @@
     color: var(--destructive);
   }
 
-  .btn.disabled{
-    color:white;
-  }
-
   .btn.primary:disabled{
-    background-color: gray;
+    background-color: var( --disabled-gray);
+    color:#fff;
   }
 
   .btn.secondary.disabled {
     background-color: transparent;
-    color:  gray;
-    border-color:  gray;
+    color:  var( --disabled-gray);
+    border-color:  var( --disabled-gray);
   }
 
   .btn.round {
     border-radius: 64px;
   }
 
-  .btn .icon{
+  .btn.icon{
     padding: 0.5em;
     color: var(--primary);
     background-color: transparent;
   } 
   
 
-  .btn .icon.inverse{
-    color: white;
+  .btn.icon.inverse{
+    color: #fff;
   }

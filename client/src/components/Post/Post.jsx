@@ -9,11 +9,13 @@ import {
   FaPhone,
   FaMessage,
   FaGasPump,
+  FaLocationDot,
 } from "react-icons/fa6";
 import { PiEngineFill } from "react-icons/pi";
 import { TbManualGearbox } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import useMap from "../../hooks/useMap";
+import PropTypes from "prop-types";
 
 const Post = ({ data }) => {
   const navigate = useNavigate();
@@ -26,7 +28,7 @@ const Post = ({ data }) => {
   let imageUrls = data?.imagesUrls;
 
   let defaultBlock = [
-    <div key="0" className="no-image" alt="No Photos" onClick={handleMessage}>
+    <div key="0" className="no-image" alt="No Photos">
       <FaCamera style={{ height: "2em", width: "2em" }} /> No Photos
     </div>,
   ];
@@ -46,12 +48,16 @@ const Post = ({ data }) => {
       </div>
 
       <div className="post-details">
-        <h3 className="post-title ">{data?.title}</h3>
+        <span className="post-title ">
+          <h3>{data?.title}</h3>
+        </span>
 
-        <span className="post-price ">{data ? "$" + data.price : ""}</span>
+        <span className="post-price ">
+          {data?.price >= 0 && `$${data.price.toLocaleString()}`}
+        </span>
 
         <span className="car-name">
-          {data?.car?.make + " " + data?.car?.model}
+          {`${data?.car?.make || ""} ${data?.car?.model || ""}`}
         </span>
 
         <span>
@@ -61,43 +67,45 @@ const Post = ({ data }) => {
           <FaCalendar /> {data?.car?.year}
         </span>
         <span>
-          <FaRoad /> {data?.car?.mileage + " km"}
+          <FaRoad />{" "}
+          {data?.car?.mileage && `${data.car.mileage.toLocaleString()} km`}
         </span>
         <span>
           <FaGasPump /> {data?.car?.fuel}
         </span>
         <span>
-          <PiEngineFill /> {data?.car?.hp + " " + "hp"}
+          <PiEngineFill />{" "}
+          {data?.car?.hp && `${data.car.hp.toLocaleString()} hp`}
         </span>
         <span>
           <TbManualGearbox /> {data?.car?.transmission}
         </span>
-
-        <div className="post-footer ">
-          <span className="post-location ">
-            {data?.location.longitude && data?.location.latitude ? (
+        <span className="post-location ">
+          {data?.location?.longitude && data?.location?.latitude ? (
+            <>
+              {" "}
+              <FaLocationDot />
               <a
                 href={getMapURL({
                   longitude: data.location.longitude,
                   latitude: data.location.latitude,
                 })}
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                {data.location.address}
-              </a>
-            ) : (
-              data?.location?.address
-            )}
-          </span>
-
+                {data?.location?.address}
+              </a>{" "}
+            </>
+          ) : (
+            data?.location?.address
+          )}
+        </span>
+        <div className="post-footer ">
           <div className="btn-group post-btn-group ">
             <Button variant="primary">
               <FaPhone /> Call
             </Button>
-            <Button
-              variant="primary"
-              value={data?.user}
-              onClick={handleMessage}
-            >
+            <Button variant="primary" onClick={handleMessage}>
               <FaMessage /> Message
             </Button>
           </div>
@@ -106,5 +114,53 @@ const Post = ({ data }) => {
     </div>
   );
 };
+Post.propTypes = {
+  data: PropTypes.shape({
+    user: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired,
+    imageIds: PropTypes.arrayOf(PropTypes.string),
 
+    car: PropTypes.shape({
+      make: PropTypes.string.isRequired,
+      model: PropTypes.string.isRequired,
+      bodyType: PropTypes.string.isRequired,
+      fuel: PropTypes.string.isRequired,
+      mileage: PropTypes.number.isRequired,
+      hp: PropTypes.number.isRequired,
+    }).isRequired,
+
+    location: PropTypes.shape({
+      countyCode: PropTypes.string.isRequired,
+      latitude: PropTypes.number,
+      longitude: PropTypes.number,
+    }).isRequired,
+  }).isRequired,
+};
+
+Post.defaultProps = {
+  data: {
+    user: "failedToGetUser",
+    title: "",
+    price: 0,
+    imageIds: [],
+
+    car: {
+      make: "",
+      model: "",
+      bodyType: "",
+      fuel: "",
+      mileage: "",
+      hp: "",
+      year: "",
+      transmission: "",
+    },
+
+    location: {
+      countyCode: null,
+      latitude: null,
+      longitude: null,
+    },
+  },
+};
 export default Post;

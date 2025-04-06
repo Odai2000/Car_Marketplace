@@ -1,6 +1,6 @@
 import "./PostCreator.css";
 import Button from "../../UI/Button/Button";
-import { useEffect, useState } from "react";
+import {useEffect, useState } from "react";
 import useAuth from "../../../hooks/useAuth";
 
 import AddressStep from "./steps/AddressStep";
@@ -10,6 +10,7 @@ import CarPhotosStep from "./steps/CarPhotosStep";
 import ReviewStep from "./steps/ReviewStep";
 import useConfig from "../../../hooks/useConfig";
 import { FaAngleRight } from "react-icons/fa6";
+import useWindowSize from "../../../hooks/useWindow";
 
 const steps = [
   { component: CarInfoStep, name: "Car details" },
@@ -29,21 +30,16 @@ const PostCreator = () => {
   const [formData, setFormData] = useState({
     title: "",
     car: {},
-    price: "",
+    price: 0,
     location: {},
     images: [],
-    user: auth._id,
+    user: auth.userData._id,
   });
 
   const [controlsValidity, setControlsValidity] = useState({});
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
-  const handleResize = () => {
-    setIsSmallScreen(window.innerWidth < 700);
-  };
+  const { isSmallScreen } = useWindowSize();
 
   useEffect(() => {
-    window.addEventListener("resize", handleResize);
-
     const isValid = Object.values(controlsValidity).every(
       (valid) => valid === true
     );
@@ -88,7 +84,7 @@ const PostCreator = () => {
     setControlsValidity((prev) => ({ ...prev, [field]: !!isValid }));
     console.log(field, isValid);
     console.log(isStepValid);
-  };
+  }
 
   return (
     <div className="PostCreator">

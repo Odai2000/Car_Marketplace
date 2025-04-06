@@ -33,20 +33,11 @@ body {
   color: #666;
 }
 .user-header .profile-image {
-  width: fit-content;
-  height: fit-content;
-  border: 1px #bbb solid;
+  width: 12rem;
+  height: 12rem;
+  border: 1px #ddd solid;
   border-radius: 100%;
-  background-color: #ddd;
-  font-size: max(5rem, 8vw);
-  padding: 0.25em ;
-}
-.user-header .default-profile-image {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  overflow: hidden;
 }
 
 .user-header .default-profile-image *{

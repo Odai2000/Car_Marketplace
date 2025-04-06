@@ -1,24 +1,26 @@
-import { useEffect, useState,forwardRef } from "react";
+/* eslint-disable react/display-name */
+import { useEffect, useState, forwardRef } from "react";
 import { useNavigate } from "react-router-dom";
 import useAppData from "../../../../hooks/useAppData";
 import Button from "../../../UI/Button/Button";
 import Select from "../../../UI/FormControls/select";
+import { FaX } from "react-icons/fa6";
 
-const Filter = forwardRef(({},ref) => {
+const Filter = ({ query, handleToggle, isSmallScreen }) => {
   const { carSpecsData, loading } = useAppData();
   const [selectedMake, setSelectedMake] = useState({});
 
-  const [make, setMake] = useState("");
-  const [model, setModel] = useState("");
-  const [yearMin, setYearMin] = useState("");
-  const [yearMax, setYearMax] = useState("");
-  const [bodyType, setBodyType] = useState("");
-  const [mileageMin, setMileageMin] = useState("");
-  const [mileageMax, setMileageMax] = useState("");
-  const [hpMin, setHpMin] = useState("");
-  const [hpMax, setHpMax] = useState("");
-  const [priceMin, setPriceMin] = useState("");
-  const [priceMax, setPriceMax] = useState("");
+  const [make, setMake] = useState(query.get("make") || "");
+  const [model, setModel] = useState(query.get("model") || "");
+  const [yearMin, setYearMin] = useState(query.get("yearMin") || "");
+  const [yearMax, setYearMax] = useState(query.get("yearMax") || "");
+  const [bodyType, setBodyType] = useState(query.get("bodyType") || "");
+  const [mileageMin, setMileageMin] = useState(query.get("mileageMin") || "");
+  const [mileageMax, setMileageMax] = useState(query.get("mileageMax") || "");
+  const [hpMin, setHpMin] = useState(query.get("hpMin") || "");
+  const [hpMax, setHpMax] = useState(query.get("hpMax") || "");
+  const [priceMin, setPriceMin] = useState(query.get("priceMin") || "");
+  const [priceMax, setPriceMax] = useState(query.get("priceMax") || "");
 
   const navigate = useNavigate();
 
@@ -40,7 +42,7 @@ const Filter = forwardRef(({},ref) => {
   })(); //notice: this is an array not a function
 
   const hpOptions = ((fromHp = 20, toHp = 400) => {
-    return Array.from({ length: (toHp - fromHp) / 1000 + 1 }, (x, y) => ({
+    return Array.from({ length: (toHp - fromHp) / 10 + 1 }, (x, y) => ({
       value: fromHp + y * 20,
       label: fromHp + y * 20 + " hp",
     }));
@@ -73,7 +75,7 @@ const Filter = forwardRef(({},ref) => {
   const handleMakeChange = (e) => {
     console.log("e", e);
 
-    const makeData = carSpecsData.makes.find((make) => {
+    const makeData = carSpecsData?.makes.find((make) => {
       return make.name === e;
     });
 
@@ -104,13 +106,34 @@ const Filter = forwardRef(({},ref) => {
     navigate(`/posts?${query}`);
   };
 
+  useEffect(() => {
+    if (query.get("make")) {
+      const makeData = carSpecsData?.makes?.find(
+        (make) => make.name === query.get("make")
+      );
+
+      setMake(makeData?.name);
+      setSelectedMake(makeData);
+
+      if (
+        query.get("model") &&
+        makeData?.models?.includes(query.get("model"))
+      ) {
+        setModel(query.get("model"));
+      }
+    }
+  }, [query, carSpecsData?.makes]);
+
   if (loading) {
     console.log("loading");
     return <div>Loading.....</div>;
   }
   return (
     <>
-      <div className="Filter card" ref={ref}>
+      <div className="Filter card">
+       {isSmallScreen && <Button styleName="cross" onClick={handleToggle}>
+          <FaX />
+        </Button>}
         <h2>Filter</h2>
         <form>
           <Select
@@ -122,7 +145,7 @@ const Filter = forwardRef(({},ref) => {
             }}
             defaultOption={{ label: "Make", value: "" }}
           >
-            {carSpecsData.makes.map((make, index) => (
+            {carSpecsData?.makes?.map((make, index) => (
               <option key={index} value={make.name}>
                 {make.name}
               </option>
@@ -219,6 +242,6 @@ const Filter = forwardRef(({},ref) => {
       </div>
     </>
   );
-})
+};
 
 export default Filter;

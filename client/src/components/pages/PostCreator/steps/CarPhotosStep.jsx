@@ -1,20 +1,18 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import Button from "../../../UI/Button/Button";
 import DragAndDrop from "../../../UI/FormControls/DragAndDropFileUploader/DragAndDropFileUploader";
 
-const CarPhotosStep = ({ formData, setFormData, isSmallScreen }) => {
+const CarPhotosStep = ({ formData, setFormData, setControlsValidity,isSmallScreen }) => {
   const imageInput = useRef();
   const handleImageInput = () => {
     imageInput.current.click();
   };
+
   const acceptString='image/jpeg, image/png, image/webp'
+
+  useEffect(()=>{  setControlsValidity({images:!!formData?.images})},[])
   return (
     <>
-      {/* <div className="form-group post-img">
-        <Button type="button" variant="primary" onClick={handleImageInput}>
-          Add Image
-        </Button>
-      </div> */}
       <div className="m-post-img">
         <input
           ref={imageInput}
@@ -38,7 +36,10 @@ const CarPhotosStep = ({ formData, setFormData, isSmallScreen }) => {
         onChange={(fileArray) => {
           setFormData({ ...formData, images: fileArray });
         }}
-        maxFiles={3}
+        maxFiles={20}
+        maxSize={3*1024*1024}
+        value={formData?.images}
+        onClick={handleImageInput}
       />}
     </>
   );

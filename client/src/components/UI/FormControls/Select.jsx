@@ -1,6 +1,6 @@
 import { FaCircleExclamation } from "react-icons/fa6";
 import "./FormControls.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Select = ({
   name,
@@ -11,28 +11,27 @@ const Select = ({
   styleName,
   options,
   defaultOption,
-  validationRules,
+  validationRules={},
   onValidationChange,
   children,
 }) => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const validate = (value) => {
-    const { required, customValidator} =
-      validationRules;
+    const { required, customValidator } = validationRules;
 
     if (required && value == "") {
       return `${label ? label : "This field"}  is required.`;
     }
-    
-    if (customValidator ) {
-      return customValidator(value)
+
+    if (customValidator) {
+      return customValidator(value);
     }
 
     return ""; // no errors
   };
 
-  const handleBlur = (e) => {
+  const handleChange = (e) => {
     const errorMessage = validate(e.target.value);
     setErrorMessage(errorMessage);
 
@@ -40,7 +39,14 @@ const Select = ({
     if (onValidationChange) {
       onValidationChange(!errorMessage);
     }
+    onChange(e)
   };
+
+    useEffect(() => {
+      if (onValidationChange) {
+        onValidationChange(validate(value));
+      }
+    }, []);
   return (
     <div className={`form-control-container ${styleName}`}>
       {label ? (
@@ -54,8 +60,7 @@ const Select = ({
         name={name}
         id={id}
         value={value}
-        onChange={onChange}
-        onBlur={handleBlur}
+        onChange={(e) => handleChange(e)}
         className={`form-control select-field ${errorMessage ? "error" : ""}`}
       >
         {defaultOption ? (

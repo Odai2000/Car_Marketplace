@@ -28,6 +28,9 @@
 .DragAndDrop .drop-target * {
   pointer-events: none;
 }
+.DragAndDrop .drop-target .btn {
+  pointer-events:visible;
+}
 
 .DragAndDrop .drop-target.dragging-over {
   border: none;

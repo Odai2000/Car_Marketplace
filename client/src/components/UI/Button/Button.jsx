@@ -1,11 +1,27 @@
 import "./Button.css";
 
-function Button({styleName,id,variant, destructive, onClick, children, icon, ...props}) {
+function Button({
+  styleName,
+  id,
+  type = "button",
+  variant,
+  destructive,
+  onClick,
+  children,
+  icon,
+  ...props
+}) {
   const className = `btn ${variant} ${destructive ? "destructive" : ""} `;
 
   return (
-    <button type="button" id ={id} className={className + (styleName?styleName:'') } onClick={onClick} {...props}>
-      {icon && <i className={icon}/>} {children}
+    <button
+      type={type}
+      id={id}
+      className={className + (styleName ? styleName : "")}
+      onClick={onClick}
+      {...props}
+    >
+      {icon && <i className={icon} />} {children}
     </button>
   );
 }

@@ -12,7 +12,7 @@ const Input = ({
   label,
   placeholder,
   styleName,
-  validationRules,
+  validationRules={},
   onValidationChange,
   ...props
 }) => {

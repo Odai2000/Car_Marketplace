@@ -141,6 +141,11 @@ const AddressStep = ({
         address: address,
       },
     });
+
+    setControlsValidity({
+      countryCode: !!geocodeData.features[0].properties.countrycode,
+    }); //failed to find better solution for now....
+
   };
 
   const fetchAddressSuggestions = async (query) => {

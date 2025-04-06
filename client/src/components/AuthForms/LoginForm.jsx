@@ -9,55 +9,23 @@ import { useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import useToast from "../../hooks/useToast";
 
-function LoginForm(props) {
+function LoginForm({ show, onCancel }) {
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
 
-  const { show, onCancel } = props;
-  const { setAuth, persist, setPersist } = useAuth();
+  const { persist, setPersist, login } = useAuth();
   const { showToast } = useToast();
 
-  const login = async (username, password) => {
-    fetch("http://localhost:8080/user/login", {
-      method: "POST",
-      credentials: "include",
-      body: JSON.stringify({
-        username: username,
-        password: password,
-      }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          if (response.status === 401) {
-            throw new Error("Incorrect username or password.");
-          }
-          throw new Error("Login failed");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setAuth((prev) => ({
-          ...prev,
-          accessToken: data.accessToken,
-          roles: data.userData.roles,
-          userData: data.userData,
-        }));
-      })
-      .catch((error) => {
-        console.log(error);
-        showToast(error.message, "error");
-      })
-      .finally(() => {
-        setUsername("");
-        setPassword("");
-      });
-  };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    login(username, password);
+    const result = await login(username, password);
+
+    if (result.success) {
+      setUsername("");
+      setPassword("");
+    } else {
+      showToast(result.errorMsg, "error");
+    }
   };
   const togglePersist = () => {
     setPersist((prev) => !prev);
@@ -97,11 +65,15 @@ function LoginForm(props) {
           />
 
           <span className="col-2">
-            Don't have an account? <Button variant="link">Sign up</Button>
+            {`Don't have an account?`} <Button variant="link">Sign up</Button>
           </span>
 
           <div id="remeber-me-container">
-            <Input type="checkbox" onChange={togglePersist} checked={persist} />
+            <Input
+              type="checkbox"
+              onChange={togglePersist}
+              checked={persist || false}
+            />
             <label>Remeber Me</label>
           </div>
 

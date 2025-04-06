@@ -109,6 +109,17 @@ nav.open > ul > li {
   gap: 0.5em;
 }
 
+/* to replace later */
+.navBar-rightside .profile-image{
+  height: 2em;
+  width: 2em;
+  border: 1px #ddd solid;
+  border-radius: 100%;
+  overflow: hidden;
+} 
+.navBar-rightside .profile-image:hover{
+cursor:pointer;
+} 
 
 @media (min-width: 700px) {
   .btn-group {

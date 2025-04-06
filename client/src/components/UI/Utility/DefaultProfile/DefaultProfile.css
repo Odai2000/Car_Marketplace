@@ -1,0 +1,10 @@
+.DefaultProfile {
+  height: 100%;
+  width: 100%;
+  background-color: #eee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  /* font-size: max(5rem, 8vw); */
+}

@@ -17,6 +17,15 @@
   padding: 0.25em;
   font-size: 1.5em;
   color: var(--primary);
+
+  box-shadow: inset 4px 0 8px -4px rgba(0, 0, 0, 0.04),
+    inset -4px 0 8px -4px rgba(0, 0, 0, 0.04), 0 2px 12px rgba(0, 0, 0, 0.15);
+
+  transition: all 0.3s ease;
+}
+.HighlightedPosts > .Carousel > .carousel-btn:hover {
+  background-color: var(--primary);
+  color: #fff;
 }
 
 @media (min-width: 768px) {

@@ -4,11 +4,11 @@ import "./UserAccount.css";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import useAuth from "../../../hooks/useAuth";
+import DefaultProfile from "../../UI/Utility/DefaultProfile/DefaultProfile";
 
 const serverUrl = import.meta.env.VITE_SERVER_URL;
 
 const UserAccount = () => {
-
   const [firstName, setFirstName] = useState(null);
   const [lastName, setLastName] = useState(null);
   const [username, setUsername] = useState(null);
@@ -34,9 +34,7 @@ const UserAccount = () => {
       <div className="UserAccount">
         <div className="user-header">
           <div className="profile-image">
-            <div className="default-profile-image">
-              <FaUser style={{ color: "#999" }} />
-            </div>
+            <DefaultProfile size="max(5rem, 8vw)" />
           </div>
           <div className="user-info">
             <div className="name">{`${firstName} ${lastName}`}</div>
@@ -74,7 +72,6 @@ const UserAccount = () => {
         ) : (
           ""
         )}
-
       </div>
     </>
   );

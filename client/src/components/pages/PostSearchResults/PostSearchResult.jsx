@@ -2,14 +2,16 @@ import "./PostSearchResult.css";
 import Filter from "./Filter/Filter";
 import Post from "../../Post/Post";
 import Button from "../../UI/Button/Button";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-
+import useConfig from "../../../hooks/useConfig";
+import useWindowSize from "../../../hooks/useWindow";
 
 const PostSearchResult = () => {
   const [posts, setPosts] = useState([]);
-
-  const filterComponent = useRef(null);
+  const { config } = useConfig();
+  const { isSmallScreen } = useWindowSize();
+  const [showFilter, setShowFilter] = useState(!isSmallScreen);
 
   const useQuery = () => {
     return new URLSearchParams(useLocation().search);
@@ -24,6 +26,8 @@ const PostSearchResult = () => {
   const bodyType = query.get("bodyType");
   const mileageMin = query.get("mileageMin");
   const mileageMax = query.get("mileageMax");
+  const hpMin = query.get("hpMin");
+  const hpMax = query.get("hpMax");
   const transmission = query.get("transmission");
   const priceMin = query.get("priceMin");
   const priceMax = query.get("priceMax");
@@ -38,11 +42,13 @@ const PostSearchResult = () => {
       ...(mileageMin && { mileageMin }),
       ...(mileageMax && { mileageMax }),
       ...(transmission && { transmission }),
+      ...(hpMin && { hpMin }),
+      ...(hpMax && { hpMax }),
       ...(priceMin && { priceMin }),
       ...(priceMax && { priceMax }),
     }).toString();
 
-    fetch(`http://localhost:8080/post?${queryParams}`, {
+    fetch(`${config.serverURL}/post?${queryParams}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -50,26 +56,44 @@ const PostSearchResult = () => {
     })
       .then((response) => response.json())
       .then((data) => setPosts(data));
-  }, [make, model, yearMin, yearMax, bodyType, mileageMin, mileageMax, transmission, priceMin, priceMax]);
+  }, [
+    make,
+    model,
+    yearMin,
+    yearMax,
+    bodyType,
+    mileageMin,
+    mileageMax,
+    hpMin,
+    hpMax,
+    transmission,
+    priceMin,
+    priceMax,
+  ]);
 
   const toggleFilter = () => {
-    if (!filterComponent.current) return;
-    if (filterComponent.current.style.display == 'flex') {
-      filterComponent.current.style.display = 'none';
-    } else {
-      filterComponent.current.style.display = 'flex';
-    }
+    setShowFilter(!showFilter);
   };
+
   return (
     <>
-     
       <div className="PostSearchResult">
-    
-        <Filter  ref ={filterComponent}/>
+        {(showFilter || !isSmallScreen) && (
+          <Filter
+            query={query}
+            handleToggle={toggleFilter}
+            isSmallScreen={isSmallScreen}
+          />
+        )}
+
         <div className="post-results-container">
-        <Button variant="primary" id="filter-toggle-btn" onClick={toggleFilter}>
-        Filter
-      </Button>
+          <Button
+            variant="primary"
+            id="filter-toggle-btn"
+            onClick={toggleFilter}
+          >
+            Filter
+          </Button>
           {posts.length > 0 ? (
             posts.map((post) => <Post key={post.id} data={post} />)
           ) : (

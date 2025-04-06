@@ -43,14 +43,9 @@ form .form-contol-error-message {
 }
 
 /* Autocomplete */
-/* .Autocomplete input{
-  border-bottom-right-radius: 2px;
-  border-bottom-left-radius: 2px;
-  } */
+
 .Autocomplete {
-  /* border: 1px solid black; */
   position: relative;
-  /* bottom: 1em; */
   border-radius: 1em;
 }
 .Autocomplete .autocomplete-dropdown {
@@ -61,6 +56,7 @@ form .form-contol-error-message {
   border: 1px solid #ccc;
   border-radius: 0.5em;
 }
+
 .Autocomplete .autocomplete-dropdown li {
   padding: 0.75em;
   font-size: 1.25em;
