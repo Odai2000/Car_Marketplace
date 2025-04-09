@@ -11,13 +11,13 @@ import {
   FaGasPump,
   FaLocationDot,
 } from "react-icons/fa6";
-import { PiEngineFill } from "react-icons/pi";
+import { PiDotsThreeOutlineFill, PiEngineFill } from "react-icons/pi";
 import { TbManualGearbox } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import useMap from "../../hooks/useMap";
 import PropTypes from "prop-types";
 
-const Post = ({ data }) => {
+const Post = ({ data = null }) => {
   const navigate = useNavigate();
   const { getMapURL } = useMap();
 
@@ -25,7 +25,7 @@ const Post = ({ data }) => {
     navigate(`/chat/${data?.user}`);
   };
 
-  let imageUrls = data?.imagesUrls;
+  let images = data?.images;
 
   let defaultBlock = [
     <div key="0" className="no-image" alt="No Photos">
@@ -36,10 +36,10 @@ const Post = ({ data }) => {
   return (
     <div className="post" key={data?._id}>
       <div className="post-img-container">
-        {imageUrls && imageUrls.length > 0 ? (
+        {images && images.length > 0 ? (
           <Carousel single counter>
-            {imageUrls.map((url, index) => (
-              <img key={index} src={url} />
+            {images.map((image, index) => (
+              <img key={index} src={image.imageURL} />
             ))}
           </Carousel>
         ) : (
@@ -47,13 +47,18 @@ const Post = ({ data }) => {
         )}
       </div>
 
+      {/* <div className="icon"> */}
+      <Button
+        variant="icon"
+        onClick={() => {
+          navigate("/edit", { state: { postData: data } });
+        }}
+      >
+        <PiDotsThreeOutlineFill />
+      </Button>
       <div className="post-details">
         <span className="post-title ">
           <h3>{data?.title}</h3>
-        </span>
-
-        <span className="post-price ">
-          {data?.price >= 0 && `$${data.price.toLocaleString()}`}
         </span>
 
         <span className="car-name">
@@ -67,14 +72,14 @@ const Post = ({ data }) => {
           <FaCalendar /> {data?.car?.year}
         </span>
         <span>
-          <FaRoad />{" "}
+          <FaRoad />
           {data?.car?.mileage && `${data.car.mileage.toLocaleString()} km`}
         </span>
         <span>
           <FaGasPump /> {data?.car?.fuel}
         </span>
         <span>
-          <PiEngineFill />{" "}
+          <PiEngineFill />
           {data?.car?.hp && `${data.car.hp.toLocaleString()} hp`}
         </span>
         <span>
@@ -83,7 +88,6 @@ const Post = ({ data }) => {
         <span className="post-location ">
           {data?.location?.longitude && data?.location?.latitude ? (
             <>
-              {" "}
               <FaLocationDot />
               <a
                 href={getMapURL({
@@ -94,7 +98,7 @@ const Post = ({ data }) => {
                 rel="noopener noreferrer"
               >
                 {data?.location?.address}
-              </a>{" "}
+              </a>
             </>
           ) : (
             data?.location?.address
@@ -109,6 +113,10 @@ const Post = ({ data }) => {
               <FaMessage /> Message
             </Button>
           </div>
+
+          <span className="post-price ">
+            {(data?.price >= 0 && `$${data.price.toLocaleString()}`) || "$"}
+          </span>
         </div>
       </div>
     </div>
@@ -119,7 +127,7 @@ Post.propTypes = {
     user: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
-    imageIds: PropTypes.arrayOf(PropTypes.string),
+    images: PropTypes.arrayOf(PropTypes.object),
 
     car: PropTypes.shape({
       make: PropTypes.string.isRequired,
@@ -143,7 +151,7 @@ Post.defaultProps = {
     user: "failedToGetUser",
     title: "",
     price: 0,
-    imageIds: [],
+    images: [],
 
     car: {
       make: "",

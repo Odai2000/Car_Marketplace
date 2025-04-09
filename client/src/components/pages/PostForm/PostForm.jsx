@@ -1,6 +1,6 @@
 import "./PostCreator.css";
 import Button from "../../UI/Button/Button";
-import {useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useAuth from "../../../hooks/useAuth";
 
 import AddressStep from "./steps/AddressStep";
@@ -11,6 +11,7 @@ import ReviewStep from "./steps/ReviewStep";
 import useConfig from "../../../hooks/useConfig";
 import { FaAngleRight } from "react-icons/fa6";
 import useWindowSize from "../../../hooks/useWindow";
+import { useLocation } from "react-router-dom";
 
 const steps = [
   { component: CarInfoStep, name: "Car details" },
@@ -20,21 +21,24 @@ const steps = [
   { component: ReviewStep, name: "Review" },
 ];
 
-const PostCreator = () => {
+const PostForm = ({ isUpdating = false, }) => {
   const { auth } = useAuth();
   const { config } = useConfig();
-
+  const location = useLocation();
+const postData = location?.state?.postData;
   const [stepIndex, setStepIndex] = useState(0);
   const [isStepValid, setIsStepValid] = useState();
 
-  const [formData, setFormData] = useState({
-    title: "",
-    car: {},
-    price: 0,
-    location: {},
-    images: [],
-    user: auth.userData._id,
-  });
+  const [formData, setFormData] = useState(
+    postData || {
+      title: "",
+      car: {},
+      price: 0,
+      location: {},
+      images: [],
+      user: auth.userData._id,
+    }
+  );
 
   const [controlsValidity, setControlsValidity] = useState({});
   const { isSmallScreen } = useWindowSize();
@@ -55,6 +59,8 @@ const PostCreator = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (isUpdating) editPost();
+
     createPost();
   };
 
@@ -72,7 +78,18 @@ const PostCreator = () => {
       headers: {
         Authorization: `Bearer ${auth.accessToken}`,
       },
-      body: formData,
+      body: JSON.stringify(formData),
+    })
+      .then((response) => response.json())
+      .catch((error) => console.log(error));
+  };
+  const editPost = async () => {
+    await fetch(`${config.serverURL}/post`, {
+      method: "Patch",
+      headers: {
+        Authorization: `Bearer ${auth.accessToken}`,
+      },
+      body: JSON.stringify(formData),
     })
       .then((response) => response.json())
       .catch((error) => console.log(error));
@@ -82,15 +99,13 @@ const PostCreator = () => {
 
   const handleValidateChange = (field, isValid) => {
     setControlsValidity((prev) => ({ ...prev, [field]: !!isValid }));
-    console.log(field, isValid);
-    console.log(isStepValid);
-  }
+  };
 
   return (
     <div className="PostCreator">
       <form className="PostCreator-form">
         <div className="form-header col-2">
-          <h2>Create New Post</h2>
+          <h2>{`${isUpdating ? "Edit post" : "New post"}`}</h2>
         </div>
 
         <div className="form-subheader col-2">
@@ -152,7 +167,7 @@ const PostCreator = () => {
               variant="primary"
               disabled={!isStepValid}
             >
-              Post
+              {`${isUpdating ? "Save" : "Post"}`}
             </Button>
           )}
         </div>
@@ -161,4 +176,4 @@ const PostCreator = () => {
   );
 };
 
-export default PostCreator;
+export default PostForm;

@@ -1,4 +1,5 @@
 .post {
+  position: relative;
   width: min();
   display: flex;
   flex-direction: column;
@@ -6,6 +7,10 @@
   background-color: #fff;
 }
 
+.post > .icon{
+  position: absolute;
+  right: 1em;
+}
 .post > .post-details {
   display: grid;
   gap: 0.3em;
@@ -37,6 +42,7 @@
 }
 
 .post .post-details .post-price {
+  justify-self: end
   display: flex;
   justify-content: end;
   grid-column: span 1;
@@ -86,10 +92,19 @@
 
 .post-footer {
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  justify-content: end;
   gap: 1em;
   grid-column: span 2;
+}
+
+.post-btn-group {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.post-btn-group > * {
+  flex-grow: 1;
 }
 
 .post .Carousel {
@@ -122,10 +137,13 @@
     flex-direction: row;
     /* height: 15em; */
   }
-
+ .post .icon {
+    flex-direction: row;
+  }
   .post .post-details {
     gap: 0.75em;
     grid-template-columns: repeat(3, minmax(6rem, 1fr));
+    
   }
 
   .post .post-details .post-title {
@@ -133,13 +151,11 @@
     grid-column: span 2;
   }
 
-  
   .post .post-details .post-price {
     grid-column: span 1;
     text-align: end;
   }
 
-  
   .post .post-details .car-name {
     grid-column: span 3;
   }
@@ -150,9 +166,13 @@
   }
 
   .post-footer {
-    flex-direction: column;
-    justify-content: space-between;
+
+    /* justify-content: space-between; */
     grid-column: span 3;
+  }
+
+  .post-footer .post-btn-group {
+   flex-direction: row;
   }
 
   .post .post-details .post-location {

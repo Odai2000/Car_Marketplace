@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import "./App.css";
 import Layout from "./components/Layout";
 import Home from "./components/pages/Home/Home";
-import PostCreator from "./components/pages/PostCreator/PostCreator";
+import PostForm from "./components/pages/PostForm/PostForm";
 import PostSearchResult from "./components/pages/PostSearchResults/PostSearchResult";
 import AuthProvider from "./context/AuthProvider";
 import AppDataProvider from "./context/AppDataProvider";
@@ -34,7 +34,8 @@ function App() {
                     />
 
                     <Route element={<ReqAuth allowedRoles={["USER"]} />}>
-                      <Route path="new-post" element={<PostCreator />} />
+                      <Route path="new" element={<PostForm />} />
+                      <Route path="edit" element={<PostForm isUpdating={true}/>} />
                       <Route path="me" element={<UserAccount />} />
                     </Route>
                   </Route>

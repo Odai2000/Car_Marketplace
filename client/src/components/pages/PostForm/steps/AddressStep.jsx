@@ -22,11 +22,11 @@ const AddressStep = ({
 
   useEffect(() => {
     setControlsValidity({
-      countryCode: !!formData.location.countryCode,
+      countryCode: !!formData?.location?.countryCode,
       // stateCode: !!formData.location.stateCode,
     });
 
-    if (formData.location.countryCode && countriesData) {
+    if (formData?.location?.countryCode && countriesData) {
       const country = countriesData.find(
         (country) => country.code === formData.location.countryCode
       );
@@ -180,7 +180,7 @@ const AddressStep = ({
     <>
       <Select
         name="countryCode"
-        value={formData.location.countryCode}
+        value={formData?.location?.countryCode}
         onChange={(e) => handleSelectedCountryChange(e.target.value)}
         styleName={!isSmallScreen ? "col-2" : ""}
         validationRules={{ required: true }}
@@ -199,7 +199,7 @@ const AddressStep = ({
       <Autocomplete
         type="text"
         name="address"
-        value={formData.location.address}
+        value={formData?.location?.address}
         getDisplayValue={(item) => item.display}
         onSelection={(selected) => {
           setFormData({

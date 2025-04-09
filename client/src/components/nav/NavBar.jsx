@@ -89,7 +89,7 @@ function NavBar() {
         <div className="navBar-rightside">
           {auth ? (
             <>
-                <Button variant="primary" styleName="new-post-btn" onClick={()=>{navigate("/new-post")}}>
+                <Button variant="primary" styleName="new-post-btn" onClick={()=>{navigate("/new")}}>
                   New Post
                 </Button>
             

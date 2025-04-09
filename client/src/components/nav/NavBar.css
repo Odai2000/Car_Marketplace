@@ -122,8 +122,7 @@ cursor:pointer;
 } 
 
 @media (min-width: 700px) {
-  .btn-group {
-    order: 2;
+  nav .btn-group {
   }
 
   nav {
