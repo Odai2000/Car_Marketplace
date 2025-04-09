@@ -2,28 +2,32 @@ const Post = require("../models/Post");
 const asyncHandler = require("express-async-handler");
 const CloudStorageManager = require("../modules/cloud_storage/cloudStorageManager");
 const cloudStorage = new CloudStorageManager("pcloud");
+const folderId = "14517807595"; //temp
 
 const getPostById = asyncHandler(async (req, res) => {
   try {
     const post = await Post.findById(req.params.id).exec();
 
     if (!post) {
-      return res.status(400).json({ message: "No Post found." });
+      return res.status(404).json({ message: "No Post found." });
     }
 
-    if (post.imageIds) {
-      const imagesUrls = [];
+    if (post.imageIds && post.imageIds.length > 0) {
+      try {
+        for (const imageId of post.imageIds) {
+          const imageURL = await cloudStorage.download(imageId);
 
-      for (const imageId of imageIds) {
-        imagesUrls.push(await cloudStorage.download(imageId));
-      }
-      if (!imagesUrls) {
+          post.images.push({
+            imageId,
+            imageURL,
+          });
+        }
+      } catch (error) {
+        console.log(error);
         return res.status(500);
       }
-      delete post.imageIds;
-
-      post.imagesUrls = imagesUrls;
     }
+    delete post.imageIds;
 
     return res.status(200).json(post);
   } catch (error) {
@@ -87,28 +91,30 @@ const getPosts = asyncHandler(async (req, res) => {
 
   const posts = await Post.find(query).lean();
 
-  console.log(query);
-
   if (!posts.length) {
-    return res.status(400).json({ message: "No Posts found." });
+    // return res.status(400).json({ message: "No Posts found." });
+    return res.status(200).json(posts);
   }
 
+  // populate post.images and remove remove post.imageIds
   for (const post of posts) {
-    const imageIds = post.imageIds;
-    if (imageIds) {
+    if (post.imageIds && post.imageIds.length > 0) {
       try {
-        const imagesUrls = [];
+        post.images = [];
+        for (const imageId of post.imageIds) {
+          const imageURL = await cloudStorage.download(imageId);
 
-        for (const imageId of imageIds) {
-          imagesUrls.push(await cloudStorage.download(imageId));
+          post.images.push({
+            imageId,
+            imageURL,
+          });
         }
-        delete post.imageIds;
-        post.imagesUrls = imagesUrls;
       } catch (error) {
         console.log(error);
         return res.status(500);
       }
     }
+    delete post.imageIds;
   }
 
   res.status(200).json(posts);
@@ -116,14 +122,14 @@ const getPosts = asyncHandler(async (req, res) => {
 
 const createPost = asyncHandler(async (req, res) => {
   try {
-    let { title, desc = "", car, price } = req.body;
-    const user = req.user._id;
+    let { title, desc = "", car, price, location } = req.body;
+    const user_id = req.user._id;
 
     const files = req.files;
     car = JSON.parse(car);
 
     //confirm data
-    if (!title || !user || !car || !price) {
+    if (!title || !user_id || !car || !price || !location) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -133,12 +139,10 @@ const createPost = asyncHandler(async (req, res) => {
       for (const file of files) {
         imageIds.push(await cloudStorage.upload(file, 14517807595));
       }
-
-      console.log(imageIds);
     }
 
     //Add post to the DB
-    const obj = { title, desc, imageIds, car, price, user };
+    const obj = { title, desc, imageIds, car, price, user_id };
     const post = await Post.create(obj);
 
     if (!post) {
@@ -154,15 +158,20 @@ const createPost = asyncHandler(async (req, res) => {
 
 const updatePost = asyncHandler(async (req, res) => {
   try {
-    const { id, title, desc, user, car, price } = req.body;
-
-    if (!id || !title || !desc || !user || !car || !price) {
+    const { id, title, desc, user, car, price, location, imagesIdsToDelete } =
+      req.body;
+    if (!id || !title || !desc || !user || !car || !price || !location) {
       return res.status(400).json({ message: "All fields are required" });
     }
-    const post = await Post.findById(id).lean().exec();
+    const post = await Post.findById(id).exec();
 
     if (!post) {
-      return res.status(400).json({ message: `No post found with id: ${id}` });
+      return res.status(404).json({ message: `No post found with id: ${id}` });
+    }
+
+    if (req.user._id !== _id && !req.user.roles.includes("ADMIN")) {
+      console.log(`${req.user._id} === ${_id} `);
+      return res.status(403).send("Forbidden");
     }
 
     post.title = title;
@@ -170,6 +179,28 @@ const updatePost = asyncHandler(async (req, res) => {
     post.user = user;
     post.car = car;
     post.price = price;
+    post.location = location;
+
+    const files = req.files;
+    if (files) {
+      //Upload images to cloud at specified folder and store their ids in the DB
+      for (const file of files) {
+        post.imageIds.push(await cloudStorage.upload(file, folderId));
+      }
+    }
+
+    // remove images ids that match with deletion array and store them as valid ids for file deletion on cloud
+    let validImageIds = [];
+
+    if (imagesIdsToDelete && imagesIdsToDelete.length > 0) {
+      post.imageIds = post.imageIds.filter((id) => {
+        if (imagesIdsToDelete.includes(id)) {
+          validImageIds.push(id);
+          return false;
+        }
+        return true;
+      });
+    }
 
     const updatedPost = await post.save();
 
@@ -177,7 +208,13 @@ const updatePost = asyncHandler(async (req, res) => {
       return res.status(400).send("Update failed");
     }
 
-    res.status(201).send("Post updated.");
+    // delete files on cloud storage after update success
+    if (imagesToActuallyDelete.length > 0) {
+      await Promise.all(
+        imagesToActuallyDelete.map((imageId) => cloudStorage.delete(imageId))
+      );
+    }
+    res.status(200).send("Post updated.");
   } catch (error) {
     console.log(error);
     return res.status(500);
@@ -187,16 +224,34 @@ const updatePost = asyncHandler(async (req, res) => {
 const deletePost = asyncHandler(async (req, res) => {
   const { id } = req.body;
 
-  const post = await Post.findById(id).lean().exec();
+  const post = await Post.findById(id).exec();
 
   if (!post) {
     return res
       .status(400)
       .json({ message: `No post with id: ${id} was found` });
   }
-  const queryResult = await Post.deleteOne({ _id: id }).lean().exce();
 
-  res.status(200).json({ message: `Post with id: ${id} has been deleted` });
+  if (req.user._id !== _id && !req.user.roles.includes("ADMIN")) {
+    console.log(`${req.user._id} === ${_id} `);
+    return res.status(403).send("Forbidden");
+  }
+
+  const result = await post.delete({ _id: id }).exec();
+
+  if (!result)
+    return res
+      .status(500)
+      .json({ message: `Failed to delete post with ${id}` });
+
+  if (post.imageIds && imageIds.length > 0) {
+    await Promise.all(
+      post.imageIds.map(async (imageId) => {
+        await cloudStorage.delete(imageId);
+      })
+    );
+    res.status(200).json({ message: `Post with id: ${id} has been deleted` });
+  }
 });
 
 module.exports = {

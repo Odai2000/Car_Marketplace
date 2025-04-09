@@ -13,7 +13,6 @@ const authenticateToken = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
-    console.log(decoded);
     req.user = decoded;
     next();
   } catch (error) {

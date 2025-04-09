@@ -3,7 +3,6 @@ const Token = require("../models/Token");
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { default: mongoose } = require("mongoose");
 const EmailManager = require("../modules/email/emailManager");
 const emailManager = new EmailManager("brevo");
 

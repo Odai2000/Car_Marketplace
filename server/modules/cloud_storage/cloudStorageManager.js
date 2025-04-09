@@ -15,5 +15,9 @@ class CloudStorageManager {
     download(fileId) {
         return this.cloudProvider.download(fileId);
     }
+
+    delete(fileId) {
+        return this.cloudProvider.delete(fileId);
+    }
 }
 module.exports = CloudStorageManager;

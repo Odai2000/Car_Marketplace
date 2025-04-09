@@ -22,7 +22,7 @@ class PCloudStorage extends CloudStorageInterface {
       fs.promises.unlink(file.path);
       return response.metadata.fileid;
     } catch (error) {
-      console.error("An unexpected error occurred:", error);
+      console.error("An unexpected error occurred while uploading:", error);
       return null;
     }
   });
@@ -32,7 +32,16 @@ class PCloudStorage extends CloudStorageInterface {
     try {
       return await this.client.getfilelink(fileId);
     } catch (error) {
-      console.error("An unexpected error occurred:", error);
+      console.error("An unexpected error occurred when downloading:", error);
+      return null;
+    }
+  });
+
+  delete = asyncHandler(async (fileId) => {
+    try {
+      return await this.client.deletefile(fileId);
+    } catch (error) {
+      console.error("An unexpected error occurred while deleting:", error);
       return null;
     }
   });
