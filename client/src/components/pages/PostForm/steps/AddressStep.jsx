@@ -220,7 +220,7 @@ const AddressStep = ({
         validationRules={{ required: false }}
         onValidationChange={(value) => handleValidateChange("address", value)}
       />
-      <Button styleName={'geolocation-btn'} variant={"primary"} onClick={handleGetLocation} icon>
+      <Button styleName={'geolocation-btn'} variant={"primary"} onClick={handleGetLocation} >
      <FaLocationCrosshairs/> {isSmallScreen && 'Use My GeoLocation' }
       </Button>
     </>

@@ -1,14 +1,17 @@
 import { useEffect, useRef } from "react";
 import Button from "../../../UI/Button/Button";
-import DragAndDrop from "../../../UI/FormControls/DragAndDropFileUploader/DragAndDropFileUploader";
+import ImageManager from "../../../UI/ImagesManager/ImageManager";
 
 const CarPhotosStep = ({
   formData,
   setFormData,
   setControlsValidity,
   isSmallScreen,
+  imageStates,
+  setImageStates,
 }) => {
   const imageInput = useRef();
+
   const handleImageInput = () => {
     imageInput.current.click();
   };
@@ -18,7 +21,7 @@ const CarPhotosStep = ({
   useEffect(() => {
     setControlsValidity({ images: !!formData?.images });
   }, []);
-  
+
   return (
     <>
       <div className="m-post-img">
@@ -28,8 +31,8 @@ const CarPhotosStep = ({
           accept={acceptString}
           multiple
           onChange={(e) => {
-            const fileArray = Array.from(e.target.files);
-            setFormData({ ...formData, images: fileArray });
+            setFormData({ ...formData, images: [...imageStates.files],toDelete:
+              imageStates.toRemove });
           }}
           style={{ display: "none" }}
         />
@@ -40,15 +43,21 @@ const CarPhotosStep = ({
       </div>
 
       {!isSmallScreen && (
-        <DragAndDrop
+        <ImageManager
           accept={acceptString}
-          onChange={(fileArray) => {
-            setFormData({ ...formData, images: fileArray });
-          }}
           maxFiles={20}
           maxSize={3 * 1024 * 1024}
-          value={formData?.images}
-          onClick={handleImageInput}
+          files={imageStates?.files}
+          imageObjects={imageStates?.existing.filter(
+            (item) => !imageStates?.toRemove?.includes(item.imageId)
+          )}
+          onChange={(states) => {
+            setImageStates((prev) => ({
+              ...prev,
+              ...states,
+              toRemove: [...new Set([...prev.toRemove, ...(states.toRemove || [])])], // prevent overriding or duplication by child
+            }));
+          }}
         />
       )}
     </>

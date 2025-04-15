@@ -21,13 +21,20 @@ const steps = [
   { component: ReviewStep, name: "Review" },
 ];
 
-const PostForm = ({ isUpdating = false, }) => {
+const PostForm = ({ isUpdating = false }) => {
   const { auth } = useAuth();
   const { config } = useConfig();
   const location = useLocation();
-const postData = location?.state?.postData;
+  const postData = location?.state?.postData;
   const [stepIndex, setStepIndex] = useState(0);
   const [isStepValid, setIsStepValid] = useState();
+
+  const [imageStates, setImageStates] = useState({
+    files: [],
+    toRemove: [],
+    existing: postData?.images || [],
+    previews: [],
+  });
 
   const [formData, setFormData] = useState(
     postData || {
@@ -50,6 +57,10 @@ const postData = location?.state?.postData;
     setIsStepValid(isValid);
   }, []);
 
+  // useEffect(() => {
+  //   setFormData((prev) => ({ ...prev, images: imageStates.files }));
+  // }, [imageStates.files]);
+
   useEffect(() => {
     const isValid = Object.values(controlsValidity).every(
       (valid) => valid === true
@@ -60,8 +71,7 @@ const postData = location?.state?.postData;
   const handleSubmit = (e) => {
     e.preventDefault();
     if (isUpdating) editPost();
-
-    createPost();
+    else createPost();
   };
 
   const nextStep = () => {
@@ -83,6 +93,7 @@ const postData = location?.state?.postData;
       .then((response) => response.json())
       .catch((error) => console.log(error));
   };
+
   const editPost = async () => {
     await fetch(`${config.serverURL}/post`, {
       method: "Patch",
@@ -142,8 +153,11 @@ const postData = location?.state?.postData;
             isSmallScreen={isSmallScreen}
             setControlsValidity={setControlsValidity}
             handleValidateChange={handleValidateChange}
+            setImageStates={setImageStates}
+            imageStates={imageStates}
           />
         </div>
+
         <div className="btn-group">
           {stepIndex > 0 ? (
             <Button type="button" variant="primary" onClick={backStep}>

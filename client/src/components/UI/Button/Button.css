@@ -1,94 +1,97 @@
 /* Button.css */
 .btn {
-    padding: 0.7em;
-    border-radius: 4px;
-    font-weight: 500;
-    letter-spacing: 0.75px;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.7em;
+  border-radius: 4px;
+  font-weight: 500;
+  letter-spacing: 0.75px;
+}
 
-  .btn:hover{
-    cursor:pointer;
-  }
-  
-  .btn.primary {
-    background-color: var(--primary);
-    color: #fff;
+.btn:hover {
+  cursor: pointer;
+}
 
-    transition: background-color ease-in 0.3s;
-  }
-  
-  .btn.primary:hover {
-    background-color: hsl(
-      var(--primary-h),
-      var(--primary-s),
-      calc(var(--primary-l) + 4%)
-    );
-  }
-  
-  .btn.secondary {
-    background-color: transparent;
-    color: var(--primary);
-    border: 1px solid var(--primary);
-  }
+.btn.primary {
+  background-color: var(--primary);
+  color: #fff;
 
-  .btn.secondary.inverse {
-    color: #fff;
-    border: none
-  }
+  transition: background-color ease-in 0.3s;
+}
 
-  .btn.link{
-    padding: 0;
-    background-color: transparent;
-    color: var(--primary);
-    border-radius: 0;
-  }
-  .btn.link.inverse {
-    color: #fff;
-  }
-  .btn.link:hover{
-    text-decoration: underline;
-  }
-  
-  /* .destructive {
+.btn.primary:hover {
+  background-color: hsl(
+    var(--primary-h),
+    var(--primary-s),
+    calc(var(--primary-l) + 4%)
+  );
+}
+
+.btn.secondary {
+  background-color: transparent;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+.btn.secondary.inverse {
+  color: #fff;
+  border: none;
+}
+
+.btn.link {
+  padding: 0;
+  background-color: transparent;
+  color: var(--primary);
+  border-radius: 0;
+}
+.btn.link.inverse {
+  color: #fff;
+}
+.btn.link:hover {
+  text-decoration: underline;
+}
+
+/* .destructive {
     color: var(--destructive);
   } */
-  
- .btn.primary.destructive {
-    background-color: var(--destructive);
-  }
-  
-  .btn.secondary.destructive {
-    background-color: transparent;
-    color:  var(--destructive);
-    border-color:  var(--destructive);
-  }
 
-  .btn.link.destructive{
-    color: var(--destructive);
-  }
+.btn.primary.destructive {
+  background-color: var(--destructive);
+}
 
-  .btn.primary:disabled{
-    background-color: var( --disabled-gray);
-    color:#fff;
-  }
+.btn.secondary.destructive {
+  background-color: transparent;
+  color: var(--destructive);
+  border-color: var(--destructive);
+}
 
-  .btn.secondary.disabled {
-    background-color: transparent;
-    color:  var( --disabled-gray);
-    border-color:  var( --disabled-gray);
-  }
+.btn.link.destructive {
+  color: var(--destructive);
+}
 
-  .btn.round {
-    border-radius: 64px;
-  }
+.btn.primary:disabled {
+  background-color: var(--disabled-gray);
+  color: #fff;
+}
 
-  .btn.icon{
-    padding: 0.5em;
-    color: var(--primary);
-    background-color: transparent;
-  } 
-  
+.btn.secondary.disabled {
+  background-color: transparent;
+  color: var(--disabled-gray);
+  border-color: var(--disabled-gray);
+}
 
-  .btn.icon.inverse{
-    color: #fff;
-  }
+.btn.round {
+  border-radius: 64px;
+}
+
+.btn.icon {
+  padding: 0.5em;
+  color: var(--primary);
+  background-color: transparent;
+}
+
+.btn.icon.inverse {
+  color: #fff;
+}

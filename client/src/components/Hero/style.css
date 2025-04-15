@@ -41,11 +41,11 @@
 }
 
 #hero-advanced-btn{
-  grid-column: span 2;
   font-size: 0.9em;
   font-weight: 500;
   padding: 0.5em;
   text-align: left;
+  justify-content: flex-start;
 }
 
 #hero-advanced-btn > svg{

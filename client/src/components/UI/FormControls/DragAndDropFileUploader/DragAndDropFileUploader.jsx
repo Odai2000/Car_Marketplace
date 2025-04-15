@@ -4,7 +4,7 @@ import { FaUpload } from "react-icons/fa6";
 import Button from "../../Button/Button";
 
 const DragAndDrop = ({
-  value,
+  files,
   onChange, // signals to parent only
   onValidationChange,
   includeBrowserBtn = true,
@@ -17,12 +17,15 @@ const DragAndDrop = ({
   customStyleClass,
   ...props
 }) => {
-  const [uploadFiles, setUploadFiles] = useState(value||[]);
+  const [uploadFiles, setUploadFiles] = useState(files||[]);
   const [isDragOver, setIsDragOver] = useState(false);
   const imageInput = useRef();
 
   const [errorMessage, setErrorMessage] = useState("");
 
+  // TODO
+  // add format validation
+  // test them
   const validateFiles = (files) => {
     if (files.length > maxFiles) {
       return `You can upload a maximum of ${maxFiles} files.`;
@@ -86,7 +89,7 @@ const DragAndDrop = ({
   return (
     <>
       <div
-        className={`DragAndDrop ${customStyleClass || ""} `}
+        className={`DragAndDrop  `}
         style={{ width: width, height: height }}
       >
         <div
