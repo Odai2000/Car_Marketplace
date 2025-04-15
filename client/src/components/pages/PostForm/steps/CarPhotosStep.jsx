@@ -19,7 +19,7 @@ const CarPhotosStep = ({
   const acceptString = "image/jpeg, image/png, image/webp";
 
   useEffect(() => {
-    setControlsValidity({ images: !!formData?.images });
+    // setControlsValidity({ images: !!formData?.images });
   }, []);
 
   return (

@@ -10,7 +10,7 @@ router
   .route("/")
   .get(postController.getPosts)
   .post(authenticateToken,upload.array("images"), postController.createPost)
-  .patch(authenticateToken,postController.updatePost)
+  .patch(authenticateToken,upload.array("images"),postController.updatePost)
   .delete(authenticateToken,postController.deletePost);
 
 router.route("/:id").get(postController.getPostById);

@@ -30,7 +30,6 @@ io.on('connection', (socket) => {
   chatSocket(io,socket)
 });
 
-
 //DB
 const { default: mongoose } = require("mongoose");
 const connectDB = require("./config/connectDB");
@@ -53,6 +52,7 @@ const corsOptions = {
       callback(new Error("Not allowed by CORS"));
     }
   },
+  methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
   credentials:true
 };
 
@@ -64,7 +64,6 @@ app.use("/user", require("./routes/user"));
 app.use("/post", require("./routes/post"));
 app.use("/data",require("./routes/data"))
 app.use("/chat",require("./routes/chat"))
-
 
 mongoose.connection.once("open", () => {
   server.listen(PORT, () => console.log(`server running on port ${PORT}`));

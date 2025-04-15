@@ -2,7 +2,7 @@ const Post = require("../models/Post");
 const asyncHandler = require("express-async-handler");
 const CloudStorageManager = require("../modules/cloud_storage/cloudStorageManager");
 const cloudStorage = new CloudStorageManager("pcloud");
-const folderId = "14517807595"; //temp
+const folderId = process.env.PCLOUD_FOLDER_ID; 
 
 const getPostById = asyncHandler(async (req, res) => {
   try {
@@ -122,27 +122,37 @@ const getPosts = asyncHandler(async (req, res) => {
 
 const createPost = asyncHandler(async (req, res) => {
   try {
-    let { title, desc = "", car, price, location } = req.body;
+    const data = JSON.parse(req.body.data);
+    const { title, desc = "", car, price, location } = data;
     const user_id = req.user._id;
 
     const files = req.files;
-    car = JSON.parse(car);
 
     //confirm data
     if (!title || !user_id || !car || !price || !location) {
-      return res.status(400).json({ message: "All fields are required" });
+      console.log("Received body:", {
+        title: !!title,
+        user_id: !!user_id,
+        car: !!car,
+        price: !!price,
+        location: !!location,
+        actualValues: { title, car, price, location, user_id },
+      });
+      return res
+        .status(400)
+        .json({ message: "All fields are required" + user_id });
     }
 
     let imageIds = [];
     if (files) {
       //Upload images to cloud at specified folder and store their ids in the DB
       for (const file of files) {
-        imageIds.push(await cloudStorage.upload(file, 14517807595));
+        imageIds.push(await cloudStorage.upload(file, folderId));
       }
     }
 
     //Add post to the DB
-    const obj = { title, desc, imageIds, car, price, user_id };
+    const obj = { title, desc, imageIds, car, location, price, user_id };
     const post = await Post.create(obj);
 
     if (!post) {
@@ -158,25 +168,37 @@ const createPost = asyncHandler(async (req, res) => {
 
 const updatePost = asyncHandler(async (req, res) => {
   try {
-    const { id, title, desc, user, car, price, location, imagesIdsToDelete } =
-      req.body;
-    if (!id || !title || !desc || !user || !car || !price || !location) {
+    const data = JSON.parse(req.body.data);
+    const { _id, title, desc, car, price, location, imagesIdsToDelete } = data;
+    const user_id = req.user._id;
+    if (!_id || !title || !user_id || !car || !price || !location) {
+      console.log("Received body:", {
+        title: !!title,
+        user_id: !!user_id,
+        car: !!car,
+        price: !!price,
+        location: !!location,
+        _id: !!_id,
+        actualValues: { title, car, price, location, user_id },
+      });
       return res.status(400).json({ message: "All fields are required" });
     }
-    const post = await Post.findById(id).exec();
+    const post = await Post.findById(_id).exec();
 
     if (!post) {
-      return res.status(404).json({ message: `No post found with id: ${id}` });
+      return res.status(404).json({ message: `No post found with id: $_{id}` });
     }
 
-    if (req.user._id !== _id && !req.user.roles.includes("ADMIN")) {
-      console.log(`${req.user._id} === ${_id} `);
+    if (
+      req.user._id.toString() !== post.user_id.toString() &&
+      !req.user.roles.includes("ADMIN")
+    ) {
       return res.status(403).send("Forbidden");
     }
 
     post.title = title;
     post.desc = desc;
-    post.user = user;
+    post.user_id = user_id;
     post.car = car;
     post.price = price;
     post.location = location;
@@ -209,22 +231,22 @@ const updatePost = asyncHandler(async (req, res) => {
     }
 
     // delete files on cloud storage after update success
-    if (imagesToActuallyDelete.length > 0) {
+    if (validImageIds.length > 0) {
       await Promise.all(
-        imagesToActuallyDelete.map((imageId) => cloudStorage.delete(imageId))
+        validImageIds.map((imageId) => cloudStorage.delete(Number(imageId)))
       );
     }
     res.status(200).send("Post updated.");
   } catch (error) {
     console.log(error);
-    return res.status(500);
+    return res.status(500).send("Server Error");
   }
 });
 
 const deletePost = asyncHandler(async (req, res) => {
-  const { id } = req.body;
-
-  const post = await Post.findById(id).exec();
+  const data = JSON.parse(req.body.data);
+  const { _id } = data;
+  const post = await Post.findById(_id).exec();
 
   if (!post) {
     return res
@@ -232,8 +254,7 @@ const deletePost = asyncHandler(async (req, res) => {
       .json({ message: `No post with id: ${id} was found` });
   }
 
-  if (req.user._id !== _id && !req.user.roles.includes("ADMIN")) {
-    console.log(`${req.user._id} === ${_id} `);
+  if (req.user._id !== post.user_id && !req.user.roles.includes("ADMIN")) {
     return res.status(403).send("Forbidden");
   }
 
@@ -247,7 +268,7 @@ const deletePost = asyncHandler(async (req, res) => {
   if (post.imageIds && imageIds.length > 0) {
     await Promise.all(
       post.imageIds.map(async (imageId) => {
-        await cloudStorage.delete(imageId);
+        await cloudStorage.delete(Number(imageId));
       })
     );
     res.status(200).json({ message: `Post with id: ${id} has been deleted` });

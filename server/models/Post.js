@@ -76,18 +76,6 @@ const locationSchema = new mongoose.Schema({
       },
     },
   },
-  stateCode: {
-    type: String,
-    required: true,
-    validate: {
-      validator: async (stateCode) => {
-        const countryCode = this.countryCode;
-        const country = await Country.findOne({ code: countryCode });
-
-        return country.states.some((state) => state.code === stateCode);
-      },
-    },
-  },
   address:{
     type:String
   }
@@ -104,7 +92,7 @@ const postSchema = new mongoose.Schema(
       type: String,
       maxLength: 240,
     },
-    user: {
+    user_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,

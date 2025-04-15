@@ -43,7 +43,6 @@ const PostForm = ({ isUpdating = false }) => {
       price: 0,
       location: {},
       images: [],
-      user: auth.userData._id,
     }
   );
 
@@ -83,24 +82,57 @@ const PostForm = ({ isUpdating = false }) => {
   };
 
   const createPost = async () => {
+    const formPayload = new FormData();
+    formPayload.append(
+      "data",
+      JSON.stringify({
+        title: formData.title,
+        car: formData.car,
+        price: formData.price,
+        location: formData.location,
+      })
+    );
+
+    imageStates.files.forEach((file) => {
+      formPayload.append("images", file);
+    });
+
     await fetch(`${config.serverURL}/post`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${auth.accessToken}`,
       },
-      body: JSON.stringify(formData),
+      body: formPayload,
     })
       .then((response) => response.json())
       .catch((error) => console.log(error));
   };
 
   const editPost = async () => {
+    const formPayload = new FormData();
+    formPayload.append(
+      "data",
+      JSON.stringify({
+        _id: postData?._id,
+        imagesIdsToDelete: imageStates?.toRemove||[],
+        title: formData.title,
+        car: formData.car,
+        price: formData.price,
+        location: formData.location,
+
+      })
+    );
+
+    imageStates.files.forEach((file) => {
+      formPayload.append("images", file);
+    });
+
     await fetch(`${config.serverURL}/post`, {
-      method: "Patch",
+      method: "PATCH",
       headers: {
         Authorization: `Bearer ${auth.accessToken}`,
       },
-      body: JSON.stringify(formData),
+      body: formPayload,
     })
       .then((response) => response.json())
       .catch((error) => console.log(error));
