@@ -12,6 +12,7 @@ import useConfig from "../../../hooks/useConfig";
 import { FaAngleRight } from "react-icons/fa6";
 import useWindowSize from "../../../hooks/useWindow";
 import { useLocation } from "react-router-dom";
+import useAuthFetch from "../../../hooks/useAuthFetch";
 
 const steps = [
   { component: CarInfoStep, name: "Car details" },
@@ -23,6 +24,7 @@ const steps = [
 
 const PostForm = ({ isUpdating = false }) => {
   const { auth } = useAuth();
+  const authFetch = useAuthFetch();
   const { config } = useConfig();
   const location = useLocation();
   const postData = location?.state?.postData;
@@ -97,11 +99,8 @@ const PostForm = ({ isUpdating = false }) => {
       formPayload.append("images", file);
     });
 
-    await fetch(`${config.serverURL}/post`, {
+    await authFetch(`${config.serverURL}/post`, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${auth.accessToken}`,
-      },
       body: formPayload,
     })
       .then((response) => response.json())
@@ -127,11 +126,8 @@ const PostForm = ({ isUpdating = false }) => {
       formPayload.append("images", file);
     });
 
-    await fetch(`${config.serverURL}/post`, {
+    await authFetch(`${config.serverURL}/post`, {
       method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${auth.accessToken}`,
-      },
       body: formPayload,
     })
       .then((response) => response.json())

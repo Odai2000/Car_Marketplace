@@ -14,6 +14,7 @@ import {
   FaUser,
 } from "react-icons/fa6";
 import DefaultProfile from "../../UI/Utility/DefaultProfile/DefaultProfile";
+import useAuthFetch from "../../../hooks/useAuthFetch";
 
 const UserSettings = () => {
   const [view, setView] = useState("profile");
@@ -30,15 +31,15 @@ const UserSettings = () => {
   const { auth, setAuth, logout } = useAuth();
   const { config } = useConfig();
   const { showToast } = useToast();
+  const authFetch = useAuthFetch();
   const navigate = useNavigate();
 
   const handleSave = async (e) => {
     e.preventDefault();
-    await fetch(`${config.serverURL}/user`, {
+    await authFetch(`${config.serverURL}/user`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${auth.accessToken}`,
       },
       body: JSON.stringify({
         _id: auth.userData._id,
@@ -69,11 +70,10 @@ const UserSettings = () => {
 
   const handlePasswordChange = async (e) => {
     e.preventDefault();
-    await fetch(`${config.serverURL}/me/change-password`, {
+    await authFetch(`${config.serverURL}/me/change-password`, {
       method: "PATCH",
       headers: {
         "content-Type": "application/json",
-        Authorization: `Bearer ${auth.accessToken}`,
       },
       body: JSON.stringify({
         password: password,
@@ -95,12 +95,11 @@ const UserSettings = () => {
   };
   const handleAccountDelete = async (e) => {
     e.preventDefault();
-    await fetch(`${config.serverURL}/user`, {
+    await authFetch(`${config.serverURL}/user`, {
       method: "DELETE",
       credentials: "include",
       headers: {
         "content-Type": "application/json",
-        Authorization: `Bearer ${auth.accessToken}`,
       },
       body: JSON.stringify({
         _id: auth.userData._id,

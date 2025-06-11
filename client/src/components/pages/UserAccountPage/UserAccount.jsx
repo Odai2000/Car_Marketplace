@@ -5,6 +5,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import useAuth from "../../../hooks/useAuth";
 import DefaultProfile from "../../UI/Utility/DefaultProfile/DefaultProfile";
+import useAuthFetch from "../../../hooks/useAuthFetch";
 
 const serverUrl = import.meta.env.VITE_SERVER_URL;
 
@@ -17,6 +18,7 @@ const UserAccount = () => {
   const [emailVert, setEmailVert] = useState(null);
 
   const { auth } = useAuth();
+  const authFetch  = useAuthFetch();
   const navigate = useNavigate;
 
   useEffect(() => {

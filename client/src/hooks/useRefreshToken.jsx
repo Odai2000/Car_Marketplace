@@ -6,29 +6,27 @@ const useRefreshToken = () => {
   const { config } = useConfig();
 
   const refresh = async () => {
-    await fetch(`${config.serverURL}/user/token`, {
+    const response = await fetch(`${config.serverURL}/user/token`, {
       method: "POST",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        setAuth((prev) => {
-          return {
-            ...prev,
-            accessToken: data.accessToken,
-            roles: data.userData.roles,
-            userData:data.userData
-          };
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    }).catch((error) => {
+      console.log(error);
+    });
+
+    const data = await response.json();
+    setAuth((prev) => {
+      return {
+        ...prev,
+        accessToken: data.accessToken,
+        roles: data.userData.roles,
+        userData: data.userData,
+      };
+    });
+
+    return data.accessToken;
   };
 
   return refresh;

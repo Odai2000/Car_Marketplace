@@ -8,9 +8,11 @@ import Input from "../../UI/FormControls/Input";
 import { FaArrowLeft } from "react-icons/fa";
 import { useParams, useNavigate } from "react-router-dom";
 import DefaultProfile from "../../UI/Utility/DefaultProfile/DefaultProfile";
+import useAuthFetch from "../../../hooks/useAuthFetch";
 
 const Chat = () => {
   const { auth } = useAuth();
+  const authFetch  = useAuthFetch();
   const { config } = useConfig();
   const { showToast } = useToast();
   const { peer_id } = useParams();
@@ -23,10 +25,9 @@ const Chat = () => {
   const [toggleView, setToggleView] = useState(false);
 
   const fetchChats = async () => {
-    await fetch(`${config.serverURL}/chat`, {
+    await authFetch(`${config.serverURL}/chat`, {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${auth.accessToken}`,
       },
     })
       .then((response) => {
@@ -45,10 +46,9 @@ const Chat = () => {
   };
 
   const fetchChat = async (peer_id) => {
-    await fetch(`${config.serverURL}/chat/${peer_id}`, {
+    await authFetch(`${config.serverURL}/chat/${peer_id}`, {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${auth.accessToken}`,
       },
     })
       .then((response) => {
