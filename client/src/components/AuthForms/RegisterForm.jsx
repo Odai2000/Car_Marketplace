@@ -20,22 +20,28 @@ const RegisterForm = ({ show, onCancel }) => {
   const { register } = useAuth();
   const { showToast } = useToast();
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (password !== ConfirmPassword) {
       console.log("Passwords don't match!");
       return;
     }
 
- const result=  await register(firstName, lastName, email, username, password);
+    const result = await register(
+      firstName,
+      lastName,
+      email,
+      username,
+      password
+    );
 
- if (result.success) {
-  setUsername("");
-  setPassword("");
-  showToast('User registered. Pls login by urself for now', "success");
-} else {
-  showToast(result.errorMsg, "error");
-}
+    if (result.success) {
+      setUsername("");
+      setPassword("");
+      showToast("User registered. Pls login by urself for now", "success");
+    } else {
+      showToast(result.errorMsg, "error");
+    }
   };
 
   useEffect(() => {}, []);
@@ -110,7 +116,7 @@ const RegisterForm = ({ show, onCancel }) => {
             placeholder="Confirm Password"
           />
 
-          <span className="col-2">
+          <span className="col-2 flex">
             Already have an account? <Button variant="link">Login</Button>
           </span>
 

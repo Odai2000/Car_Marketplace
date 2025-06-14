@@ -64,7 +64,7 @@ function LoginForm({ show, onCancel }) {
             styleName="col-2"
           />
 
-          <span className="col-2">
+          <span className="col-2 flex">
             {`Don't have an account?`} <Button variant="link">Sign up</Button>
           </span>
 

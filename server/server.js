@@ -45,13 +45,14 @@ const cors = require("cors");
 const whitelist = ["http://localhost:8097","http://192.168.1.101:8097"];
 
 const corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+  // origin: function (origin, callback) {
+  //   if (whitelist.indexOf(origin) !== -1) {
+  //     callback(null, true);
+  //   } else {
+  //     callback(new Error("Not allowed by CORS"));
+  //   }
+  // },
+  origin:true,
   methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
   credentials:true
 };

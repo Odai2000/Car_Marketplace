@@ -1,6 +1,8 @@
 import { FaBars, FaUser } from "react-icons/fa6";
 import Items from "./Items";
 import "./NavBar.css";
+import logo from '../../assets/logo.svg';
+import logoWhite from '../../assets/logo-white.svg';
 import { IconContext } from "react-icons/lib";
 import Button from "../UI/Button/Button";
 import RegisterForm from "../AuthForms/RegisterForm";
@@ -71,8 +73,8 @@ function NavBar() {
               <img
                 src={
                   !scrolled && location.pathname == "/"
-                    ? "/src/assets/logo-white.svg"
-                    : "/src/assets/logo.svg"
+                    ? logoWhite
+                    : logo
                 }
                 alt="logo"
               />

@@ -1,20 +1,20 @@
 .post {
   position: relative;
-  width: min();
+  /* width: min(); */
   display: flex;
   flex-direction: column;
   border: 1px solid lightgray;
   background-color: #fff;
 }
 
-.post > .icon{
+.post > .icon {
   position: absolute;
   right: 1em;
 }
 .post > .post-details {
   display: grid;
   gap: 0.3em;
-  grid-template-columns: repeat(2, minmax(2rem, 1fr));
+  grid-template-columns: repeat(4, minmax(2rem, 1fr));
   padding: 0.75em;
   text-wrap: nowrap;
   flex-grow: 1;
@@ -26,6 +26,7 @@
   padding: 0.25em;
   font-size: 1em;
   display: inline-block;
+  grid-column: span 2;
 }
 
 .post .post-details span::first-letter {
@@ -33,7 +34,7 @@
 }
 .post .post-details .post-title {
   grid-row: span 1;
-  grid-column: span 1;
+  grid-column: span 3;
   max-width: 38ch;
   overflow: hidden;
   font-weight: bold;
@@ -42,7 +43,7 @@
 }
 
 .post .post-details .post-price {
-  justify-self: end
+  justify-self: end;
   display: flex;
   justify-content: end;
   grid-column: span 1;
@@ -57,7 +58,7 @@
 }
 
 .post .post-details .car-name {
-  grid-column: span 2;
+  grid-column: span 4;
 }
 
 .post .post-img-container {
@@ -71,15 +72,17 @@
   justify-content: center;
   align-items: center;
 }
-
 .post .post-details .post-location {
   width: 100%;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  grid-column: span 4;
+}
+.post .post-details .post-location .address{
+
   color: gray;
-  grid-column: span 2;
 }
 
 .post-btn-group {
@@ -94,7 +97,7 @@
   display: flex;
   justify-content: end;
   gap: 1em;
-  grid-column: span 2;
+  grid-column: span 4;
 }
 
 .post-btn-group {
@@ -131,24 +134,31 @@
   color: rgba(0, 0, 0, 0.25);
   box-sizing: border-box;
 }
+.post-opts-btn{
+  position: absolute;
+  top: 0;
+  color: #fff;
+  font-size: 1.25rem;
+}
 
 @media (min-width: 768px) {
   .post {
     flex-direction: row;
     /* height: 15em; */
   }
- .post .icon {
+  .post .icon {
     flex-direction: row;
   }
   .post .post-details {
     gap: 0.75em;
-    grid-template-columns: repeat(3, minmax(6rem, 1fr));
-    
+    grid-template-columns: repeat(6, minmax(4rem, 1fr));
   }
-
+  .post .post-details span {
+    grid-column: span 2;
+  }
   .post .post-details .post-title {
     grid-row: span 2;
-    grid-column: span 2;
+    grid-column: span 5;
   }
 
   .post .post-details .post-price {
@@ -157,7 +167,7 @@
   }
 
   .post .post-details .car-name {
-    grid-column: span 3;
+    grid-column: span 6;
   }
 
   .post .post-img-container {
@@ -166,17 +176,16 @@
   }
 
   .post-footer {
-
     /* justify-content: space-between; */
-    grid-column: span 3;
+    grid-column: span 6;
   }
 
   .post-footer .post-btn-group {
-   flex-direction: row;
+    flex-direction: row;
   }
 
   .post .post-details .post-location {
-    grid-column: span 3;
+    grid-column: span 6;
     font-size: 0.75em;
   }
 }

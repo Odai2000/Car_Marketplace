@@ -16,13 +16,15 @@ import { TbManualGearbox } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import useMap from "../../hooks/useMap";
 import PropTypes from "prop-types";
+import useAuth from "../../hooks/useAuth";
 
 const Post = ({ data = null }) => {
   const navigate = useNavigate();
   const { getMapURL } = useMap();
+  const { auth } = useAuth();
 
   const handleMessage = () => {
-    navigate(`/chat/${data?.user}`);
+    navigate(`/chat/${data?.user_id}`);
   };
 
   let images = data?.images;
@@ -48,17 +50,13 @@ const Post = ({ data = null }) => {
       </div>
 
       {/* <div className="icon"> */}
-      <Button
-        variant="icon"
-        onClick={() => {
-          navigate("/edit", { state: { postData: data } });
-        }}
-      >
-        <PiDotsThreeOutlineFill />
-      </Button>
+
       <div className="post-details">
         <span className="post-title ">
           <h3>{data?.title}</h3>
+        </span>
+        <span className="post-price ">
+          {(data?.price >= 0 && `$${data.price.toLocaleString()}`) || "$"}
         </span>
 
         <span className="car-name">
@@ -83,40 +81,57 @@ const Post = ({ data = null }) => {
           {data?.car?.hp && `${data.car.hp.toLocaleString()} hp`}
         </span>
         <span>
-          <TbManualGearbox /> {data?.car?.transmission}
+          <TbManualGearbox />{" "}
+          <span>{data?.car?.transmission.toLocaleString()}</span>
         </span>
-        <span className="post-location ">
-          {data?.location?.longitude && data?.location?.latitude ? (
-            <>
-              <FaLocationDot />
-              <a
-                href={getMapURL({
-                  longitude: data.location.longitude,
-                  latitude: data.location.latitude,
-                })}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {data?.location?.address}
-              </a>
-            </>
+        <span className="post-location">
+          <FaLocationDot />
+          <span className="address">     {data?.location?.address &&
+          data?.location?.longitude &&
+          data?.location?.latitude ? (
+            <a
+              href={getMapURL({
+                longitude: data.location.longitude,
+                latitude: data.location.latitude,
+              })}
+            >
+              {data.location.address}
+            </a>
+          ) : data?.location?.address ? (
+            data.location.address
           ) : (
-            data?.location?.address
-          )}
+            data?.location?.countryCode
+          )}</span>
+     
         </span>
         <div className="post-footer ">
-          <div className="btn-group post-btn-group ">
-            <Button variant="primary">
-              <FaPhone /> Call
+         
+            <div className="btn-group post-btn-group ">
+               {auth?.userData?._id == data.user_id ? (<Button variant="primary"    
+              onClick={() => {
+                navigate("/edit", { state: { postData: data } });
+              }}>
+                Edit
+              </Button>):(
+                <> <Button variant="primary">
+                <FaPhone /> Call
+              </Button>
+              <Button variant="primary" onClick={handleMessage}>
+                <FaMessage /> Message
+              </Button></>
+             )}
+            </div>
+          
+          {/* <div className="post-opts-btn">
+            <Button
+              variant="icon"
+              onClick={() => {
+                navigate("/edit", { state: { postData: data } });
+              }}
+            >
+              <PiDotsThreeOutlineFill />
             </Button>
-            <Button variant="primary" onClick={handleMessage}>
-              <FaMessage /> Message
-            </Button>
-          </div>
-
-          <span className="post-price ">
-            {(data?.price >= 0 && `$${data.price.toLocaleString()}`) || "$"}
-          </span>
+          </div> */}
         </div>
       </div>
     </div>
