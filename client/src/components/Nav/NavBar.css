@@ -1,0 +1,162 @@
+.nav-wrapper {
+  z-index: 2;
+  display: flex;
+  position: static;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background-color: #fff;
+  color: var(--primary);
+  padding: 0.5em 1em;
+}
+
+.nav-wrapper.scrolled{
+  position: fixed;
+}
+
+.nav-wrapper.style-transparent {
+  position: absolute;
+  background-color: transparent;
+}
+
+.nav-wrapper.style-transparent {
+  background-color: transparent;
+}
+.nav-wrapper.style-transparent li a {
+  color: #fff;
+}
+.navBar-rightside > .btn.secondary {
+  color: var(--primary);
+}
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+}
+
+#logo {
+  height: 2.5em;
+}
+
+nav {
+  display: none;
+  height: 100%;
+}
+
+nav > ul {
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+  gap: 1em;
+  padding: 0 1em;
+}
+
+nav > ul > li {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: black;
+}
+
+.nav > ul > li a {
+  font-weight: 900;
+  color: white;
+}
+
+nav > ul > li:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: white;
+}
+
+nav.open {
+  display: block;
+  position: absolute;
+  top: 100%;
+  right: 0;
+}
+
+nav.open > ul {
+  flex-direction: column;
+  justify-content: flex-start;
+  height: 100vh;
+  background-color: white;
+}
+
+nav.open > ul > li {
+  width: 100%;
+  display: flex;
+  padding: 2em;
+  color: #a7a7a7;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid #a7a7a7;
+}
+
+.menu-toggle {
+}
+
+.op {
+  display: block;
+  height: 100%;
+  width: 1.5em;
+  color: white;
+}
+
+.navBar-rightside {
+  height: fit-content;
+  display: flex;
+  gap: 0.5em;
+}
+
+/* to replace later */
+.navBar-rightside .profile-image{
+  height: 2em;
+  width: 2em;
+  border: 1px #ddd solid;
+  border-radius: 100%;
+  overflow: hidden;
+} 
+.navBar-rightside .profile-image:hover{
+cursor:pointer;
+} 
+
+@media (min-width: 700px) {
+  nav .btn-group {
+  }
+
+  nav {
+    display: block;
+    position: static;
+  }
+
+  nav > ul {
+    position: relative;
+    flex-direction: row;
+  }
+
+  nav > ul > li {
+    display: inline-block;
+    font-size: 18px;
+    padding: 0.75em;
+    border-radius: 4px;
+    transition: background-color 0.4s ease-in-out;
+  }
+
+  .nav > ul > li > a {
+    color: var(--primary);
+  }
+  
+  nav > ul > li:hover {
+    cursor: pointer;
+    background-color: var(--primary);
+  }
+
+  .nav > ul > li:hover > a {
+    color: white;
+  }
+
+  .menu-toggle {
+    display: none;
+  }
+}
