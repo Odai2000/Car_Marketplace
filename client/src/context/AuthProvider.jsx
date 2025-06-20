@@ -79,10 +79,25 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem("refreshToken");
-    setAuth(null);
-    navigate("/");
+  const logout = async () => {
+    try {
+      const response = await fetch(`${config.serverURL}/user/logout`, {
+        method: "POST",
+        credentials: "include",
+            headers: {
+          "Content-Type": "application/json; charset=UTF-8",
+        },
+      });
+
+      if (response.ok) {
+        setPersist(false);
+        setAuth(null);
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      return { success: false, errorMsg: error.message };
+    }
   };
   return (
     <AuthContext.Provider

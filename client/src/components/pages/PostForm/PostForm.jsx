@@ -42,7 +42,7 @@ const PostForm = ({ isUpdating = false }) => {
     postData || {
       title: "",
       car: {},
-      price: 0,
+      price: '',
       location: {},
       images: [],
     }

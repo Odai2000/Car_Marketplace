@@ -30,6 +30,8 @@ router
 
 router.route("/login").post(userController.loginUser);
 
+router.route("/logout").post(userController.logout);
+
 router.route("/token").post(userController.refreshTheToken);
 
 module.exports = router;

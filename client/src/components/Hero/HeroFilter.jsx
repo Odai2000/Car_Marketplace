@@ -62,7 +62,7 @@ function HeroFilter() {
   const handleMakeChange = (e) => {
     console.log("e", e);
 
-    const makeData = carSpecsData.makes.find((make) => {
+    const makeData = carSpecsData?.makes?.find((make) => {
       return make.name === e;
     });
 
@@ -105,7 +105,7 @@ function HeroFilter() {
             }}
             defaultOption={{ label: "Make", value: "" }}
           >
-            {carSpecsData.makes.map((make, index) => (
+            {carSpecsData?.makes?.map((make, index) => (
               <option key={index} value={make.name}>
                 {make.name}
               </option>

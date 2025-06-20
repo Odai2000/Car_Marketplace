@@ -23,7 +23,6 @@ const AddressStep = ({
   useEffect(() => {
     setControlsValidity({
       countryCode: !!formData?.location?.countryCode,
-      // stateCode: !!formData.location.stateCode,
     });
 
     if (formData?.location?.countryCode && countriesData) {
@@ -148,6 +147,7 @@ const AddressStep = ({
 
   };
 
+  
   const fetchAddressSuggestions = async (query) => {
     try {
       const geocodeData = await geocoding(query);
@@ -207,8 +207,8 @@ const AddressStep = ({
             location: {
               ...formData.location,
               address: selected?.display || "",
-              longitude: selected?.longitude || null,
-              latitude: selected?.latitude || null,
+              longitude: selected?.coords[0] || null,
+              latitude: selected?.coords[1] || null,
             },
           });
         }}

@@ -7,7 +7,7 @@ export const ToastProvider = ({ children }) => {
   const [toastOptions, setToastOptions] = useState({
   });
 
-  const showToast = (message, variant = "info", duration = 100000, cancellable = true) => {
+  const showToast = (message, variant = "info", duration = 6000, cancellable = true) => {
     setToastOptions({ message, variant, duration, cancellable, isVisible: true });  
   
     setTimeout(() => {

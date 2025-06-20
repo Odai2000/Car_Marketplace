@@ -18,7 +18,7 @@ const authenticateSocket = require('./middleware/authenticateSocket')
 const { Server } = require('socket.io');
 const io = new Server(server,{
   cors: {
-    origin: ["http://localhost:8097", "http://192.168.1.101:8097"],
+    origin: [process.env.CLIENT_URL],
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -42,17 +42,17 @@ const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET
 
 //CORS
 const cors = require("cors");
-const whitelist = ["http://localhost:8097","http://192.168.1.101:8097"];
+const whitelist = [process.env.CLIENT_URL];
 
 const corsOptions = {
-  // origin: function (origin, callback) {
-  //   if (whitelist.indexOf(origin) !== -1) {
-  //     callback(null, true);
-  //   } else {
-  //     callback(new Error("Not allowed by CORS"));
-  //   }
-  // },
-  origin:true,
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  // origin:true,
   methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
   credentials:true
 };

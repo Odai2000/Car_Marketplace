@@ -16,6 +16,7 @@ const Autocomplete = ({
 
   const [suggestions, setSuggestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(-1);
+    const [isMouseOverSuggestions, setIsMouseOverSuggestions] = useState(false);
 
   const handleChange = (e) => {
     setUserInput(e.target.value);
@@ -41,7 +42,9 @@ const Autocomplete = ({
   };
 
   const handleBlur = ()=>{
-    setSuggestions([])
+       if (!isMouseOverSuggestions) {
+      setSuggestions([]);
+    }
   }
 
   useEffect(() => {
@@ -84,7 +87,8 @@ const Autocomplete = ({
           {...props}
         />
         {suggestions?.length > 0 && (
-          <ul className="autocomplete-dropdown">
+          <ul className="autocomplete-dropdown"       onMouseEnter={() => setIsMouseOverSuggestions(true)}
+          onMouseLeave={() => setIsMouseOverSuggestions(false)}>
             {suggestions.map((suggestion, index) => (
               <li className={index===currentIndex && 'active'} key={index} onClick={() => handleSelection(suggestion)}>
                 {suggestion.display}

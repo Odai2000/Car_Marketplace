@@ -205,7 +205,7 @@ const loginUser = asyncHandler(async (req, res) => {
         "Origin, X-Requested-With, Content-Type, Accept, authorization"
       );
       res.setHeader("Content-Type", "application/json");
-      res.setHeader("Access-Control-Allow-Origin", "http://localhost:8097");
+      res.setHeader("Access-Control-Allow-Origin", process.env.CLIENT_URL);
       res.setHeader(
         "Access-Control-Allow-METHODS",
         "GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS, PATCH"
@@ -232,16 +232,34 @@ const loginUser = asyncHandler(async (req, res) => {
         .cookie("refreshToken", refreshToken, {
           httpOnly: true,
           secure: false,
-          sameSite: "lax",
+          sameSite: "strict",
           maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
         })
         .json({ accessToken: accessToken, userData: userData });
     } else {
       return res.status(401).send("Authentication Failed.");
     }
-  } catch (err) {
-    console.log(err);
-    return res.status(500).send(err);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send(error);
+  }
+});
+
+const logout = asyncHandler(async (req, res) => {
+  try {
+    //sends null token
+    return res
+      .status(200)
+      .cookie("refreshToken", "", {
+        httpOnly: true,
+        secure: false,
+        sameSite: "strict",
+        maxAge: -0,
+      })
+      .send("user logged out.");
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send(error);
   }
 });
 
@@ -381,6 +399,7 @@ module.exports = {
   deleteUser,
 
   loginUser,
+  logout,
   refreshTheToken,
   changePassword,
   resendEmailVerification,
