@@ -6,7 +6,7 @@ import PostForm from "./components/pages/PostForm/PostForm";
 import PostSearchResult from "./components/pages/PostSearchResults/PostSearchResult";
 import AuthProvider from "./context/AuthProvider";
 import AppDataProvider from "./context/AppDataProvider";
-import PersistLogin from "./components/persistLogin";
+import PersistLogin from "./components/PersistLogin";
 import { ToastProvider } from "./context/ToastProvider";
 import ReqAuth from "./components/ReqAuth";
 import UnAuthorized from "./components/pages/UnAuthorized/UnAuthorized";
