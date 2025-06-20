@@ -3,7 +3,7 @@ import { useEffect, useState, forwardRef } from "react";
 import { useNavigate } from "react-router-dom";
 import useAppData from "../../../../hooks/useAppData";
 import Button from "../../../UI/Button/Button";
-import Select from "../../../UI/FormControls/select";
+import Select from "../../../UI/FormControls/Select";
 import { FaX } from "react-icons/fa6";
 
 const Filter = ({ query, handleToggle, isSmallScreen }) => {

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import useAppData from "../../../../hooks/useAppData";
 import Input from "../../../UI/FormControls/Input";
 import Button from "../../../UI/Button/Button";
-import Select from "../../../UI/FormControls/select";
+import Select from "../../../UI/FormControls/Select";
 import useConfig from "../../../../hooks/useConfig";
 import Autocomplete from "../../../UI/FormControls/Autocomplete";
 import useToast from "../../../../hooks/useToast";

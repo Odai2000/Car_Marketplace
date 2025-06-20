@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import useAppData from "../../../../hooks/useAppData";
 import Input from "../../../UI/FormControls/Input";
-import Select from "../../../UI/FormControls/select";
+import Select from "../../../UI/FormControls/Select";
 
 const CarInfoStep = ({
   formData,

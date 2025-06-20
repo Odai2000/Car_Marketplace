@@ -3,7 +3,7 @@ import { FaAngleRight } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAppData from "../../hooks/useAppData";
-import Select from "../UI/FormControls/select";
+import Select from "../UI/FormControls/Select";
 
 function HeroFilter() {
   const { carSpecsData, loadingCarSpecs } = useAppData();
