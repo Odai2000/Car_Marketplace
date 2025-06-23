@@ -17,7 +17,7 @@ import DefaultProfile from "../../UI/Utility/DefaultProfile/DefaultProfile";
 import useAuthFetch from "../../../hooks/useAuthFetch";
 
 const UserSettings = () => {
-  const [view, setView] = useState("profile");
+  const [activeTab, setActiveTab] = useState("profile");
 
   const [firstName, setFirstName] = useState("");
   const [username, setUsername] = useState("");
@@ -134,29 +134,29 @@ const UserSettings = () => {
           </div>
           <div className="vertical-tabs">
             <Button
-              styleName={`tab ${view === "profile" ? "active" : ""}`}
+              styleName={`tab ${activeTab === "profile" ? "active" : ""}`}
               variant="primary round"
               onClick={() => {
-                setView("profile");
+                setActiveTab("profile");
               }}
             >
               <FaUser /> Profile
             </Button>
             <Button
               styleName={`tab ${
-                view === "personalInformation" ? "active" : ""
+                activeTab === "personalInformation" ? "active" : ""
               }`}
               onClick={() => {
-                setView("personalInformation");
+                setActiveTab("personalInformation");
               }}
               variant="primary round"
             >
               <FaAddressCard /> Personal Information
             </Button>
             <Button
-              styleName={`tab ${view === "perferences" ? "active" : ""}`}
+              styleName={`tab ${activeTab === "perferences" ? "active" : ""}`}
               onClick={() => {
-                setView("perferences");
+                setActiveTab("perferences");
               }}
               variant="primary round"
             >
@@ -177,11 +177,11 @@ const UserSettings = () => {
           </div>
         </div>
         <div className="config-panel">
-          {view === "profile" ? (
-            <div className="view profile-config">
+          {activeTab === "profile" ? (
+            <div className="activeTab profile-config">
               <Button
                 onClick={() => {
-                  setView("changePassword");
+                  setActiveTab("changePassword");
                 }}
               >
                 Change password
@@ -198,7 +198,7 @@ const UserSettings = () => {
             ""
           )}
 
-          {view === "personalInformation" ? (
+          {activeTab === "personalInformation" ? (
             <div className="edit-account-info">
               <form>
                 <Input
@@ -249,7 +249,7 @@ const UserSettings = () => {
             ""
           )}
 
-          {view === "changePassword" ? (
+          {activeTab === "changePassword" ? (
             <div className="change-password ">
               <h2>Change Password</h2>
               <form>

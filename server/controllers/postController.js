@@ -120,6 +120,39 @@ const getPosts = asyncHandler(async (req, res) => {
   res.status(200).json(posts);
 });
 
+const getPostsByUserId = asyncHandler(async (req, res) => {
+
+
+  const posts = await Post.find({user_id:req.params.user_id}).sort({ createdAt: -1 }).lean();
+
+  if (!posts.length) {
+    return res.status(200).json(posts);
+  }
+
+  // populate post.images and remove remove post.imageIds
+  for (const post of posts) {
+    if (post.imageIds && post.imageIds.length > 0) {
+      try {
+        post.images = [];
+        for (const imageId of post.imageIds) {
+          const imageURL = await cloudStorage.download(imageId);
+
+          post.images.push({
+            imageId,
+            imageURL,
+          });
+        }
+      } catch (error) {
+        console.log(error);
+        return res.status(500);
+      }
+    }
+    delete post.imageIds;
+  }
+
+  res.status(200).json(posts);
+});
+
 const createPost = asyncHandler(async (req, res) => {
   try {
     const data = JSON.parse(req.body.data);
@@ -278,6 +311,7 @@ const deletePost = asyncHandler(async (req, res) => {
 module.exports = {
   getPosts,
   getPostById,
+  getPostsByUserId,
   createPost,
   updatePost,
   deletePost,

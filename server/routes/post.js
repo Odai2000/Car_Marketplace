@@ -15,4 +15,6 @@ router
 
 router.route("/:id").get(postController.getPostById);
 
+router.route("/user/:user_id/").get(postController.getPostsByUserId);
+
 module.exports = router;

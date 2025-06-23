@@ -1,35 +1,90 @@
-import { FaUser } from "react-icons/fa6";
-import Button from "../../UI/Button/Button";
 import "./UserAccount.css";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import Button from "../../UI/Button/Button";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import useAuth from "../../../hooks/useAuth";
 import DefaultProfile from "../../UI/Utility/DefaultProfile/DefaultProfile";
 import useAuthFetch from "../../../hooks/useAuthFetch";
-
-const serverUrl = import.meta.env.VITE_SERVER_URL;
+import Post from "../../Post/Post";
+import useConfig from "../../../hooks/useConfig";
 
 const UserAccount = () => {
-  const [firstName, setFirstName] = useState(null);
-  const [lastName, setLastName] = useState(null);
-  const [username, setUsername] = useState(null);
-  const [password, setPassword] = useState(null);
+  const [userData, setUserData] = useState(null);
+
   const [email, setEmail] = useState(null);
   const [emailVert, setEmailVert] = useState(null);
+  const [activeTab, setActiveTab] = useState("posts");
+  const [posts, setPosts] = useState([]);
+  const [savedPosts, setSavedPosts] = useState([]);
+  const [articles, setArticles] = useState([]);
 
   const { auth } = useAuth();
-  const authFetch  = useAuthFetch();
+  const { config } = useConfig();
+  const { _id } = useParams();
+  const authFetch = useAuthFetch();
+  const location = useLocation();
   const navigate = useNavigate;
 
-  useEffect(() => {
-    setFirstName(auth.userData.firstName);
-    setLastName(auth.userData.lastName);
-    setUsername(auth.userData.username);
-    setEmail(auth.userData.email);
-    setEmailVert(auth.userData.emailVert);
-  }, [auth]);
+  const loadData = async () => {
+    try {
+      if (location.pathname === "/me") {
+        // use user data from auth
+        if (auth.userData) {
+          setUserData({
+            firstName: auth.userData?.firstName,
+            lastName: auth.userData?.lastName,
+            username: auth?.userData?.username,
+            emailVert: auth?.userData?.emailVert,
+            user_id: auth?.userData?._id,
+          });
+        }
+      } else if (_id) {
+        //  fetch user data by id
+        await fetch(`${config.serverUrl}/users/${_id}`)
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            setUserData({
+              firstName: data?.firstName,
+              lastName: data?.lastName,
+              username: data?.username,
+              emailVert: data?.emailVert,
+              user_id: userData?._id,
+            });
+          });
+      }
+    } catch (error) {
+      console.error("Failed to load user data:", error);
+    }
+  };
 
-  const location = useLocation();
+  useEffect(() => {
+    loadData();
+  }, [auth, location.pathname]);
+
+  useEffect(() => {
+    const user_id = userData?.user_id;
+    if (!user_id) return;
+
+    if (activeTab === "posts" && !posts?.length) {
+      fetch(`${config.serverURL}/post/user/${user_id}`)
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          setPosts(data);
+        });
+    } else if (activeTab === "saved-posts" && !savedPosts?.length) {
+      authFetch(`${config.serverUrl}/user/saved-posts`)
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          setSavedPosts(data);
+        });
+    }
+  }, [activeTab,userData]);
 
   return (
     <>
@@ -39,8 +94,8 @@ const UserAccount = () => {
             <DefaultProfile size="max(5rem, 8vw)" />
           </div>
           <div className="user-info">
-            <div className="name">{`${firstName} ${lastName}`}</div>
-            <div className="username">@{username}</div>
+            <div className="name">{`${userData?.firstName} ${userData?.lastName}`}</div>
+            <div className="username">@{userData?.username}</div>
 
             {location.pathname === "/me" ? (
               <Link to="/me/settings">
@@ -54,26 +109,43 @@ const UserAccount = () => {
           </div>
         </div>
 
-        {location.pathname === "/me" ? (
-          <>
-            <div className="tabs">
-              <div className="tab">Posts</div>
-              <div className="tab">Fav Posts</div>
-              <div className="tab">Articles</div>
+        <div className="account-content card flex-col">
+          <div className="tabs">
+            <div
+              className={`tab ${activeTab === "posts" ? "active" : ""}`}
+              onClick={() => {
+                setActiveTab("posts");
+              }}
+            >
+              Posts
             </div>
+            {location.pathname === "/me" ? (
+              <div
+                className={`tab ${activeTab === "saved-posts" ? "active" : ""}`}
+                onClick={() => {
+                  setActiveTab("saved-posts");
+                }}
+              >
+                Saved Posts
+              </div>
+            ) : (
+              ""
+            )}
+            <div
+              className={`tab ${activeTab === "articles" ? "active" : ""}`}
+              onClick={() => {
+                setActiveTab("articles");
+              }}
+            >
+              Articles
+            </div>
+          </div>
 
-            <div className="card">
-              <h3>Things to do</h3>
-              <ul>
-                <li>Verify ur email</li>
-                <li>Verify ur email</li>
-                <li>Verify ur email</li>
-              </ul>
-            </div>
-          </>
-        ) : (
-          ""
-        )}
+          <div className="content">
+            {activeTab === "posts" &&
+              posts?.map((post) => <Post key={post._id} data={post} />)}
+          </div>
+        </div>
       </div>
     </>
   );

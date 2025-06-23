@@ -10,14 +10,17 @@ import {
   FaMessage,
   FaGasPump,
   FaLocationDot,
+  FaEllipsisVertical,
 } from "react-icons/fa6";
-import { PiDotsThreeOutlineFill, PiEngineFill } from "react-icons/pi";
+import { CiCalendar } from "react-icons/ci";
+import { PiEngineFill ,PiCarSimpleThin, PiRoadHorizonThin, PiCalendarBlankThin, PiGasPumpThin, PiEngineThin, PiGearThin} from "react-icons/pi";
 import { TbManualGearbox } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import useMap from "../../hooks/useMap";
 import PropTypes from "prop-types";
 import useAuth from "../../hooks/useAuth";
 import { IconContext } from "react-icons";
+import Dropdown from "../UI/Dropdown/Dropdown";
 
 const Post = ({ data = null }) => {
   const navigate = useNavigate();
@@ -66,28 +69,28 @@ const Post = ({ data = null }) => {
             {`${data?.car?.make || ""} ${data?.car?.model || ""}`}
           </span>
           <span>
-            <FaCar /> <span>{data?.car?.bodyType}</span>
+            <PiCarSimpleThin /> <span>{data?.car?.bodyType}</span>
           </span>
           <span>
-            <FaCalendar /> <span>{data?.car?.year}</span>
+            <PiCalendarBlankThin /> <span>{data?.car?.year}</span>
           </span>
           <span>
-            <FaRoad />{" "}
+            <PiRoadHorizonThin />
             <span>
               {data?.car?.mileage && `${data.car.mileage.toLocaleString()} km`}
             </span>
           </span>
           <span>
-            <FaGasPump /> <span>{data?.car?.fuel}</span>
+            <PiGasPumpThin /> <span>{data?.car?.fuel}</span>
           </span>
           <span>
-            <PiEngineFill />{" "}
+            <PiEngineThin />
             <span>
               {data?.car?.hp && `${data.car.hp?.toLocaleString()} hp`}
             </span>
           </span>
           <span>
-            <TbManualGearbox /> <span>{data?.car?.transmission}</span>
+            <PiGearThin  /> <span>{data?.car?.transmission}</span>
           </span>
         </IconContext.Provider>
         <span className="post-location">
@@ -125,27 +128,44 @@ const Post = ({ data = null }) => {
               </Button>
             ) : (
               <>
-                {" "}
                 <Button variant="primary">
                   <FaPhone /> Call
                 </Button>
                 <Button variant="primary" onClick={handleMessage}>
                   <FaMessage /> Message
                 </Button>
+                {/* <div className="post-opts-btn"> */}
+
+                {/* </div> */}
               </>
             )}
-          </div>
 
-          {/* <div className="post-opts-btn">
-            <Button
-              variant="icon"
-              onClick={() => {
-                navigate("/edit", { state: { postData: data } });
-              }}
+            <Dropdown
+              className="opts-btn"
+              trigger={
+                <Button styleName="opts-btn" variant="icon" onClick={() => {}}>
+                  <div className="overlay">
+                    <FaEllipsisVertical />
+                  </div>
+                </Button>
+              }
             >
-              <PiDotsThreeOutlineFill />
-            </Button>
-          </div> */}
+              <ul>
+                {auth?.userData?._id === data.user_id ||
+                auth?.role === "Admin" ? (
+                  <>
+                    <li>Archive</li>
+                    <li>Delete</li>
+                  </>
+                ) : (
+                  <>
+                    <li>Save</li>
+                    <li>Report</li>
+                  </>
+                )}
+              </ul>
+            </Dropdown>
+          </div>
         </div>
       </div>
     </div>
@@ -153,7 +173,7 @@ const Post = ({ data = null }) => {
 };
 Post.propTypes = {
   data: PropTypes.shape({
-    user: PropTypes.string.isRequired,
+    user_id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
     images: PropTypes.arrayOf(PropTypes.object),
@@ -178,7 +198,7 @@ Post.propTypes = {
 
 Post.defaultProps = {
   data: {
-    user: "failedToGetUser",
+    user_id: null,
     title: "",
     price: 0,
     images: [],

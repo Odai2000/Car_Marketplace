@@ -1,9 +1,15 @@
+.UserAccount{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap:1em;
+}
+
 /* temp-fix */
 body {
   font-size: 0.75rem;
 }
-
-
 
 .user-header {
   display: flex;
@@ -13,8 +19,7 @@ body {
   padding-bottom: 2rem;
   border-bottom-left-radius: 2rem;
   border-bottom-right-radius: 2rem;
-  background-color:white ;
-
+  background-color: white;
 }
 
 .user-info {
@@ -40,29 +45,47 @@ body {
   overflow: hidden;
 }
 
-.user-header .default-profile-image *{
-display: inline-block;
+.user-header .default-profile-image * {
+  display: inline-block;
 }
 .UserAccount .edit-user-btn {
   color: #fff;
 }
 
+.UserAccount .account-content {
+ display: flex;
+ flex-direction: column;
+ gap:1em;
+  width: 100%;
+  
+}
+
 /* Tabs */
 .UserAccount .tabs {
+  flex:1;
   display: flex;
   justify-content: center;
   gap: 1em;
+  font-size: 1.2rem;
 }
+
 
 .UserAccount .tab {
-  padding: 1em;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 0.5em;
+  color: gray;
+   transition: all 0.2s ease;
+}
+.UserAccount .tab.active {
+  border-bottom: 2px solid var(--primary);
+  font-weight: 900;
   color: var(--primary);
 }
-
 .UserAccount .tab:hover {
-  background-color: var(--primary);
-  color: #fff;
-  border-radius: 24px;
+  border-bottom: 2px solid var(--primary);
+  cursor: pointer;
 }
 
 .edit-account-info {
@@ -82,4 +105,9 @@ display: inline-block;
   body {
     font-size: 1rem;
   }
+
+  .UserAccount .account-content {
+  
+  width: 60%;
+}
 }
