@@ -42,7 +42,7 @@ const userSchema = new mongoose.Schema(
     profileImageId: { type: String },
     status: {
       type: [String],
-      enum: ["offline", "online","soft_deleted"],
+      enum: ["offline", "online", "soft_deleted"],
       default: ["offline"],
     },
     roles: {
@@ -50,6 +50,10 @@ const userSchema = new mongoose.Schema(
       enum: ["USER", "ADMIN"],
       default: ["USER"],
     },
+    savedPosts: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Post",
+    }],
   },
   { timestamps: true }
 );

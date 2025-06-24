@@ -76,12 +76,12 @@ const UserAccount = () => {
           setPosts(data);
         });
     } else if (activeTab === "saved-posts" && !savedPosts?.length) {
-      authFetch(`${config.serverUrl}/user/saved-posts`)
+      authFetch(`${config.serverURL}/user/saved-posts`)
         .then((response) => {
           return response.json();
         })
         .then((data) => {
-          setSavedPosts(data);
+          setSavedPosts(data.savedPosts);
         });
     }
   }, [activeTab,userData]);
@@ -144,6 +144,8 @@ const UserAccount = () => {
           <div className="content">
             {activeTab === "posts" &&
               posts?.map((post) => <Post key={post._id} data={post} />)}
+            {activeTab === "saved-posts" &&
+              savedPosts?.map((post) => <Post key={post._id} data={post} />)}
           </div>
         </div>
       </div>

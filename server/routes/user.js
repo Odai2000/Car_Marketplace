@@ -20,6 +20,10 @@ router.route("/:_id").get(userController.getUser);
 
 router.route("/:_id/verify-email").post(userController.verifyEmail);
 
+router.route("/:_id/save-post").post(authenticateToken,userController.savePost);
+router.route("/:_id/unsave-post").post(authenticateToken,userController.unsavePost);
+router.route("/saved-posts").post(authenticateToken,userController.getSavedPosts);
+
 router
   .route("/:_id/resend-email-verification")
   .get(authenticateToken, userController.resendEmailVerification);

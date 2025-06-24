@@ -17,14 +17,15 @@ const getAllUsers = asyncHandler(async (req, res) => {
 
 // *check how to combine these two
 const getUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.body._id).select("-password").lean();
+  const user = await User.findById(req.body._id)
+    .select("-password -savedPosts")
+    .lean();
 
   if (!user) return res.status(400).json({ message: "No user found" });
 
   res.status(200).json(user);
 });
 
-// obsolete, might remove later
 const getUserPersonalData = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id).select("-password").lean();
 
@@ -291,6 +292,59 @@ const verifyEmail = asyncHandler(async (req, res) => {
   }
 });
 
+const savePost = asyncHandler(async (req, res) => {
+  const user_id = req.user._id;
+  const post_id = req.body.post_id;
+
+  try {
+    await User.updateOne(
+      { _id: user_id },
+      { $addToSet: { savedPosts: post_id } }
+    );
+
+    const updatedUser = await User.findById(user_id)
+      .select("savedPosts")
+      .lean();
+
+    res.status(200).json({ savedPosts: updatedUser.savedPosts });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json(error);
+  }
+});
+
+const unsavePost = asyncHandler(async (req, res) => {
+  const user_id = req.user._id;
+  const post_id = req.body.post_id;
+
+  try {
+    await User.updateOne({ _id: user_id }, { $pull: { savedPosts: post_id } });
+
+    const updatedUser = await User.findById(user_id)
+      .select("savedPosts")
+      .lean();
+
+    res.status(200).send("Post unsaved");
+  } catch (error) {
+    console.error(error);
+    res.status(500).json(error);
+  }
+});
+
+const getSavedPosts = asyncHandler(async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id)
+      .populate("savedPosts")
+      .select("savedPosts")
+      .lean();
+
+    res.status(200).json({ savedPosts: user?.savedPosts });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json(error);
+  }
+});
+
 // auxiliary functions
 
 const generateAccessToken = (user) => {
@@ -404,4 +458,7 @@ module.exports = {
   changePassword,
   resendEmailVerification,
   verifyEmail,
+  savePost,
+  unsavePost,
+  getSavedPosts,
 };

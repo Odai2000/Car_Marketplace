@@ -13,22 +13,90 @@ import {
   FaEllipsisVertical,
 } from "react-icons/fa6";
 import { CiCalendar } from "react-icons/ci";
-import { PiEngineFill ,PiCarSimpleThin, PiRoadHorizonThin, PiCalendarBlankThin, PiGasPumpThin, PiEngineThin, PiGearThin} from "react-icons/pi";
-import { TbManualGearbox } from "react-icons/tb";
+import {
+  PiEngineFill,
+  PiCarSimpleThin,
+  PiRoadHorizonThin,
+  PiCalendarBlankThin,
+  PiGasPumpThin,
+  PiEngineThin,
+  PiGearThin,
+} from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
 import useMap from "../../hooks/useMap";
 import PropTypes from "prop-types";
 import useAuth from "../../hooks/useAuth";
 import { IconContext } from "react-icons";
 import Dropdown from "../UI/Dropdown/Dropdown";
+import useAuthFetch from "../../hooks/useAuthFetch";
+import useToast from "../../hooks/useToast";
+import useConfig from "../../hooks/useConfig";
 
 const Post = ({ data = null }) => {
   const navigate = useNavigate();
   const { getMapURL } = useMap();
-  const { auth } = useAuth();
+  const { auth, setAuth } = useAuth();
+  const authFetch = useAuthFetch();
+  const { showToast } = useToast();
+  const { config } = useConfig();
+
+  const isOwner = auth?.userData?._id === data.user_id;
+  const isAdmin = auth?.roles?.includes("ADMIN");
+  const isUser = auth?.roles?.includes("USER");
+  const isSaved = auth?.userData?.savedPosts?.includes(data?._id);
 
   const handleMessage = () => {
     navigate(`/chat/${data?.user_id}`);
+  };
+
+  const handleSave = async () => {
+    try {
+      await authFetch(
+        `${config.serverURL}/user/${auth?.userData._id}/save-post`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            post_id: data?._id,
+          }),
+        }
+      )
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          setAuth({ ...auth, savedPost: data?.savePost });
+        });
+    } catch (error) {
+      showToast("error", "Failed to save");
+
+      console.error(error);
+    }
+  };
+
+  const handleUnsave = async () => {
+    try {
+      await authFetch(`/user/${auth?.userData._id}/unsavePost`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          post_id: data?._id,
+        }),
+      })
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          setAuth({ ...auth, savedPost: data?.savePost });
+        });
+    } catch (error) {
+      showToast("error", "Failed to unsave");
+      console.error(error);
+    }
   };
 
   let images = data?.images;
@@ -38,6 +106,25 @@ const Post = ({ data = null }) => {
       <FaCamera style={{ height: "2em", width: "2em" }} /> No Photos
     </div>,
   ];
+  const DropdownOpts = (
+    <>
+      {isOwner || isAdmin ? (
+        <>
+          <li>Archive</li>
+          <li>Delete</li>
+        </>
+      ) : isUser ? (
+        <>
+          {isSaved ? (
+            <li onClick={handleUnsave}>Unsave</li>
+          ) : (
+            <li onClick={handleSave}>Save</li>
+          )}
+          <li>Report</li>
+        </>
+      ) : null}
+    </>
+  );
 
   return (
     <div className="post" key={data?._id}>
@@ -90,7 +177,7 @@ const Post = ({ data = null }) => {
             </span>
           </span>
           <span>
-            <PiGearThin  /> <span>{data?.car?.transmission}</span>
+            <PiGearThin /> <span>{data?.car?.transmission}</span>
           </span>
         </IconContext.Provider>
         <span className="post-location">
@@ -117,7 +204,7 @@ const Post = ({ data = null }) => {
 
         <div className="post-footer ">
           <div className="btn-group post-btn-group ">
-            {auth?.userData?._id === data.user_id ? (
+            {isOwner ? (
               <Button
                 variant="primary"
                 onClick={() => {
@@ -134,9 +221,6 @@ const Post = ({ data = null }) => {
                 <Button variant="primary" onClick={handleMessage}>
                   <FaMessage /> Message
                 </Button>
-                {/* <div className="post-opts-btn"> */}
-
-                {/* </div> */}
               </>
             )}
 
@@ -150,20 +234,7 @@ const Post = ({ data = null }) => {
                 </Button>
               }
             >
-              <ul>
-                {auth?.userData?._id === data.user_id ||
-                auth?.role === "Admin" ? (
-                  <>
-                    <li>Archive</li>
-                    <li>Delete</li>
-                  </>
-                ) : (
-                  <>
-                    <li>Save</li>
-                    <li>Report</li>
-                  </>
-                )}
-              </ul>
+              <ul>{DropdownOpts} </ul>
             </Dropdown>
           </div>
         </div>
