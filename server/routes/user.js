@@ -11,7 +11,7 @@ router
   .delete(authenticateToken, userController.deleteUser);
 
 router.route("/me").get(authenticateToken, userController.getUserPersonalData);
-
+router.route("/me/saved-posts").get(authenticateToken,userController.getSavedPosts);
 router
   .route("/me/change-password")
   .patch(authenticateToken, userController.changePassword);
@@ -22,7 +22,6 @@ router.route("/:_id/verify-email").post(userController.verifyEmail);
 
 router.route("/:_id/save-post").post(authenticateToken,userController.savePost);
 router.route("/:_id/unsave-post").post(authenticateToken,userController.unsavePost);
-router.route("/saved-posts").post(authenticateToken,userController.getSavedPosts);
 
 router
   .route("/:_id/resend-email-verification")

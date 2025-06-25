@@ -227,6 +227,7 @@ const loginUser = asyncHandler(async (req, res) => {
         emailVert: user.emailVert,
         profileImageId: user.profileImageId,
         roles: user.roles,
+        savedPosts: user.savedPosts,
       };
       return res
         .status(200)
@@ -324,7 +325,7 @@ const unsavePost = asyncHandler(async (req, res) => {
       .select("savedPosts")
       .lean();
 
-    res.status(200).send("Post unsaved");
+      res.status(200).json({ savedPosts: updatedUser.savedPosts });
   } catch (error) {
     console.error(error);
     res.status(500).json(error);
@@ -434,6 +435,7 @@ const refreshTheToken = asyncHandler(async (req, res) => {
         emailVert: user.emailVert,
         profileImageId: user.profileImageId,
         roles: user.roles,
+        savedPosts: user.savedPosts,
       };
 
       res.status(200).json({ accessToken: accessToken, userData: userData });

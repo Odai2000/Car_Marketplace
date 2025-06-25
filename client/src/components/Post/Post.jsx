@@ -3,18 +3,12 @@ import Button from "../UI/Button/Button";
 import Carousel from "../UI/Carousel/Carousel";
 import {
   FaCamera,
-  FaCar,
-  FaCalendar,
-  FaRoad,
   FaPhone,
   FaMessage,
-  FaGasPump,
   FaLocationDot,
   FaEllipsisVertical,
 } from "react-icons/fa6";
-import { CiCalendar } from "react-icons/ci";
 import {
-  PiEngineFill,
   PiCarSimpleThin,
   PiRoadHorizonThin,
   PiCalendarBlankThin,
@@ -31,6 +25,8 @@ import Dropdown from "../UI/Dropdown/Dropdown";
 import useAuthFetch from "../../hooks/useAuthFetch";
 import useToast from "../../hooks/useToast";
 import useConfig from "../../hooks/useConfig";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const Post = ({ data = null }) => {
   const navigate = useNavigate();
@@ -48,6 +44,7 @@ const Post = ({ data = null }) => {
   const handleMessage = () => {
     navigate(`/chat/${data?.user_id}`);
   };
+
 
   const handleSave = async () => {
     try {
@@ -67,7 +64,7 @@ const Post = ({ data = null }) => {
           return response.json();
         })
         .then((data) => {
-          setAuth({ ...auth, savedPost: data?.savePost });
+     setAuth({ ...auth, userData:{...auth?.userData,savedPosts: data?.savedPosts} });
         });
     } catch (error) {
       showToast("error", "Failed to save");
@@ -78,23 +75,41 @@ const Post = ({ data = null }) => {
 
   const handleUnsave = async () => {
     try {
-      await authFetch(`/user/${auth?.userData._id}/unsavePost`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          post_id: data?._id,
-        }),
-      })
+      await authFetch(
+        `${config.serverURL}/user/${auth?.userData._id}/unsave-post`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            post_id: data?._id,
+          }),
+        }
+      )
         .then((response) => {
           return response.json();
         })
         .then((data) => {
-          setAuth({ ...auth, savedPost: data?.savePost });
+          setAuth({ ...auth, userData:{...auth?.userData,savedPosts: data?.savedPosts} });
         });
     } catch (error) {
-      showToast("error", "Failed to unsave");
+      showToast( "Failed to unsave","error");
+      console.error(error);
+    }
+  };
+  const handleDelete = async () => {
+    try {
+      const response = await authFetch(
+        `${config.serverURL}/post/${data?._id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      if (response.ok) showToast("success", "Post deleted.");
+    } catch (error) {
+      showToast("error", "Failed to delete post");
+
       console.error(error);
     }
   };
@@ -111,7 +126,7 @@ const Post = ({ data = null }) => {
       {isOwner || isAdmin ? (
         <>
           <li>Archive</li>
-          <li>Delete</li>
+          <li onClick={handleDelete}>Delete</li>
         </>
       ) : isUser ? (
         <>
@@ -132,7 +147,7 @@ const Post = ({ data = null }) => {
         {images && images.length > 0 ? (
           <Carousel single counter>
             {images.map((image, index) => (
-              <img key={index} src={image.imageURL} />
+              <img key={index} src={`${config.serverURL}${image.imageURL}`} />
             ))}
           </Carousel>
         ) : (

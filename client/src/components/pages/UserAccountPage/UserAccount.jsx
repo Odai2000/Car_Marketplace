@@ -76,7 +76,7 @@ const UserAccount = () => {
           setPosts(data);
         });
     } else if (activeTab === "saved-posts" && !savedPosts?.length) {
-      authFetch(`${config.serverURL}/user/saved-posts`)
+      authFetch(`${config.serverURL}/user/me/saved-posts`)
         .then((response) => {
           return response.json();
         })

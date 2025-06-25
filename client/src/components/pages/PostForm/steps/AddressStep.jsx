@@ -30,7 +30,7 @@ const AddressStep = ({
         (country) => country.code === formData.location.countryCode
       );
       setSelectedCountry(country || null);
-    } 
+    }
   }, []);
 
   if (loadingCountries) {
@@ -144,10 +144,8 @@ const AddressStep = ({
     setControlsValidity({
       countryCode: !!geocodeData.features[0].properties.countrycode,
     }); //failed to find better solution for now....
-
   };
 
-  
   const fetchAddressSuggestions = async (query) => {
     try {
       const geocodeData = await geocoding(query);
@@ -212,16 +210,62 @@ const AddressStep = ({
             },
           });
         }}
-        onChange = {(e)=>{setFormData({...formData, location: {
-          ...formData.location,
-          address: e.target.value} })}}
+        onChange={(e) => {
+          setFormData({
+            ...formData,
+            location: {
+              ...formData.location,
+              address: e.target.value,
+            },
+          });
+        }}
         fetchData={fetchAddressSuggestions}
         placeholder="Address (optional) eg: "
         validationRules={{ required: false }}
         onValidationChange={(value) => handleValidateChange("address", value)}
-      />
-      <Button styleName={'geolocation-btn'} variant={"primary"} onClick={handleGetLocation} >
-     <FaLocationCrosshairs/> {isSmallScreen && 'Use My GeoLocation' }
+      ></Autocomplete>
+
+      {formData?.location?.longitude || formData?.location?.latitude ? (
+        <>
+          <h3 className="col-2">Coords</h3>
+          <Input
+            name="longitude"
+            value={formData?.location?.longitude}
+            onChange={(e) => {
+              setFormData({
+                ...formData,
+                location: {
+                  ...formData.location,
+                  longitude: e.target.value,
+                },
+              });
+            }}
+            styleName={!isSmallScreen ? "col-1" : "col-2"}
+          ></Input>
+          <Input
+            name="latitude"
+            value={formData?.location?.latitude}
+            onChange={(e) => {
+              setFormData({
+                ...formData,
+                location: {
+                  ...formData.location,
+                  latitude: e.target.value,
+                },
+              });
+            }}
+            styleName={!isSmallScreen ? "col-1" : "col-2"}
+          ></Input>
+        </>
+      ) : (
+        ""
+      )}
+      <Button
+        styleName={"geolocation-btn"}
+        variant={"primary"}
+        onClick={handleGetLocation}
+      >
+        <FaLocationCrosshairs /> {isSmallScreen && "Use My GeoLocation"}
       </Button>
     </>
   );

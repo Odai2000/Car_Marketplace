@@ -2,7 +2,7 @@ const Post = require("../models/Post");
 const asyncHandler = require("express-async-handler");
 const CloudStorageManager = require("../modules/cloud_storage/cloudStorageManager");
 const cloudStorage = new CloudStorageManager("pcloud");
-const folderId = process.env.PCLOUD_FOLDER_ID; 
+const folderId = process.env.PCLOUD_FOLDER_ID;
 
 const getPostById = asyncHandler(async (req, res) => {
   try {
@@ -15,11 +15,11 @@ const getPostById = asyncHandler(async (req, res) => {
     if (post.imageIds && post.imageIds.length > 0) {
       try {
         for (const imageId of post.imageIds) {
-          const imageURL = await cloudStorage.download(imageId);
+          // const imageURL = await cloudStorage.download(imageId);
 
           post.images.push({
             imageId,
-            imageURL,
+            imageURL: `/files/${imageId}`,
           });
         }
       } catch (error) {
@@ -106,7 +106,7 @@ const getPosts = asyncHandler(async (req, res) => {
 
           post.images.push({
             imageId,
-            imageURL,
+            imageURL: `/files/${imageId}`,
           });
         }
       } catch (error) {
@@ -121,9 +121,9 @@ const getPosts = asyncHandler(async (req, res) => {
 });
 
 const getPostsByUserId = asyncHandler(async (req, res) => {
-
-
-  const posts = await Post.find({user_id:req.params.user_id}).sort({ createdAt: -1 }).lean();
+  const posts = await Post.find({ user_id: req.params.user_id })
+    .sort({ createdAt: -1 })
+    .lean();
 
   if (!posts.length) {
     return res.status(200).json(posts);
@@ -139,7 +139,7 @@ const getPostsByUserId = asyncHandler(async (req, res) => {
 
           post.images.push({
             imageId,
-            imageURL,
+            imageURL: `/files/${imageId}`,
           });
         }
       } catch (error) {
