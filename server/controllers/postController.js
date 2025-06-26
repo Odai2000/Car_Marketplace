@@ -6,7 +6,33 @@ const folderId = process.env.PCLOUD_FOLDER_ID;
 
 const getPostById = asyncHandler(async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id).exec();
+    const { include } = req.params;
+    const populateFields = [];
+
+    const query = await Post.findById(req.params.id);
+
+    if (include?.includes("bids")) {
+      populateFields.push({
+        path: "bids",
+        options: { sort: { createdAt: -1 } },
+        populate: { path: "user_id", select: "username" },
+      });
+    }
+
+    if (include?.includes("comments")) {
+      populateFields.push({
+        path: "comments",
+        match: { parent_id: null },
+        options: { sort: { createdAt: -1 }, limit: 10 },
+        populate: { path: "user_id", select: "username" },
+      });
+    }
+
+    if (populateFields.length > 0) {
+      query = query.populate(populateFields);
+    }
+
+    const post = await query.exec();
 
     if (!post) {
       return res.status(404).json({ message: "No Post found." });

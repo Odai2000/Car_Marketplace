@@ -41,10 +41,15 @@ const carSchema = new mongoose.Schema({
     required: true,
     enum: bodyTypesData.types,
   },
+  condition: {
+    type: String,
+    required: true,
+    enum: ["New", "Excellent", "Good", "Fair", "Poor", "Salvage"],
+  },
   transmission: {
     type: String,
     required: true,
-    enum: ["automatic", "manual"],
+    enum: ["Automatic", "Manual"],
   },
   mileage: {
     type: Number,
@@ -61,7 +66,6 @@ const carSchema = new mongoose.Schema({
     required: true,
     min: 0,
   },
-
 });
 
 const locationSchema = new mongoose.Schema({
@@ -76,9 +80,9 @@ const locationSchema = new mongoose.Schema({
       },
     },
   },
-  address:{
-    type:String
-  }
+  address: {
+    type: String,
+  },
 });
 
 const postSchema = new mongoose.Schema(
@@ -103,9 +107,13 @@ const postSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    status: {
+      type: String,
+      enum: ["Active", "Sold", "Archived"],
+      default: "Active",
+    },
     car: {
-      type: carSchema,
-      required: false,
+      type: carSchema
     },
     location: {
       type: locationSchema,
@@ -117,10 +125,29 @@ const postSchema = new mongoose.Schema(
       min: 0,
     },
   },
-
   {
     timestamps: true,
+    toObject: { virtuals: true },
+    toJSON: { virtuals: true },
   }
 );
+
+postSchema.virtual("bids", {
+  ref: "Bid",
+  localField: "_id",
+  foreignField: "post_id",
+  justOne: false,
+});
+postSchema.virtual("comments", {
+  ref: "Comment",
+  localField: "_id",
+  foreignField: "post_id",
+  justOne: false,
+});
+
+postSchema.index({ user_id: 1 });
+postSchema.index({ status: 1 });
+postSchema.index({ "car.make": 1, "car.model": 1 });
+postSchema.index({ price: 1 });
 
 module.exports = mongoose.model("Post", postSchema);

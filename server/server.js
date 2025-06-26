@@ -57,6 +57,10 @@ const corsOptions = {
   credentials:true
 };
 
+// open access for public files streaming
+const openCors = cors({ origin: true });
+app.use("/files",openCors,require("./routes/file"))
+
 app.use(bodyParser.json(), cookieParser(), cors(corsOptions));
 
 //Routes
@@ -65,7 +69,6 @@ app.use("/user", require("./routes/user"));
 app.use("/post", require("./routes/post"));
 app.use("/data",require("./routes/data"))
 app.use("/chat",require("./routes/chat"))
-app.use("/files",require("./routes/file"))
 
 mongoose.connection.once("open", () => {
   server.listen(PORT, () => console.log(`server running on port ${PORT}`));
