@@ -3,19 +3,26 @@ const asyncHandler = require("express-async-handler");
 const CloudStorageManager = require("../modules/cloud_storage/cloudStorageManager");
 const cloudStorage = new CloudStorageManager("pcloud");
 const folderId = process.env.PCLOUD_FOLDER_ID;
+const Bid = require("../models/Bid");
+const Comment = require("../models/Comment");
 
 const getPostById = asyncHandler(async (req, res) => {
   try {
-    const { include } = req.params;
+    const { include } = req.query;
     const populateFields = [];
+    let query = Post.findById(req.params.id);
 
-    const query = await Post.findById(req.params.id);
+    //would be changed late to user
+    populateFields.push({
+      path: "user_id",
+      select: "firstName lastName name",
+    });
 
     if (include?.includes("bids")) {
       populateFields.push({
         path: "bids",
         options: { sort: { createdAt: -1 } },
-        populate: { path: "user_id", select: "username" },
+        populate: { path: "user_id", select: "firstName lastName name" },
       });
     }
 
@@ -24,15 +31,14 @@ const getPostById = asyncHandler(async (req, res) => {
         path: "comments",
         match: { parent_id: null },
         options: { sort: { createdAt: -1 }, limit: 10 },
-        populate: { path: "user_id", select: "username" },
+        populate: { path: "user_id", select: "firstName lastName name" },
       });
     }
 
     if (populateFields.length > 0) {
       query = query.populate(populateFields);
     }
-
-    const post = await query.exec();
+    const post = await query.lean();
 
     if (!post) {
       return res.status(404).json({ message: "No Post found." });
@@ -40,6 +46,7 @@ const getPostById = asyncHandler(async (req, res) => {
 
     if (post.imageIds && post.imageIds.length > 0) {
       try {
+        post.images = [];
         for (const imageId of post.imageIds) {
           // const imageURL = await cloudStorage.download(imageId);
 

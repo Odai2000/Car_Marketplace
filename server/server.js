@@ -45,14 +45,14 @@ const cors = require("cors");
 const whitelist = [process.env.CLIENT_URL];
 
 const corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  // origin:true,
+  // origin: function (origin, callback) {
+  //   if (whitelist.indexOf(origin) !== -1) {
+  //     callback(null, true);
+  //   } else {
+  //     callback(new Error("Not allowed by CORS"));
+  //   }
+  // },
+  origin:true,
   methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
   credentials:true
 };

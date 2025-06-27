@@ -6,34 +6,36 @@
   background-color: rgba(0, 0, 0, 0.04);
 }
 
-.HighlightedPosts > .Carousel > .items {
+.HighlightedPosts > .Carousel .items {
   overflow: scroll;
 }
 
-.HighlightedPosts > .Carousel > .carousel-btn {
+.HighlightedPosts > .Carousel .carousel-btn {
   position: static;
   display: none;
   transform: translate(0, 0);
   padding: 0.25em;
   font-size: 1.5em;
   color: var(--primary);
+  background-color: #fff;
+  margin:0 .25rem ;
 
   box-shadow: inset 4px 0 8px -4px rgba(0, 0, 0, 0.04),
     inset -4px 0 8px -4px rgba(0, 0, 0, 0.04), 0 2px 12px rgba(0, 0, 0, 0.15);
 
   transition: all 0.3s ease;
 }
-.HighlightedPosts > .Carousel > .carousel-btn:hover {
+.HighlightedPosts > .Carousel .carousel-btn:hover {
   background-color: var(--primary);
   color: #fff;
 }
 
 @media (min-width: 768px) {
-  .HighlightedPosts > .Carousel > .carousel-btn {
+  .HighlightedPosts > .Carousel .carousel-btn {
     display: block;
   }
 
-  .HighlightedPosts > .Carousel > .items {
+  .HighlightedPosts > .Carousel  .items {
     overflow: hidden;
   }
 }

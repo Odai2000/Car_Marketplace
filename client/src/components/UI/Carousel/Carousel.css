@@ -1,6 +1,15 @@
-.Carousel {
+.Carousel  {
   position: relative;
   max-width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+ gap: 0.5em;
+}
+
+.carousel-container  {
+  position: relative;
+  width: 100%;
   height: 100%;
   display: flex;
   justify-content: space-between;
@@ -30,7 +39,7 @@ padding: 0;
   height: 100%;
 }
 
-.Carousel .carousel-btn {
+.Carousel .single .carousel-btn {
   position: absolute;
   top: 50%;
   transform: translate(0, -50%);
@@ -55,4 +64,22 @@ padding: 0;
   background-color: rgba(0, 0, 0, 0.2);
   color: #fff;
   border-radius: 0.25em;
+}
+
+/* thumbnails */
+.Carousel .thumbnails{
+  display: flex;
+  flex-direction: column;
+gap: 0.1em;
+}
+
+.Carousel .thumbnail{
+  height: 75px;
+  width: 120px;
+  cursor:pointer;
+
+}
+
+.Carousel .thumbnail.active{
+  border: 1px solid var(--primary);
 }

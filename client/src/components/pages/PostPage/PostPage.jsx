@@ -1,0 +1,358 @@
+import "./PostPage.css";
+import { useEffect, useState } from "react";
+import ImagesManager from "../../UI/ImagesManager/ImageManager";
+import Input from "../../UI/FormControls/Input";
+import Button from "../../UI/Button/Button";
+import useMap from "../../../hooks/useMap";
+import PropTypes from "prop-types";
+import DefaultProfile from "../../UI/Utility/DefaultProfile/DefaultProfile";
+import useConfig from "../../../hooks/useConfig";
+import { useNavigate, useParams } from "react-router-dom";
+import Carousel from "../../UI/Carousel/Carousel";
+import { FaCamera, FaLocationDot, FaMessage, FaPhone } from "react-icons/fa6";
+import useToast from "../../../hooks/useToast";
+import useAuth from "../../../hooks/useAuth";
+import useAuthFetch from "../../../hooks/useAuthFetch";
+
+const PostPage = () => {
+  const [comments, setComments] = useState([]);
+  const [bids, setBids] = useState([]);
+  const [data, setData] = useState({});
+
+  const { auth, setAuth } = useAuth();
+  const { authFetch } = useAuthFetch();
+  const { config } = useConfig();
+  const { showToast } = useToast();
+  const { getEmbeddedMapURL } = useMap();
+  const navigate = useNavigate();
+
+  const { _id } = useParams();
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        if (!_id || !config?.serverURL) return;
+
+        const response = await fetch(
+          `${config.serverURL}/post/${_id}?include=bids,comments`
+        );
+        const data = await response.json();
+        setData(data);
+      } catch (error) {
+        console.error("Failed to load post data:", error);
+        showToast("Failed to load post data", "error");
+      }
+    };
+
+    loadData();
+  }, [_id, config?.serverURL]);
+
+  let images = data?.images;
+
+  let defaultBlock = (
+    <div key="0" className="no-image" alt="No Photos">
+      <FaCamera style={{ height: "2em", width: "2em" }} /> No Photos
+    </div>
+  );
+
+  const isOwner = auth?.userData?._id === data.user_id?._id;
+  const isAdmin = auth?.roles?.includes("ADMIN");
+  const isUser = auth?.roles?.includes("USER");
+  const isSaved = auth?.userData?.savedPosts?.includes(data?._id);
+  const handleMessage = () => {
+    navigate(`/chat/${data?.user_id?._id}`);
+  };
+
+  const handleSave = async () => {
+    try {
+      await authFetch(
+        `${config.serverURL}/user/${auth?.userData._id}/save-post`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            post_id: data?._id,
+          }),
+        }
+      )
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          setAuth({
+            ...auth,
+            userData: { ...auth?.userData, savedPosts: data?.savedPosts },
+          });
+        });
+    } catch (error) {
+      showToast("error", "Failed to save");
+
+      console.error(error);
+    }
+  };
+
+  const handleUnsave = async () => {
+    try {
+      await authFetch(
+        `${config.serverURL}/user/${auth?.userData._id}/unsave-post`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            post_id: data?._id,
+          }),
+        }
+      )
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          setAuth({
+            ...auth,
+            userData: { ...auth?.userData, savedPosts: data?.savedPosts },
+          });
+        });
+    } catch (error) {
+      showToast("Failed to unsave", "error");
+      console.error(error);
+    }
+  };
+  const handleDelete = async () => {
+    try {
+      const response = await authFetch(
+        `${config.serverURL}/post/${data?._id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      if (response.ok) showToast("success", "Post deleted.");
+    } catch (error) {
+      showToast("error", "Failed to delete post");
+
+      console.error(error);
+    }
+  };
+  return (
+    <>
+      <div className="PostPage">
+        <div className="container">
+          <section className="photos">
+            {images && images.length > 0 ? (
+              <Carousel thumbnails counter>
+                {images.map((image, index) => (
+                  <img
+                    key={index}
+                    src={`${config.serverURL}${image.imageURL}`}
+                  />
+                ))}
+              </Carousel>
+            ) : (
+              defaultBlock
+            )}
+          </section>
+          <header>
+            <h1>{data?.title}</h1>
+            <h2 className="">${data?.price?.toLocaleString()}</h2>
+          </header>
+          <section className="actions">
+            <div className="btn-group">
+              {isOwner ? (
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    navigate("/edit", { state: { postData: data } });
+                  }}
+                >
+                  Edit
+                </Button>
+              ) : (
+                <>
+                  <Button variant="primary">
+                    <FaPhone /> Call
+                  </Button>
+                  <Button variant="primary" onClick={handleMessage}>
+                    <FaMessage /> Message
+                  </Button>
+                </>
+              )}
+            </div>
+            <Button variant="secondary">share</Button>
+          </section>
+          <section className="user">
+            <div className="profile-image">
+              <DefaultProfile size="sm" />
+            </div>
+            <div className="user-details">
+              <h2 className="name">{`${data?.user_id?.firstName} ${data?.user_id?.lastName}`}</h2>
+              <div className="rating">{data?.rating}</div>
+            </div>
+          </section>
+          <section className="details">
+            <h2>Vehicle Details</h2>
+            <div>
+              <span className="label">Make: </span>
+              <span className="data">{data?.car?.make || "N/A"}</span>
+            </div>
+            <div>
+              <span className="label">Model: </span>
+              <span className="data">{data?.car?.model || "N/A"}</span>
+            </div>
+            <div>
+              <span className="label">Body Type: </span>
+              <span className="data">{data?.car?.bodyType || "N/A"}</span>
+            </div>
+            <div>
+              <span className="label">Year: </span>
+              <span className="data">{data?.car?.year || "N/A"}</span>
+            </div>
+            <div>
+              <span className="label">Mileage: </span>
+              <span className="data">
+                {data?.car?.mileage
+                  ? `${data.car.mileage.toLocaleString()} km`
+                  : "N/A"}
+              </span>
+            </div>
+            <div>
+              <span className="label">Condition: </span>
+              <span className="data">{data?.car?.condition || "N/A"}</span>
+            </div>
+            <div>
+              <span className="label">Fuel Type: </span>
+              <span className="data">{data?.car?.fuel || "N/A"}</span>
+            </div>
+            <div>
+              <span className="label">Horsepower: </span>
+              <span className="data">
+                {data?.car?.hp ? `${data.car.hp} HP` : "N/A"}
+              </span>
+            </div>
+            <div>
+              <span className="label">Transmission: </span>
+              <span className="data">{data?.car?.transmission || "N/A"}</span>
+            </div>
+          </section>
+          <section className="location">
+            <h2> Location</h2>
+
+            <div className="address">
+              <FaLocationDot style={{ color: "var(--primary)" }} />
+              {data?.location?.address || "N/A"}
+            </div>
+            <div className="map">
+              <iframe
+                width="350"
+                height="225"
+                frameBorder="0"
+                scrolling="no"
+                src={getEmbeddedMapURL({
+                  longitude: data?.location?.longitude,
+                  latitude: data?.location?.latitude,
+                })}
+              ></iframe>
+            </div>
+          </section>
+          <section className="desc">
+            <h2>Description</h2>
+            {data?.desc || <div className="empty-txt">No Description</div>}
+          </section>
+          <section className="stats">
+            <h2>Analyze & Stats</h2>
+
+            <div className="empty-txt">WIP</div>
+          </section>
+          <section className="bids">
+            <h2>Bids</h2>
+            {bids?.length ? (
+              bids.map((bid) => (
+                <div key={bid?._id} className="bid">
+                  {bid?.amount}
+                </div>
+              ))
+            ) : (
+              <div className="empty-txt">No Bids</div>
+            )}
+            <Input placeholder="Enter bid..."></Input>{" "}
+            <Button variant="primary">Bid</Button>
+          </section>
+          <section className="comments">
+            <h2>Comments</h2>
+            {comments?.length > 0 ? (
+              comments.map((comment) => (
+                <div key={comment?._id} className="comment">
+                  {comment?.text}
+                </div>
+              ))
+            ) : (
+              <div className="empty-txt">No Comments</div>
+            )}
+            <Input placeholder="Enter comment..."></Input>{" "}
+            <Button variant="primary">send</Button>
+          </section>
+          <section className="similar-posts">
+            <h3>Similar Posts</h3>
+          </section>
+        </div>
+      </div>
+    </>
+  );
+};
+
+PostPage.propTypes = {
+  data: PropTypes.shape({
+    // user_id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired,
+    images: PropTypes.arrayOf(PropTypes.object),
+
+    car: PropTypes.shape({
+      make: PropTypes.string.isRequired,
+      model: PropTypes.string.isRequired,
+      condition: PropTypes.string.isRequired,
+      bodyType: PropTypes.string.isRequired,
+      fuel: PropTypes.string.isRequired,
+      transmission: PropTypes.string.isRequired,
+      mileage: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+        .isRequired,
+      hp: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    }),
+
+    location: PropTypes.shape({
+      countyCode: PropTypes.string.isRequired,
+      latitude: PropTypes.number,
+      longitude: PropTypes.number,
+    }).isRequired,
+  }).isRequired,
+};
+
+PostPage.defaultProps = {
+  data: {
+    // user_id: null,
+    title: "",
+    price: 0,
+    images: [],
+
+    car: {
+      make: "",
+      model: "",
+      condition: "",
+      bodyType: "",
+      fuel: "",
+      mileage: "",
+      hp: "",
+      year: "",
+      transmission: "",
+    },
+
+    location: {
+      countyCode: "",
+      latitude: null,
+      longitude: null,
+    },
+  },
+};
+export default PostPage;

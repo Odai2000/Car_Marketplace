@@ -57,5 +57,10 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+userSchema.virtual('name').get(function() {
+  return `${this.firstName} ${this.lastName}`;
+});
 
+userSchema.set('toJSON', { virtuals: true });
+userSchema.set('toObject', { virtuals: true });
 module.exports = mongoose.model("User", userSchema);

@@ -15,6 +15,7 @@ import Chat from "./components/pages/Chat/Chat";
 import UserSettings from "./components/pages/UserSettings/UserSettings";
 import EmailVerification from "./components/EmailVerification/EmailVerification";
 import { ConfigProvider } from "./context/ConfigProvider";
+import PostPage from "./components/pages/PostPage/PostPage";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
                   <Route element={<Layout />}>
                     <Route index element={<Home />} />
                     <Route path="posts" element={<PostSearchResult />} />
+                    <Route path="post/:_id" element={<PostPage />} />
                     <Route
                       path="user/:_id/verify-email"
                       element={<EmailVerification />}
