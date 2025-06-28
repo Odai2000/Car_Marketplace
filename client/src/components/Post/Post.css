@@ -4,8 +4,15 @@
   flex-direction: column;
   border: 1px solid lightgray;
   background-color: #fff;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
+.post:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+  cursor: pointer;
+}
 .post > .icon {
   position: absolute;
   right: 1em;
@@ -20,7 +27,7 @@
   flex-shrink: 1;
 }
 
-.post .post-details >span {
+.post .post-details > span {
   align-items: center;
   padding: 0.25em;
   font-size: 1.15rem;
@@ -41,7 +48,7 @@
   overflow: hidden;
   font-weight: bold;
   text-wrap: wrap;
-    color: var(--primary);
+  color: var(--primary);
 }
 
 .post .post-details .post-price {
@@ -51,7 +58,7 @@
   grid-column: span 1;
   font-weight: bold;
   text-align: start;
-    color: var(--primary);
+  color: var(--primary);
 }
 
 .post .post-details .post-price,
@@ -82,12 +89,12 @@
   align-items: center;
   justify-content: flex-start;
   grid-column: span 4;
-  
-    color: var(--primary);
+
+  color: var(--primary);
 }
 .post .post-details .post-location .address {
-  font-size: clamp(0.6rem, 3vw, 1.0rem);
-    text-overflow: ellipsis;
+  font-size: clamp(0.6rem, 3vw, 1rem);
+  text-overflow: ellipsis;
   color: gray;
 }
 
@@ -117,7 +124,6 @@
   grid-column: span 4;
 }
 
-
 .post .Carousel {
   position: absolute;
   object-fit: cover;
@@ -145,17 +151,16 @@
 .post .opts-btn {
   position: absolute;
   top: 0.4rem;
-  right:0.4rem;
+  right: 0.4rem;
   color: #fff;
   font-size: 1.25rem;
   flex: 0;
   background-color: rgba(0, 0, 0, 0.1);
-   transition: background-color 300ms;
+  transition: background-color 300ms;
 }
-.post .opts-btn:hover{
+.post .opts-btn:hover {
   background-color: rgba(0, 0, 0, 0.4);
 }
-
 
 @media (min-width: 768px) {
   .post {
@@ -203,13 +208,13 @@
   }
 
   .post .opts-btn {
-  position: static;
-  color: var(--primary);
-  font-size: 1.25rem;
-  
-  background-color: transparent;
-}
-.post .opts-btn:hover{
-  background-color: transparent;
-}
+    position: static;
+    color: var(--primary);
+    font-size: 1.25rem;
+
+    background-color: transparent;
+  }
+  .post .opts-btn:hover {
+    background-color: transparent;
+  }
 }

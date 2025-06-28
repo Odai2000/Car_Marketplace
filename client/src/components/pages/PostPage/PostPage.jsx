@@ -146,7 +146,7 @@ const PostPage = () => {
                 {images.map((image, index) => (
                   <img
                     key={index}
-                    src={`${config.serverURL}${image.imageURL}`}
+                    src={`${image.imageURL}`}
                   />
                 ))}
               </Carousel>

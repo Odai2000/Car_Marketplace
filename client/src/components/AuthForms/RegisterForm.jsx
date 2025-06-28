@@ -8,6 +8,7 @@ import { IconContext } from "react-icons/lib";
 import { useEffect, useState } from "react";
 import useToast from "../../hooks/useToast";
 import useAuth from "../../hooks/useAuth";
+import Alert from "../UI/Alert/Alert";
 
 const RegisterForm = ({ show, onCancel }) => {
   const [firstName, setFirstName] = useState("");
@@ -115,10 +116,14 @@ const RegisterForm = ({ show, onCancel }) => {
             }}
             placeholder="Confirm Password"
           />
-
           <span className="col-2 flex">
-            Already have an account? <Button variant="link">Login</Button>
+            Already have an account?<Button variant="link"> Login</Button>
           </span>
+
+          <Alert className="col-2" type="warning">
+            Disclaimer: This site is for demonstration purposes only. Please do
+            not enter any personal information
+          </Alert>
 
           <Button type="submit" variant="primary" styleName="signup-btn col-2">
             Register

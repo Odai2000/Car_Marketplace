@@ -15,7 +15,6 @@ const Carousel = ({
 }) => {
   const [index, setIndex] = useState(0);
   const ref = useRef(null);
-  const { config } = useConfig;
 
   const previous = () => {
     setIndex(index > 0 ? index - 1 : index);
@@ -34,7 +33,15 @@ const Carousel = ({
     });
   };
 
-  let count = 0;
+
+   const scrollToIndex = (targetIndex) => {
+    if (ref.current) {
+      ref.current.scrollTo({
+        left: ref.current.clientWidth * targetIndex,
+        behavior: "smooth",
+      });
+    }
+  };
 
   return (
     <div className="Carousel">
@@ -49,8 +56,8 @@ const Carousel = ({
           ref={ref}
           style={{ gap: gap }}
         >
-          {Children.map(children, (child) => (
-            <div key={count++} className="carousel-item">
+          {Children.map(children, (child,i) => (
+            <div key={i} className="carousel-item">
               {child}
             </div>
           ))}
@@ -66,22 +73,23 @@ const Carousel = ({
         </Button>
       </div>
 
-      {/* thumbnails strip for photos preview  WIP*/}
-      {/* {thumbnails && (
+      {/* thumbnails strip for photos preview */}
+      {thumbnails && (
         <div className="thumbnails">
-          {Children.map(children, (child) => (
+          {Children.map(children, (child,i) => (
             <div
-              key={count++}
-              className={`thumbnail ${index === count} active`}
+              key={i}
+              className={`thumbnail ${index === i} active`}
               onClick={() => {
-                setIndex(count);
+                setIndex(i);
+                scrollToIndex(i)
               }}
             >
               {child}
             </div>
           ))}
         </div>
-      )} */}
+      )}
     </div>
   );
 };

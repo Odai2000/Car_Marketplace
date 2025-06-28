@@ -8,6 +8,7 @@ import { IconContext } from "react-icons/lib";
 import { useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import useToast from "../../hooks/useToast";
+import Alert from "../UI/Alert/Alert";
 
 function LoginForm({ show, onCancel }) {
   const [username, setUsername] = useState();
@@ -76,7 +77,10 @@ function LoginForm({ show, onCancel }) {
             />
             <label>Remeber Me</label>
           </div>
-
+          <Alert className="col-2" type="warning">
+            Disclaimer: This site is for demonstration purposes only. Please do
+            not enter any personal information
+          </Alert>
           <Button type="submit" variant="primary" styleName="login-btn col-2">
             Login
           </Button>

@@ -29,6 +29,8 @@ import { useState } from "react";
 import { useEffect } from "react";
 
 const Post = ({ data = null }) => {
+  const [isDragging, setIsDragging] = useState(false);
+
   const navigate = useNavigate();
   const { getMapURL } = useMap();
   const { auth, setAuth } = useAuth();
@@ -44,7 +46,6 @@ const Post = ({ data = null }) => {
   const handleMessage = () => {
     navigate(`/chat/${data?.user_id}`);
   };
-
 
   const handleSave = async () => {
     try {
@@ -64,7 +65,10 @@ const Post = ({ data = null }) => {
           return response.json();
         })
         .then((data) => {
-     setAuth({ ...auth, userData:{...auth?.userData,savedPosts: data?.savedPosts} });
+          setAuth({
+            ...auth,
+            userData: { ...auth?.userData, savedPosts: data?.savedPosts },
+          });
         });
     } catch (error) {
       showToast("error", "Failed to save");
@@ -91,10 +95,13 @@ const Post = ({ data = null }) => {
           return response.json();
         })
         .then((data) => {
-          setAuth({ ...auth, userData:{...auth?.userData,savedPosts: data?.savedPosts} });
+          setAuth({
+            ...auth,
+            userData: { ...auth?.userData, savedPosts: data?.savedPosts },
+          });
         });
     } catch (error) {
-      showToast( "Failed to unsave","error");
+      showToast("Failed to unsave", "error");
       console.error(error);
     }
   };
@@ -114,6 +121,8 @@ const Post = ({ data = null }) => {
     }
   };
 
+  const handleMouseDown = () => setIsDragging(false);
+  const handleMouseMove = () => setIsDragging(true);
   let images = data?.images;
 
   let defaultBlock = [
@@ -140,14 +149,26 @@ const Post = ({ data = null }) => {
       ) : null}
     </>
   );
-
+  const handleNavigate = () => {
+    if (!isDragging) navigate(`/post/${data?._id}`);
+  };
   return (
-    <div className="post" key={data?._id}>
-      <div className="post-img-container">
+    <div
+      className="post"
+      key={data?._id}
+      onClick={handleNavigate}
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+    >
+      <div className="post-img-container" onClick={(e) => e.stopPropagation()}>
         {images && images.length > 0 ? (
           <Carousel single counter>
             {images.map((image, index) => (
-              <img key={index} src={`${config.serverURL}${image.imageURL}`} />
+              <img
+                key={index}
+                src={`${image.imageURL}`}
+                onClick={(e) => e.stopPropagation()}
+              />
             ))}
           </Carousel>
         ) : (
@@ -195,9 +216,19 @@ const Post = ({ data = null }) => {
             <PiGearThin /> <span>{data?.car?.transmission}</span>
           </span>
         </IconContext.Provider>
-        <span className="post-location">
+        <span
+          className="post-location"
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
           <FaLocationDot />
-          <span className="address">
+          <span
+            className="address"
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
             {data?.location?.address &&
             data?.location?.longitude &&
             data?.location?.latitude ? (
@@ -217,12 +248,13 @@ const Post = ({ data = null }) => {
           </span>
         </span>
 
-        <div className="post-footer ">
+        <div className="post-footer  " onClick={(e) => e.stopPropagation()}>
           <div className="btn-group post-btn-group ">
             {isOwner ? (
               <Button
                 variant="primary"
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   navigate("/edit", { state: { postData: data } });
                 }}
               >
@@ -233,7 +265,13 @@ const Post = ({ data = null }) => {
                 <Button variant="primary">
                   <FaPhone /> Call
                 </Button>
-                <Button variant="primary" onClick={handleMessage}>
+                <Button
+                  variant="primary"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleMessage();
+                  }}
+                >
                   <FaMessage /> Message
                 </Button>
               </>
@@ -241,6 +279,9 @@ const Post = ({ data = null }) => {
 
             <Dropdown
               className="opts-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
               trigger={
                 <Button styleName="opts-btn" variant="icon" onClick={() => {}}>
                   <div className="overlay">

@@ -52,7 +52,7 @@ const getPostById = asyncHandler(async (req, res) => {
 
           post.images.push({
             imageId,
-            imageURL: `/files/${imageId}`,
+            imageURL: `${process.env.SERVER_URL}/files/${imageId}`,
           });
         }
       } catch (error) {
@@ -139,7 +139,8 @@ const getPosts = asyncHandler(async (req, res) => {
 
           post.images.push({
             imageId,
-            imageURL: `/files/${imageId}`,
+                    imageURL: `${process.env.SERVER_URL}/files/${imageId}`,
+
           });
         }
       } catch (error) {
@@ -172,7 +173,8 @@ const getPostsByUserId = asyncHandler(async (req, res) => {
 
           post.images.push({
             imageId,
-            imageURL: `/files/${imageId}`,
+               imageURL: `${process.env.SERVER_URL}/files/${imageId}`,
+
           });
         }
       } catch (error) {
