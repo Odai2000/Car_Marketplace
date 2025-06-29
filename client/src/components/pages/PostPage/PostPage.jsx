@@ -1,6 +1,5 @@
 import "./PostPage.css";
 import { useEffect, useState } from "react";
-import ImagesManager from "../../UI/ImagesManager/ImageManager";
 import Input from "../../UI/FormControls/Input";
 import Button from "../../UI/Button/Button";
 import useMap from "../../../hooks/useMap";
@@ -17,10 +16,12 @@ import useAuthFetch from "../../../hooks/useAuthFetch";
 const PostPage = () => {
   const [comments, setComments] = useState([]);
   const [bids, setBids] = useState([]);
+  const [bid, setBid] = useState("");
+  const [comment, setComment] = useState("");
   const [data, setData] = useState({});
 
   const { auth, setAuth } = useAuth();
-  const { authFetch } = useAuthFetch();
+  const authFetch = useAuthFetch();
   const { config } = useConfig();
   const { showToast } = useToast();
   const { getEmbeddedMapURL } = useMap();
@@ -38,8 +39,10 @@ const PostPage = () => {
         );
         const data = await response.json();
         setData(data);
+        setBids([...(data?.bids || [])].sort((a, b) => b.amount - a.amount));
+        setComments(data?.comments);
       } catch (error) {
-        console.error("Failed to load post data:", error);
+        console.error("Failed to load post data:", "error");
         showToast("Failed to load post data", "error");
       }
     };
@@ -55,7 +58,7 @@ const PostPage = () => {
     </div>
   );
 
-  const isOwner = auth?.userData?._id === data.user_id?._id;
+  const isOwner = auth?.userData?._id === data.user?._id;
   const isAdmin = auth?.roles?.includes("ADMIN");
   const isUser = auth?.roles?.includes("USER");
   const isSaved = auth?.userData?.savedPosts?.includes(data?._id);
@@ -87,7 +90,7 @@ const PostPage = () => {
           });
         });
     } catch (error) {
-      showToast("error", "Failed to save");
+      showToast("Failed to save", "error");
 
       console.error(error);
     }
@@ -117,7 +120,7 @@ const PostPage = () => {
           });
         });
     } catch (error) {
-      showToast("Failed to unsave", "error");
+      showToast("error", "Failed to unsave");
       console.error(error);
     }
   };
@@ -129,9 +132,64 @@ const PostPage = () => {
           method: "DELETE",
         }
       );
-      if (response.ok) showToast("success", "Post deleted.");
+      if (response.ok) showToast("Post deleted.", "success");
     } catch (error) {
-      showToast("error", "Failed to delete post");
+      showToast("Failed to delete post", "error");
+
+      console.error(error);
+    }
+  };
+  const handleBid = async () => {
+    try {
+      const amount = Number(bid);
+
+      if (!amount || isNaN(amount) || amount <= 0) {
+        showToast("Please enter a valid bid amount", "error");
+        return;
+      }
+      if (data.user_id === auth?.userData?._id) {
+        showToast("You can't bid on your own post.", "error");
+      }
+      const response = await authFetch(`${config.serverURL}/bid`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ post_id: data._id, amount: amount }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setBids((prev) =>
+          [...prev, data.bid].sort((a, b) => b.amount - a.amount)
+        );
+        setBid("");
+      }
+    } catch (error) {
+      showToast("Failed to bid", "error");
+
+      console.error(error);
+    }
+  };
+  const handleComment = async () => {
+    try {
+      if (!comment) {
+        showToast("Please enter a valid comment", "error");
+        return;
+      }
+      const response = await authFetch(`${config.serverURL}/comment`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ post_id: data._id, text: comment }),
+      });
+      if (response.ok) {
+        const data = await response.json;
+        setComments((prev) => [...prev, data.comment]);
+        setComment("");
+      }
+    } catch (error) {
+      showToast("Failed to comment", "error");
 
       console.error(error);
     }
@@ -144,10 +202,7 @@ const PostPage = () => {
             {images && images.length > 0 ? (
               <Carousel thumbnails counter>
                 {images.map((image, index) => (
-                  <img
-                    key={index}
-                    src={`${image.imageURL}`}
-                  />
+                  <img key={index} src={`${image.imageURL}`} />
                 ))}
               </Carousel>
             ) : (
@@ -187,7 +242,7 @@ const PostPage = () => {
               <DefaultProfile size="sm" />
             </div>
             <div className="user-details">
-              <h2 className="name">{`${data?.user_id?.firstName} ${data?.user_id?.lastName}`}</h2>
+              <h2 className="name">{data?.user?.name}</h2>
               <div className="rating">{data?.rating}</div>
             </div>
           </section>
@@ -267,31 +322,75 @@ const PostPage = () => {
           </section>
           <section className="bids">
             <h2>Bids</h2>
-            {bids?.length ? (
-              bids.map((bid) => (
-                <div key={bid?._id} className="bid">
-                  {bid?.amount}
-                </div>
-              ))
-            ) : (
-              <div className="empty-txt">No Bids</div>
-            )}
-            <Input placeholder="Enter bid..."></Input>{" "}
-            <Button variant="primary">Bid</Button>
+            <div className="list flex-col gap-1em">
+              {bids?.length ? (
+                bids.map((bid) => (
+                  <div key={bid?._id} className="bid">
+                    <div className="user-profile-image">
+                      {bid?.user?.profileImageUrl ? (
+                        <img src={bid.user.profileImageUrl} />
+                      ) : (
+                        <DefaultProfile size="xs" round />
+                      )}
+                    </div>
+                    <div className="user-name">{bid?.user?.name}</div>
+
+                    <div className="amount">{bid?.amount}</div>
+                  </div>
+                ))
+              ) : (
+                <div className="empty-txt">No Bids</div>
+              )}
+            </div>
+
+            <div className="footer flex gap-05em">
+              <Input
+                value={bid}
+                onChange={(e) => {
+                  setBid(e.target.value);
+                }}
+                placeholder="Enter bid..."
+              />
+              <Button variant="primary" onClick={handleBid}>
+                Bid
+              </Button>
+            </div>
           </section>
           <section className="comments">
             <h2>Comments</h2>
-            {comments?.length > 0 ? (
-              comments.map((comment) => (
-                <div key={comment?._id} className="comment">
-                  {comment?.text}
-                </div>
-              ))
-            ) : (
-              <div className="empty-txt">No Comments</div>
-            )}
-            <Input placeholder="Enter comment..."></Input>{" "}
-            <Button variant="primary">send</Button>
+            <div className="list flex-col gap-1em">
+              {comment?.length ? (
+                comments.map((comment) => (
+                  <div key={comment?._id} className="comment">
+                    <div className="user-profile-image">
+                      {comment?.user?.profileImageUrl ? (
+                        <img src={comment.user.profileImageUrl} />
+                      ) : (
+                        <DefaultProfile size="xs" round />
+                      )}
+                    </div>
+                    <div className="user-name">{comment?.user?.name}</div>
+
+                    <div className="text">{comment?.text}</div>
+                  </div>
+                ))
+              ) : (
+                <div className="empty-txt">No Bids</div>
+              )}
+            </div>
+
+            <div className="footer flex-col gap-05em">
+              <Input
+                value={comment}
+                onChange={(e) => {
+                  setBid(e.target.value);
+                }}
+                placeholder="Enter comment..."
+              />
+              <Button variant="primary" onClick={handleComment}>
+                Comment
+              </Button>
+            </div>
           </section>
           <section className="similar-posts">
             <h3>Similar Posts</h3>
@@ -304,7 +403,7 @@ const PostPage = () => {
 
 PostPage.propTypes = {
   data: PropTypes.shape({
-    // user_id: PropTypes.string.isRequired,
+    user_id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
     images: PropTypes.arrayOf(PropTypes.object),
@@ -331,7 +430,7 @@ PostPage.propTypes = {
 
 PostPage.defaultProps = {
   data: {
-    // user_id: null,
+    user_id: null,
     title: "",
     price: 0,
     images: [],

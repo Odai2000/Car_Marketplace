@@ -169,6 +169,7 @@ const CarInfoStep = ({
         onValidationChange={(value) =>
           handleValidateChange("transmission", value)
         }
+    
       >
         <option value="automatic">Automatic</option>
         <option value="manual">Manual</option>
@@ -187,6 +188,7 @@ const CarInfoStep = ({
         validationRules={{ required: true, maxLength: 8, numeric: true }}
         placeholder="Mileage"
         onValidationChange={(value) => handleValidateChange("mileage", value)}
+      
       />
 
       <Input

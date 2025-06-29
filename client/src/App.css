@@ -94,7 +94,18 @@ header.home-header {
   display: flex;
   flex-direction: column;
 }
-
 .flex {
   display: flex;
 }
+
+.gap-05em {
+  gap:.5em;
+}
+.gap-1em {
+  gap:1em;
+}
+
+.gap-2em {
+  gap:1em;
+}
+

@@ -1,11 +1,11 @@
-form .form-control-container {
+ .form-control-container {
   position: relative;
   display: flex;
   flex-direction: column;
   --control-height: 3rem;
 }
 
-form .form-control {
+ .form-control {
   height: var(--control-height);
   padding: 0 0.5em;
   border: 1px rgba(88, 84, 84, 0.808) solid;
@@ -13,15 +13,15 @@ form .form-control {
   background-color: transparent;
 }
 
-form .form-control-label {
+ .form-control-label {
   padding: 0.5em;
 }
 
-form .form-control.error {
+ .form-control.error {
   border-color: var(--destructive);
 }
 
-form .form-contol-error-message {
+ .form-contol-error-message {
   height: 1em;
   position: absolute;
   bottom: -1em;

@@ -233,7 +233,7 @@ const loginUser = asyncHandler(async (req, res) => {
         .status(200)
         .cookie("refreshToken", refreshToken, {
           httpOnly: true,
-          secure: false,
+          secure:  false,
           // sameSite: 'none',
           maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
         })
@@ -254,7 +254,7 @@ const logout = asyncHandler(async (req, res) => {
       .status(200)
       .cookie("refreshToken", "", {
         httpOnly: true,
-        secure: false,
+        secure: false ,
         // sameSite: "strict",
         maxAge: -0,
       })

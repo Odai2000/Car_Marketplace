@@ -12,9 +12,8 @@ const getPostById = asyncHandler(async (req, res) => {
     const populateFields = [];
     let query = Post.findById(req.params.id);
 
-    //would be changed late to user
     populateFields.push({
-      path: "user_id",
+      path: "user",
       select: "firstName lastName name",
     });
 
@@ -22,7 +21,7 @@ const getPostById = asyncHandler(async (req, res) => {
       populateFields.push({
         path: "bids",
         options: { sort: { createdAt: -1 } },
-        populate: { path: "user_id", select: "firstName lastName name" },
+        populate: { path: "user", select: "firstName lastName name" },
       });
     }
 
@@ -38,7 +37,7 @@ const getPostById = asyncHandler(async (req, res) => {
     if (populateFields.length > 0) {
       query = query.populate(populateFields);
     }
-    const post = await query.lean();
+    const post = await query.exec();
 
     if (!post) {
       return res.status(404).json({ message: "No Post found." });

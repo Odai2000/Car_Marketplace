@@ -144,6 +144,12 @@ postSchema.virtual("comments", {
   foreignField: "post_id",
   justOne: false,
 });
+postSchema.virtual("user", {
+  ref: "User",
+  localField: "user_id",
+  foreignField: "_id",
+  justOne: true,
+});
 
 postSchema.index({ user_id: 1 });
 postSchema.index({ status: 1 });

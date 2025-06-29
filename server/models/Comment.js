@@ -21,5 +21,11 @@ const commentSchema = new mongoose.Schema({
      maxLength: 1000 },  isDeleted: { type: Boolean,
      default: false },
   createdAt: { type: Date, default: Date.now },
-})
+}, { toObject: { virtuals: true }, toJSON: { virtuals: true } })
+commentSchema.virtual("user", {
+  ref: "User",
+  localField: "user_id",
+  foreignField: "_id",
+  justOne: true,
+});
 module.exports = mongoose.model("Comment", commentSchema);

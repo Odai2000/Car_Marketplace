@@ -14,6 +14,7 @@ const Select = ({
   validationRules={},
   onValidationChange,
   children,
+  props
 }) => {
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -62,6 +63,7 @@ const Select = ({
         value={value}
         onChange={(e) => handleChange(e)}
         className={`form-control select-field ${errorMessage ? "error" : ""}`}
+        {...props}
       >
         {defaultOption ? (
           <option key={defaultOption.value} value={defaultOption.value}>

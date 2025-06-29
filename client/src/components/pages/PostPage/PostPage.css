@@ -53,7 +53,7 @@
   font-weight: 800;
 }
 
-.PostPage .user {
+.PostPage section.user {
   flex-direction: row;
   gap: 1em;
   align-items: center;
@@ -71,7 +71,7 @@
   flex: 1;
 }
 
-.PostPage .user .profile-image {
+.PostPage section.user .profile-image {
   height: 8em;
   width: 8em;
   border-radius: 24em;
@@ -86,12 +86,52 @@
   position: static;
 }
 
+.PostPage .bids {
+  display: flex;
+  flex-direction: column;
+  gap: .5em;
+}
+
+.PostPage .comments {
+  display: flex;
+  flex-direction: column;
+  gap: .25em;
+}
+
+.PostPage .bids .bid {
+  display: grid;
+  grid-template-columns: repeat(3,fit-content(10rem));
+  
+  grid-template-rows: repeat(2,fit-content(4rem));
+  gap: .5em;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+.PostPage .bids .bid .user-profile-image {
+  grid-column: span 1/2;
+  grid-row: span 2;
+  height: fit-content;
+  width: fit-content;
+    height: 2em;
+  width: 2em;
+}
+
+.PostPage .bids .bid .user-name {
+  grid-column: 2/4;
+  grid-row: 1/2;
+  color: #888;
+}
+.PostPage .bids .bid .amount {
+  grid-column: 2/4;
+  grid-row: 2/3;
+}
+
 @media (min-width: 768px) {
   .PostPage > .container {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
 
-    grid-template-rows: repeat(7, minmax(3rem, auto));
+    grid-template-rows: repeat(7, minmax(5rem, auto));
 
     /* gap: 0.25em; */
     /* background-color: #eee; */

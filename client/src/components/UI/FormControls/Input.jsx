@@ -14,6 +14,7 @@ const Input = ({
   styleName,
   validationRules={},
   onValidationChange,
+  children,
   ...props
 }) => {
   const [errorMessage, setErrorMessage] = useState("");
@@ -111,6 +112,7 @@ const Input = ({
           <span className="form-contol-error-message">{errorMessage}</span>
         </>
       )}
+      {children}
     </div>
   );
 };
