@@ -7,6 +7,8 @@ import DefaultProfile from "../../UI/Utility/DefaultProfile/DefaultProfile";
 import useAuthFetch from "../../../hooks/useAuthFetch";
 import Post from "../../Post/Post";
 import useConfig from "../../../hooks/useConfig";
+import useProfileImageUpload from "../../../hooks/useProfileImageUpload";
+import { useRef } from "react";
 
 const UserAccount = () => {
   const [userData, setUserData] = useState(null);
@@ -23,7 +25,10 @@ const UserAccount = () => {
   const { _id } = useParams();
   const authFetch = useAuthFetch();
   const location = useLocation();
-  const navigate = useNavigate;
+  
+   const profileImageUploader = useProfileImageUpload(auth?.userData?._id, true);
+
+  const imageInput = useRef();
 
   const loadData = async () => {
     try {
@@ -40,7 +45,7 @@ const UserAccount = () => {
         }
       } else if (_id) {
         //  fetch user data by id
-        await fetch(`${config.serverUrl}/users/${_id}`)
+        await fetch(`${config.serverURL}/user/${_id}`)
           .then((response) => {
             return response.json();
           })
@@ -50,7 +55,8 @@ const UserAccount = () => {
               lastName: data?.lastName,
               username: data?.username,
               emailVert: data?.emailVert,
-              user_id: userData?._id,
+              user_id: data?._id,
+              profileImageUrl: data?.profileImageUrl,
             });
           });
       }
@@ -84,14 +90,18 @@ const UserAccount = () => {
           setSavedPosts(data.savedPosts);
         });
     }
-  }, [activeTab,userData]);
+  }, [activeTab, userData]);
 
   return (
     <>
       <div className="UserAccount">
         <div className="user-header">
           <div className="profile-image">
-            <DefaultProfile size="max(5rem, 8vw)" />
+            
+                <div className="edit-pfp-btn" onClick={() => {
+                  imageInput.current.click();
+                }}>edit</div>
+               {auth?.userData?.profileImageUrl?(<img src={auth?.userData?.profileImageUrl}/>): <DefaultProfile size="md" />}
           </div>
           <div className="user-info">
             <div className="name">{`${userData?.firstName} ${userData?.lastName}`}</div>
@@ -148,6 +158,13 @@ const UserAccount = () => {
               savedPosts?.map((post) => <Post key={post._id} data={post} />)}
           </div>
         </div>
+        
+      <input
+        type="file"
+        ref={imageInput}
+        onChange={profileImageUploader.handleChange}
+        hidden
+        accept={profileImageUploader.acceptString}/>
       </div>
     </>
   );

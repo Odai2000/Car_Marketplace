@@ -31,13 +31,20 @@ function App() {
                     <Route path="posts" element={<PostSearchResult />} />
                     <Route path="post/:_id" element={<PostPage />} />
                     <Route
+                      path="user/:_id/"
+                      element={<UserAccount />}
+                    />
+                    <Route
                       path="user/:_id/verify-email"
                       element={<EmailVerification />}
                     />
 
                     <Route element={<ReqAuth allowedRoles={["USER"]} />}>
                       <Route path="new" element={<PostForm />} />
-                      <Route path="edit" element={<PostForm isUpdating={true}/>} />
+                      <Route
+                        path="edit"
+                        element={<PostForm isUpdating={true} />}
+                      />
                       <Route path="me" element={<UserAccount />} />
                     </Route>
                   </Route>

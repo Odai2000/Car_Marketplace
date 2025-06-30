@@ -36,6 +36,7 @@
   gap:0.5em
 }
 .UserSettings .sidebar .profile-container .profile-image{
+  position: relative;
   width: 3rem;
   height: 3rem;
   border: 1px #ddd solid;

@@ -105,7 +105,7 @@ function NavBar() {
                 Logout
               </Button>
                 <div className="profile-image" onClick={()=>{navigate("/me")}}>
-                  <DefaultProfile size="1em" />
+                   {auth?.userData?.profileImageUrl?(<img src={auth?.userData?.profileImageUrl}/>): <DefaultProfile size="xs" />}
               </div>
                 
             </>

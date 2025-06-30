@@ -237,9 +237,9 @@ const PostPage = () => {
             </div>
             <Button variant="secondary">share</Button>
           </section>
-          <section className="user">
+          <section className="user" onClick={()=>navigate(`/user/${data?.user_id}`)}>
             <div className="profile-image">
-              <DefaultProfile size="sm" />
+       {data?.user?.profileImageUrl?(<img src={data?.user?.profileImageUrl}/>): <DefaultProfile size="sm" />}
             </div>
             <div className="user-details">
               <h2 className="name">{data?.user?.name}</h2>

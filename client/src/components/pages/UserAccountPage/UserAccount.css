@@ -38,6 +38,7 @@ body {
   color: #666;
 }
 .user-header .profile-image {
+  position: relative;
   width: 12rem;
   height: 12rem;
   border: 1px #ddd solid;
@@ -48,6 +49,9 @@ body {
 .user-header .default-profile-image * {
   display: inline-block;
 }
+
+.edit-pfp-btn{display: none;}
+
 .UserAccount .edit-user-btn {
   color: #fff;
 }
@@ -109,5 +113,23 @@ body {
   .UserAccount .account-content {
   
   width: 60%;
+}
+
+.UserAccount .profile-image:hover .edit-pfp-btn{
+  display: flex;
+}
+
+.edit-pfp-btn{
+  display:none;
+  justify-content: center;
+  align-items: center;
+  position: absolute; bottom: 0em;
+  height: 2.5em;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.6)
+  ;
+  color: #ddd;
+  letter-spacing: .025em;
+  cursor: pointer;
 }
 }

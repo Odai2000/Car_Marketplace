@@ -30,9 +30,12 @@ const CarPhotosStep = ({
           type="file"
           accept={acceptString}
           multiple
-          onChange={(e) => {
-            setFormData({ ...formData, images: [...imageStates.files],toDelete:
-              imageStates.toRemove });
+          onChange={(states) => {
+            setImageStates((prev) => ({
+              ...prev,
+              ...states,
+              toRemove: [...new Set([...prev.toRemove, ...(states.toRemove || [])])], // prevent overriding or duplication by child
+            }));
           }}
           style={{ display: "none" }}
         />

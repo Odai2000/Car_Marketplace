@@ -111,8 +111,8 @@ nav.open > ul > li {
 
 /* to replace later */
 .navBar-rightside .profile-image{
-  height: 2em;
-  width: 2em;
+  height: 2.5em;
+  width: 2.5em;
   border: 1px #ddd solid;
   border-radius: 100%;
   overflow: hidden;

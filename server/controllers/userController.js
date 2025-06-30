@@ -5,6 +5,10 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const EmailManager = require("../modules/email/emailManager");
 const emailManager = new EmailManager("brevo");
+const CloudStorageManager = require("../modules/cloud_storage/cloudStorageManager");
+
+const folderId = process.env.PCLOUD_FOLDER_ID;
+const cloudStorage = new CloudStorageManager("pcloud");
 
 //get users
 const getAllUsers = asyncHandler(async (req, res) => {
@@ -17,12 +21,14 @@ const getAllUsers = asyncHandler(async (req, res) => {
 
 // *check how to combine these two
 const getUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.body._id)
+  const user = await User.findById(req.params._id)
     .select("-password -savedPosts")
     .lean();
 
   if (!user) return res.status(400).json({ message: "No user found" });
 
+  user.profileImageUrl = `${process.env.SERVER_URL}/files/${user.profileImageId}`;
+  delete user.profileImageId;
   res.status(200).json(user);
 });
 
@@ -30,7 +36,7 @@ const getUserPersonalData = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id).select("-password").lean();
 
   if (!user) return res.status(400).json({ message: "No user found" });
-
+  user.profileImageUrl = `${process.env.SERVER_URL}/files/${user.profileImageId}`;
   res.status(200).json(user);
 });
 
@@ -233,7 +239,7 @@ const loginUser = asyncHandler(async (req, res) => {
         .status(200)
         .cookie("refreshToken", refreshToken, {
           httpOnly: true,
-          secure:  false,
+          secure: false,
           // sameSite: 'none',
           maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
         })
@@ -254,7 +260,7 @@ const logout = asyncHandler(async (req, res) => {
       .status(200)
       .cookie("refreshToken", "", {
         httpOnly: true,
-        secure: false ,
+        secure: false,
         // sameSite: "strict",
         maxAge: -0,
       })
@@ -325,7 +331,7 @@ const unsavePost = asyncHandler(async (req, res) => {
       .select("savedPosts")
       .lean();
 
-      res.status(200).json({ savedPosts: updatedUser.savedPosts });
+    res.status(200).json({ savedPosts: updatedUser.savedPosts });
   } catch (error) {
     console.error(error);
     res.status(500).json(error);
@@ -340,6 +346,26 @@ const getSavedPosts = asyncHandler(async (req, res) => {
       .lean();
 
     res.status(200).json({ savedPosts: user?.savedPosts });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json(error);
+  }
+});
+
+const updateProfileImage = asyncHandler(async (req, res) => {
+  try {
+    const file = req.file;
+    if (!file) {
+      return res.status(400).json({ error: "No file uploaded" });
+    }
+    const user = await User.findById(req.user._id);
+
+    const imageId = await cloudStorage.upload(file, folderId);
+    user.profileImageId = imageId;
+    await user.save();
+    
+      const profileImageUrl = `${process.env.SERVER_URL}/files/${user.profileImageId}`;
+    res.status(200).json({ profileImageUrl: profileImageUrl });
   } catch (error) {
     console.error(error);
     res.status(500).json(error);
@@ -425,7 +451,7 @@ const refreshTheToken = asyncHandler(async (req, res) => {
       if (!user) res.status(403).send(`Invalid token: ${err}`);
 
       const accessToken = generateAccessToken(user);
-
+      const profileImageUrl = `${process.env.SERVER_URL}/files/${user.profileImageId}`;
       const userData = {
         _id: user._id,
         firstName: user.firstName,
@@ -436,6 +462,7 @@ const refreshTheToken = asyncHandler(async (req, res) => {
         profileImageId: user.profileImageId,
         roles: user.roles,
         savedPosts: user.savedPosts,
+        profileImageUrl: profileImageUrl,
       };
 
       res.status(200).json({ accessToken: accessToken, userData: userData });
@@ -463,4 +490,5 @@ module.exports = {
   savePost,
   unsavePost,
   getSavedPosts,
+  updateProfileImage,
 };

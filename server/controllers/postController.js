@@ -14,7 +14,7 @@ const getPostById = asyncHandler(async (req, res) => {
 
     populateFields.push({
       path: "user",
-      select: "firstName lastName name",
+      select: "firstName lastName name profileImageId",
     });
 
     if (include?.includes("bids")) {
@@ -42,14 +42,14 @@ const getPostById = asyncHandler(async (req, res) => {
     if (!post) {
       return res.status(404).json({ message: "No Post found." });
     }
-
-    if (post.imageIds && post.imageIds.length > 0) {
+    const postObject = post.toObject ? post.toObject() : post;
+    if (postObject.imageIds && postObject.imageIds.length > 0) {
       try {
-        post.images = [];
-        for (const imageId of post.imageIds) {
+        postObject.images = [];
+        for (const imageId of postObject.imageIds) {
           // const imageURL = await cloudStorage.download(imageId);
 
-          post.images.push({
+          postObject.images.push({
             imageId,
             imageURL: `${process.env.SERVER_URL}/files/${imageId}`,
           });
@@ -59,9 +59,14 @@ const getPostById = asyncHandler(async (req, res) => {
         return res.status(500);
       }
     }
-    delete post.imageIds;
 
-    return res.status(200).json(post);
+    // for user profile image
+    postObject.user.profileImageUrl = `${process.env.SERVER_URL}/files/${ postObject.user.profileImageId}`;
+
+    delete postObject.user.profileImageId;
+    delete postObject.imageIds;
+
+    return res.status(200).json(postObject);
   } catch (error) {
     console.log(error);
     res.status(500);
@@ -138,8 +143,7 @@ const getPosts = asyncHandler(async (req, res) => {
 
           post.images.push({
             imageId,
-                    imageURL: `${process.env.SERVER_URL}/files/${imageId}`,
-
+            imageURL: `${process.env.SERVER_URL}/files/${imageId}`,
           });
         }
       } catch (error) {
@@ -172,8 +176,7 @@ const getPostsByUserId = asyncHandler(async (req, res) => {
 
           post.images.push({
             imageId,
-               imageURL: `${process.env.SERVER_URL}/files/${imageId}`,
-
+            imageURL: `${process.env.SERVER_URL}/files/${imageId}`,
           });
         }
       } catch (error) {

@@ -162,7 +162,7 @@ const Chat = () => {
                     src={chat.peer.profileImageURL}
                     alt={`${chat.peer.name}'s profile image`}
                   />:
-                  <DefaultProfile size="32px" />}
+                  <DefaultProfile size="2em" />}
                 </div>
                 <div className="contact-name">
                   <h3>{chat.peer.name}</h3>

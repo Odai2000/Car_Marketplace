@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Button from "../../UI/Button/Button";
 
 import "./UserSettings.css";
@@ -15,6 +15,7 @@ import {
 } from "react-icons/fa6";
 import DefaultProfile from "../../UI/Utility/DefaultProfile/DefaultProfile";
 import useAuthFetch from "../../../hooks/useAuthFetch";
+import useProfileImageUpload from "../../../hooks/useProfileImageUpload";
 
 const UserSettings = () => {
   const [activeTab, setActiveTab] = useState("profile");
@@ -30,9 +31,13 @@ const UserSettings = () => {
 
   const { auth, setAuth, logout } = useAuth();
   const { config } = useConfig();
+
+  const imageInput = useRef();
+
   const { showToast } = useToast();
   const authFetch = useAuthFetch();
   const navigate = useNavigate();
+  const profileImageUploader = useProfileImageUpload(auth?.userData?._id, true);
 
   const handleSave = async (e) => {
     e.preventDefault();
@@ -93,6 +98,7 @@ const UserSettings = () => {
         showToast("Password change failed", "error");
       });
   };
+
   const handleAccountDelete = async (e) => {
     e.preventDefault();
     await authFetch(`${config.serverURL}/user`, {
@@ -116,12 +122,13 @@ const UserSettings = () => {
         showToast("Failed to delete account", "error");
       });
   };
+
   useEffect(() => {
     setFirstName(auth.userData.firstName);
     setLastName(auth.userData.lastName);
     setUsername(auth.userData.username);
     setEmail(auth.userData.email);
-  }, []);
+  }, [auth]);
 
   return (
     <>
@@ -167,7 +174,14 @@ const UserSettings = () => {
           <div className="footer flex">
             <div className="profile-container flex">
               <div className="profile-image">
+                {auth?.userData?.profileImageUrl ? (
+                  <img
+                    src={auth?.userData?.profileImageUrl}
+                    alt="profile-image"
+                  />
+                ) : (
                   <DefaultProfile size="1em" />
+                )}
               </div>
               <div className="name">{firstName + " " + lastName}</div>
             </div>
@@ -180,6 +194,18 @@ const UserSettings = () => {
           {activeTab === "profile" ? (
             <div className="activeTab profile-config">
               <Button
+                variant="secondary"
+             onClick={() => {
+    if (imageInput.current) {
+      imageInput.current.value = '';
+    }
+    imageInput.current.click();
+  }}
+              >
+                Change Profile Picture
+              </Button>
+              <Button
+                variant="secondary"
                 onClick={() => {
                   setActiveTab("changePassword");
                 }}
@@ -290,6 +316,14 @@ const UserSettings = () => {
           )}
         </div>
       </div>
+
+      <input
+        type="file"
+        ref={imageInput}
+        onChange={profileImageUploader.handleChange}
+        hidden
+        accept={profileImageUploader.acceptString}
+      />
     </>
   );
 };
