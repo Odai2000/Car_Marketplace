@@ -11,6 +11,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 
 const server = http.createServer(app);
+app.set('trust proxy', true);
 
 //socket.io
 const chatSocket = require("./sockets/chatSocket");

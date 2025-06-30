@@ -320,7 +320,7 @@ const UserSettings = () => {
       <input
         type="file"
         ref={imageInput}
-        onChange={profileImageUploader.handleChange}
+        onChange={async(e)=> await profileImageUploader.handleChange(e)}
         hidden
         accept={profileImageUploader.acceptString}
       />

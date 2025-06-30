@@ -58,10 +58,6 @@ const PostForm = ({ isUpdating = false }) => {
     setIsStepValid(isValid);
   }, []);
 
-  // useEffect(() => {
-  //   setFormData((prev) => ({ ...prev, images: imageStates.files }));
-  // }, [imageStates.files]);
-
   useEffect(() => {
     const isValid = Object.values(controlsValidity).every(
       (valid) => valid === true

@@ -360,6 +360,10 @@ const updateProfileImage = asyncHandler(async (req, res) => {
     }
     const user = await User.findById(req.user._id);
 
+      if (user.profileImageId) {
+        await cloudStorage.delete(Number(imageId));
+      }
+
     const imageId = await cloudStorage.upload(file, folderId);
     user.profileImageId = imageId;
     await user.save();

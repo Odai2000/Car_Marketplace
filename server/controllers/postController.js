@@ -5,10 +5,11 @@ const cloudStorage = new CloudStorageManager("pcloud");
 const folderId = process.env.PCLOUD_FOLDER_ID;
 const Bid = require("../models/Bid");
 const Comment = require("../models/Comment");
+const crypto = require("crypto");
 
 const getPostById = asyncHandler(async (req, res) => {
   try {
-    const { include } = req.query;
+    const { include, user_id } = req.query;
     const populateFields = [];
     let query = Post.findById(req.params.id);
 
@@ -30,7 +31,7 @@ const getPostById = asyncHandler(async (req, res) => {
         path: "comments",
         match: { parent_id: null },
         options: { sort: { createdAt: -1 }, limit: 10 },
-        populate: { path: "user_id", select: "firstName lastName name" },
+        populate: { path: "user", select: "firstName lastName name profileImageId" },
       });
     }
 
@@ -42,29 +43,59 @@ const getPostById = asyncHandler(async (req, res) => {
     if (!post) {
       return res.status(404).json({ message: "No Post found." });
     }
-    const postObject = post.toObject ? post.toObject() : post;
-    if (postObject.imageIds && postObject.imageIds.length > 0) {
-      try {
-        postObject.images = [];
-        for (const imageId of postObject.imageIds) {
-          // const imageURL = await cloudStorage.download(imageId);
 
-          postObject.images.push({
-            imageId,
-            imageURL: `${process.env.SERVER_URL}/files/${imageId}`,
-          });
-        }
-      } catch (error) {
-        console.log(error);
-        return res.status(500);
+    // count views
+
+    const rawIp =
+      req.headers["x-forwarded-for"]
+        ?.split(",")[0]
+        ?.trim()
+        ?.replace("::ffff:", "") || req.ip?.replace("::ffff:", "");
+
+    const viewer =
+      user_id ||
+      crypto
+        .createHash("sha256")
+        .update(rawIp || "")
+        .digest("hex");
+
+    if (!post.uniqueViewers?.includes(viewer)) {
+      post.uniqueViewers.push(viewer);
+      post.views += 1;
+      await post.save();
+    }
+
+    // prepares image urls for post photos, pfp and comments
+
+    let postObject = post.toObject ? post.toObject() : post;
+    if (postObject.imageIds && postObject.imageIds.length > 0) {
+      postObject.images = [];
+      for (const imageId of postObject.imageIds) {
+        // const imageURL = await cloudStorage.download(imageId);
+
+        postObject.images.push({
+          imageId,
+          imageURL: `${process.env.SERVER_URL}/files/${imageId}`,
+        });
       }
+
+      delete postObject.imageIds;
     }
 
     // for user profile image
-    postObject.user.profileImageUrl = `${process.env.SERVER_URL}/files/${ postObject.user.profileImageId}`;
+    postObject.user.profileImageUrl = `${process.env.SERVER_URL}/files/${postObject?.user?.profileImageId}`;
+    delete postObject?.user?.profileImageId;
 
-    delete postObject.user.profileImageId;
-    delete postObject.imageIds;
+    // for comments
+   const comments= postObject.comments?.map((comment) => {
+      if (comment?.user?.profileImageId) {
+        comment.user.profileImageUrl = `${process.env.SERVER_URL}/files/${comment.user.profileImageId}`;
+        delete comment.user.profileImageId;
+      }
+      return comment
+    });
+
+    postObject.comments=comments
 
     return res.status(200).json(postObject);
   } catch (error) {
@@ -200,14 +231,6 @@ const createPost = asyncHandler(async (req, res) => {
 
     //confirm data
     if (!title || !user_id || !car || !price || !location) {
-      console.log("Received body:", {
-        title: !!title,
-        user_id: !!user_id,
-        car: !!car,
-        price: !!price,
-        location: !!location,
-        actualValues: { title, car, price, location, user_id },
-      });
       return res
         .status(400)
         .json({ message: "All fields are required" + user_id });
@@ -321,27 +344,30 @@ const deletePost = asyncHandler(async (req, res) => {
   if (!post) {
     return res
       .status(400)
-      .json({ message: `No post with id: ${id} was found` });
+      .json({ message: `No post with id: ${_id} was found` });
   }
 
-  if (req.user._id !== post.user_id && !req.user.roles.includes("ADMIN")) {
+  if (
+    req.user._id.toString() !== post.user_id.toString() &&
+    !req.user.roles.includes("ADMIN")
+  ) {
     return res.status(403).send("Forbidden");
   }
 
-  const result = await post.delete({ _id: id }).exec();
+  const result = await post.remove({ _id: _id });
 
   if (!result)
     return res
       .status(500)
-      .json({ message: `Failed to delete post with ${id}` });
+      .json({ message: `Failed to delete post with ${_id}` });
 
-  if (post.imageIds && imageIds.length > 0) {
+  if (post.imageIds && post.imageIds.length > 0) {
     await Promise.all(
       post.imageIds.map(async (imageId) => {
         await cloudStorage.delete(Number(imageId));
       })
     );
-    res.status(200).json({ message: `Post with id: ${id} has been deleted` });
+    res.status(200).json({ message: `Post with id: ${_id} has been deleted` });
   }
 });
 

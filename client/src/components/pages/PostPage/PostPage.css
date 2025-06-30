@@ -89,21 +89,21 @@
 .PostPage .bids {
   display: flex;
   flex-direction: column;
-  gap: .5em;
+  gap: 0.5em;
 }
 
 .PostPage .comments {
   display: flex;
   flex-direction: column;
-  gap: .25em;
+  gap: 0.25em;
 }
 
 .PostPage .bids .bid {
   display: grid;
-  grid-template-columns: repeat(3,fit-content(10rem));
-  
-  grid-template-rows: repeat(2,fit-content(4rem));
-  gap: .5em;
+  grid-template-columns: repeat(3, fit-content(10rem));
+
+  grid-template-rows: repeat(2, fit-content(4rem));
+  gap: 0.5em;
   flex-wrap: nowrap;
   align-items: center;
 }
@@ -112,7 +112,7 @@
   grid-row: span 2;
   height: fit-content;
   width: fit-content;
-    height: 2em;
+  height: 2em;
   width: 2em;
 }
 
@@ -122,6 +122,36 @@
   color: #888;
 }
 .PostPage .bids .bid .amount {
+  grid-column: 2/4;
+  grid-row: 2/3;
+}
+
+.PostPage .comments .comment {
+  display: grid;
+  grid-template-columns: repeat(3, fit-content(10rem));
+
+  grid-template-rows: repeat(2, fit-content(4rem));
+  gap: 0.5em;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+.PostPage .comments .comment .user-profile-image {
+  grid-column: span 1/2;
+  grid-row: span 2;
+  height: fit-content;
+  width: fit-content;
+  height: 2em;
+  width: 2em;
+    border-radius: 24em;
+    overflow: hidden;
+}
+
+.PostPage .comments .comment .user-name {
+  grid-column: 2/4;
+  grid-row: 1/2;
+  color: #888;
+}
+.PostPage .comments .comment .amount {
   grid-column: 2/4;
   grid-row: 2/3;
 }
@@ -140,6 +170,12 @@
   .PostPage header {
     grid-column: 1/3;
     grid-row: 2/3;
+    display: grid;
+    grid-template-columns: auto auto;
+  }
+
+  .PostPage header .meta-data {
+    color: #888;
   }
 
   .PostPage section {

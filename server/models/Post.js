@@ -94,7 +94,7 @@ const postSchema = new mongoose.Schema(
     },
     desc: {
       type: String,
-      maxLength: 240,
+      maxLength: 400,
     },
     user_id: {
       type: mongoose.Schema.Types.ObjectId,
@@ -107,13 +107,17 @@ const postSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    uniqueViewers: {
+      type: [String], // ids or ips
+      default: [],
+    },
     status: {
       type: String,
       enum: ["Active", "Sold", "Archived"],
       default: "Active",
     },
     car: {
-      type: carSchema
+      type: carSchema,
     },
     location: {
       type: locationSchema,

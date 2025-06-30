@@ -2,6 +2,7 @@ import "./PostPage.css";
 import { useEffect, useState } from "react";
 import Input from "../../UI/FormControls/Input";
 import Button from "../../UI/Button/Button";
+import Alert from "../../UI/Alert/Alert";
 import useMap from "../../../hooks/useMap";
 import PropTypes from "prop-types";
 import DefaultProfile from "../../UI/Utility/DefaultProfile/DefaultProfile";
@@ -35,14 +36,14 @@ const PostPage = () => {
         if (!_id || !config?.serverURL) return;
 
         const response = await fetch(
-          `${config.serverURL}/post/${_id}?include=bids,comments`
+          `${config.serverURL}/post/${_id}?include=bids,comments&user_id=${auth?.userData?._id}`
         );
         const data = await response.json();
         setData(data);
         setBids([...(data?.bids || [])].sort((a, b) => b.amount - a.amount));
         setComments(data?.comments);
       } catch (error) {
-        console.error("Failed to load post data:", "error");
+        console.error("Failed to load post data:", error);
         showToast("Failed to load post data", "error");
       }
     };
@@ -184,7 +185,7 @@ const PostPage = () => {
         body: JSON.stringify({ post_id: data._id, text: comment }),
       });
       if (response.ok) {
-        const data = await response.json;
+        const data = await response.json();
         setComments((prev) => [...prev, data.comment]);
         setComment("");
       }
@@ -212,6 +213,14 @@ const PostPage = () => {
           <header>
             <h1>{data?.title}</h1>
             <h2 className="">${data?.price?.toLocaleString()}</h2>
+            <div className="meta-data">
+              <span className="date">
+                Posted on:{" "}
+                {data?.createdAt &&
+                  new Date(data?.createdAt).toLocaleDateString()}
+              </span>{" "}
+              <span className="views">views: {data?.views}</span>
+            </div>
           </header>
           <section className="actions">
             <div className="btn-group">
@@ -237,9 +246,16 @@ const PostPage = () => {
             </div>
             <Button variant="secondary">share</Button>
           </section>
-          <section className="user" onClick={()=>navigate(`/user/${data?.user_id}`)}>
+          <section
+            className="user"
+            onClick={() => navigate(`/user/${data?.user_id}`)}
+          >
             <div className="profile-image">
-       {data?.user?.profileImageUrl?(<img src={data?.user?.profileImageUrl}/>): <DefaultProfile size="sm" />}
+              {data?.user?.profileImageUrl ? (
+                <img src={data?.user?.profileImageUrl} />
+              ) : (
+                <DefaultProfile size="sm" />
+              )}
             </div>
             <div className="user-details">
               <h2 className="name">{data?.user?.name}</h2>
@@ -359,7 +375,7 @@ const PostPage = () => {
           <section className="comments">
             <h2>Comments</h2>
             <div className="list flex-col gap-1em">
-              {comment?.length ? (
+              {comments?.length ? (
                 comments.map((comment) => (
                   <div key={comment?._id} className="comment">
                     <div className="user-profile-image">
@@ -375,7 +391,7 @@ const PostPage = () => {
                   </div>
                 ))
               ) : (
-                <div className="empty-txt">No Bids</div>
+                <div className="empty-txt">No Comments</div>
               )}
             </div>
 
@@ -383,7 +399,7 @@ const PostPage = () => {
               <Input
                 value={comment}
                 onChange={(e) => {
-                  setBid(e.target.value);
+                  setComment(e.target.value);
                 }}
                 placeholder="Enter comment..."
               />
@@ -394,6 +410,15 @@ const PostPage = () => {
           </section>
           <section className="similar-posts">
             <h3>Similar Posts</h3>
+          </section>
+          <section
+            className="privacy-notice"
+            style={{ gridColumn: "3/4", gridRow: "6/7" }}
+          >
+            <Alert type="info">
+              <h3>Notice</h3>Site stores one-way IP hashings without consent to
+              avoid duplicated views
+            </Alert>
           </section>
         </div>
       </div>

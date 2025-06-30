@@ -13,7 +13,6 @@ const CarInfoStep = ({
   const { carSpecsData, loadingCarSpecs } = useAppData();
   const [selectedMake, setSelectedMake] = useState({});
 
-
   useEffect(() => {
     setControlsValidity({
       make: !!formData.car.make,
@@ -24,6 +23,7 @@ const CarInfoStep = ({
       transmission: !!formData.car.transmission,
       mileage: !!formData.car.mileage,
       hp: !!formData.car.hp,
+      condition: !!formData.car.hp,
     });
 
     if (formData.car.make && carSpecsData?.makes) {
@@ -169,12 +169,28 @@ const CarInfoStep = ({
         onValidationChange={(value) =>
           handleValidateChange("transmission", value)
         }
-    
       >
-        <option value="automatic">Automatic</option>
-        <option value="manual">Manual</option>
+        <option value="Automatic">Automatic</option>
+        <option value="Manual">Manual</option>
       </Select>
-
+      <Select
+        name="condition"
+        value={formData.car.condition}
+        defaultOption={{ label: "Select condition", value: "" }}
+        onChange={(e) =>
+          setFormData({
+            ...formData,
+            car: { ...formData.car, [e.target.name]: e.target.value },
+          })
+        }
+        validationRules={{ required: true }}
+        onValidationChange={(value) => handleValidateChange("condition", value)}
+      >
+        <option value="Excellent">Excellent</option>
+        <option value="Good">Good</option>
+        <option value="Fair">Fair</option>
+        <option value="Salvage">Salvage</option>
+      </Select>
       <Input
         type="text"
         name="mileage"
@@ -188,7 +204,6 @@ const CarInfoStep = ({
         validationRules={{ required: true, maxLength: 8, numeric: true }}
         placeholder="Mileage"
         onValidationChange={(value) => handleValidateChange("mileage", value)}
-      
       />
 
       <Input
@@ -207,6 +222,6 @@ const CarInfoStep = ({
       />
     </>
   );
-}
+};
 
 export default CarInfoStep;
