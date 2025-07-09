@@ -15,7 +15,7 @@ const getPostById = asyncHandler(async (req, res) => {
 
     populateFields.push({
       path: "user",
-      select: "firstName lastName name profileImageId",
+      select: "firstName lastName name profileImageId ratings reputation",
     });
 
     if (include?.includes("bids")) {
@@ -62,7 +62,7 @@ const getPostById = asyncHandler(async (req, res) => {
     if (!post.uniqueViewers?.includes(viewer)) {
       post.uniqueViewers.push(viewer);
       post.views += 1;
-      await post.save();
+      await post.save({validateBeforeSave:false}); //cuz of unclean dataset
     }
 
     // prepares image urls for post photos, pfp and comments

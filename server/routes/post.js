@@ -2,6 +2,7 @@ const postController = require("../controllers/postController");
 const express = require("express");
 const router = express.Router();
 const authenticateToken = require("../middleware/authenticateToken")
+const optionalAuth = require("../middleware/optionalAuth")
 const multer = require("multer");
 
 const upload = multer({ dest: "temp/" });
@@ -13,7 +14,7 @@ router
   .patch(authenticateToken,upload.array("images"),postController.updatePost)
   .delete(authenticateToken,postController.deletePost);
 
-router.route("/:id").get(postController.getPostById);
+router.route("/:id").get(optionalAuth,postController.getPostById);
 
 router.route("/user/:user_id/").get(postController.getPostsByUserId);
 

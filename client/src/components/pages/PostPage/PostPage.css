@@ -114,6 +114,9 @@
   width: fit-content;
   height: 2em;
   width: 2em;
+  display: flex;
+  align-items: center;
+  
 }
 
 .PostPage .bids .bid .user-name {
@@ -124,6 +127,8 @@
 .PostPage .bids .bid .amount {
   grid-column: 2/4;
   grid-row: 2/3;
+  color: var(--success);
+  font-size: 1.25rem;
 }
 
 .PostPage .comments .comment {
@@ -151,7 +156,7 @@
   grid-row: 1/2;
   color: #888;
 }
-.PostPage .comments .comment .amount {
+.PostPage .comments .comment .text {
   grid-column: 2/4;
   grid-row: 2/3;
 }
@@ -195,6 +200,10 @@
     grid-column: 3 / 3;
 
     /* border-radius: .5em; */
+  }  .PostPage .user .rating {
+display:flex;
+color: #888;
+
   }
   .PostPage .details {
     grid-row: 1 / 2;

@@ -10,7 +10,7 @@
   flex-direction: column;
   gap: 1em;
   flex: 1 1 70%;
-  max-width: 120ch;
+  /* max-width: 120ch; */
 }
 
 /* Filter */

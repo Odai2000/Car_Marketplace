@@ -9,14 +9,24 @@ import DefaultProfile from "../../UI/Utility/DefaultProfile/DefaultProfile";
 import useConfig from "../../../hooks/useConfig";
 import { useNavigate, useParams } from "react-router-dom";
 import Carousel from "../../UI/Carousel/Carousel";
-import { FaCamera, FaLocationDot, FaMessage, FaPhone } from "react-icons/fa6";
+import {
+  FaCamera,
+  FaLocationDot,
+  FaMessage,
+  FaPhone,
+  FaRegStar,
+  FaStar,
+} from "react-icons/fa6";
 import useToast from "../../../hooks/useToast";
 import useAuth from "../../../hooks/useAuth";
 import useAuthFetch from "../../../hooks/useAuthFetch";
+import ReactStars from "react-rating-stars-component";
+import { FaStarHalfAlt } from "react-icons/fa";
 
 const PostPage = () => {
   const [comments, setComments] = useState([]);
   const [bids, setBids] = useState([]);
+  const [rating, setRating] = useState(0);
   const [bid, setBid] = useState("");
   const [comment, setComment] = useState("");
   const [data, setData] = useState({});
@@ -50,6 +60,12 @@ const PostPage = () => {
 
     loadData();
   }, [_id, config?.serverURL]);
+
+  useEffect(() => {
+    if (data?.user?.reputation) {
+      setRating(Number(data.user.reputation));
+    }
+  }, [data?.user?.reputation]);
 
   let images = data?.images;
 
@@ -195,6 +211,40 @@ const PostPage = () => {
       console.error(error);
     }
   };
+
+  const handleRating = async (value) => {
+    try {
+      await authFetch(`${config.serverURL}/user/${data?.user?._id}/rate`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          rater_id: auth?.userdata?._id,
+          rate: value,
+        }),
+      })
+        .then((response) => {
+          return response.json();
+        })
+        .then((rateData) => {
+          setData({
+            ...data,
+            user: {
+              ...data?.user,
+              reputation: rateData?.reputation,
+              ratingCount: rateData?.ratingCount,
+              rate: rateData?.rate,
+            },
+          });
+        });
+    } catch (error) {
+      showToast("Failed to save", "error");
+
+      console.error(error);
+    }
+  };
+
   return (
     <>
       <div className="PostPage">
@@ -215,7 +265,7 @@ const PostPage = () => {
             <h2 className="">${data?.price?.toLocaleString()}</h2>
             <div className="meta-data">
               <span className="date">
-                Posted on:{" "}
+                Posted on
                 {data?.createdAt &&
                   new Date(data?.createdAt).toLocaleDateString()}
               </span>{" "}
@@ -259,7 +309,27 @@ const PostPage = () => {
             </div>
             <div className="user-details">
               <h2 className="name">{data?.user?.name}</h2>
-              <div className="rating">{data?.rating}</div>
+              <div className="rating" onClick={(e) => e.stopPropagation()}>
+                <ReactStars
+                  key={rating}
+                  value={rating}
+                  count={5}
+                  onChange={handleRating}
+                  size={28}
+                  edit={
+                    !auth && auth?.userData?._id === data?.user?._id
+                      ? false
+                      : true
+                  }
+                  half={true}
+                  isHalf={true}
+                  emptyIcon={<FaRegStar />}
+                  halfIcon={<FaStarHalfAlt />}
+                  filledIcon={<FaStar />}
+                  activeColor="var(--primary)"
+                />
+                <div className="ratingCount">({data?.user?.ratingCount})</div>
+              </div>
             </div>
           </section>
           <section className="details">
@@ -351,7 +421,9 @@ const PostPage = () => {
                     </div>
                     <div className="user-name">{bid?.user?.name}</div>
 
-                    <div className="amount">{bid?.amount}</div>
+                    <div className="amount">
+                      ${bid?.amount?.toLocaleString()}
+                    </div>
                   </div>
                 ))
               ) : (
@@ -455,7 +527,7 @@ PostPage.propTypes = {
 
 PostPage.defaultProps = {
   data: {
-    user_id: null,
+    user_id: "",
     title: "",
     price: 0,
     images: [],

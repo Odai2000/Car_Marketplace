@@ -1,5 +1,14 @@
 const mongoose = require("mongoose");
 
+const ratingSchema = new mongoose.Schema({
+  rate: { type: Number, required: true },
+  user_id: {
+    type: mongoose.Schema.ObjectId,
+    ref: "User",
+    require: true,
+  },
+});
+
 const userSchema = new mongoose.Schema(
   {
     username: {
@@ -40,6 +49,12 @@ const userSchema = new mongoose.Schema(
       min: 2,
     },
     profileImageId: { type: String },
+    ratings: [ratingSchema],
+    reputation: {
+      type: Number,
+      default: 0,
+    },
+
     status: {
       type: [String],
       enum: ["offline", "online", "soft_deleted"],
@@ -50,17 +65,32 @@ const userSchema = new mongoose.Schema(
       enum: ["USER", "ADMIN"],
       default: ["USER"],
     },
-    savedPosts: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Post",
-    }],
+    savedPosts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Post",
+      },
+    ],
   },
   { timestamps: true }
 );
-userSchema.virtual('name').get(function() {
+userSchema.virtual("name").get(function () {
   return `${this.firstName} ${this.lastName}`;
 });
+userSchema.virtual("ratingCount").get(function () {
+  return this.ratings?.length;
+});
 
-userSchema.set('toJSON', { virtuals: true });
-userSchema.set('toObject', { virtuals: true });
+userSchema.pre("save", function (next) {
+  const ratings = this.ratings || [];
+  this.reputation =
+    this.ratingCount === 0
+      ? 0
+      : ratings.reduce((sum, rating) => sum + rating.rate, 0) / this.ratingCount;
+  next();
+});
+
+
+userSchema.set("toJSON", { virtuals: true });
+userSchema.set("toObject", { virtuals: true });
 module.exports = mongoose.model("User", userSchema);

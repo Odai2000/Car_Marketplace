@@ -11,7 +11,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 
 const server = http.createServer(app);
-app.set('trust proxy', true);
+app.set("trust proxy", true);
 
 //socket.io
 const chatSocket = require("./sockets/chatSocket");
@@ -75,7 +75,7 @@ app.use("/data", require("./routes/data"));
 app.use("/chat", require("./routes/chat"));
 app.use("/bid", require("./routes/bid"));
 app.use("/comment", require("./routes/comment"));
-
+app.use("/cron", require("./routes/cronRoutes"));
 mongoose.connection.once("open", () => {
   server.listen(PORT, () => console.log(`server running on port ${PORT}`));
 });

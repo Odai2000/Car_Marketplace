@@ -360,20 +360,55 @@ const updateProfileImage = asyncHandler(async (req, res) => {
     }
     const user = await User.findById(req.user._id);
 
-      if (user.profileImageId) {
-        await cloudStorage.delete(Number(imageId));
-      }
+    if (user.profileImageId) {
+      await cloudStorage.delete(Number(user.profileImageId));
+    }
 
-    const imageId = await cloudStorage.upload(file, folderId);
-    user.profileImageId = imageId;
+    user.profileImageId = await cloudStorage.upload(file, folderId);
     await user.save();
-    
-      const profileImageUrl = `${process.env.SERVER_URL}/files/${user.profileImageId}`;
+
+    const profileImageUrl = `${process.env.SERVER_URL}/files/${user.profileImageId}`;
     res.status(200).json({ profileImageUrl: profileImageUrl });
   } catch (error) {
     console.error(error);
     res.status(500).json(error);
   }
+});
+
+const rateUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params._id);
+  const rater_id = req.user._id;
+  const { rate } = req.body;
+
+  if (!user) return res.status(404).send("User not found.");
+
+  if(user._id.toString() ===rater_id.toString() ) return res.status(400).json({message:'Users can\'t rate themselves'})
+  if (
+    typeof rate !== "number" ||
+    rate < 1 ||
+    rate > 5 ||
+    (rate * 2) % 1 !== 0
+  ) {
+    return res.status(400).json({ message: "Invalid value for rate" });
+  }
+  const existingRating = user.ratings.find(
+    (rating) => rating.user_id.toString() === rater_id.toString()
+  );
+  if (existingRating) {
+    existingRating.rate = rate;
+  } else {
+    user.ratings.push({ user_id: rater_id, rate: rate });
+  }
+  await user.save();
+
+  return res
+    .status(200)
+    .json({
+      message: "Rating saved successfully.",
+      rate: user.rate,
+      ratingCount: user.ratingCount,
+      reputation: user.reputation,
+    });
 });
 
 // auxiliary functions
@@ -495,4 +530,5 @@ module.exports = {
   unsavePost,
   getSavedPosts,
   updateProfileImage,
+  rateUser,
 };

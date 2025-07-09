@@ -16,6 +16,7 @@ import {
 import DefaultProfile from "../../UI/Utility/DefaultProfile/DefaultProfile";
 import useAuthFetch from "../../../hooks/useAuthFetch";
 import useProfileImageUpload from "../../../hooks/useProfileImageUpload";
+import logoWhite from '../../../assets/logo-white.svg';
 
 const UserSettings = () => {
   const [activeTab, setActiveTab] = useState("profile");
@@ -136,7 +137,7 @@ const UserSettings = () => {
         <div className="sidebar">
           <div id="logo">
             <Link to="/">
-              <img src="/src/assets/logo-white.svg" alt="logo" />
+              <img src={logoWhite} alt="logo" />
             </Link>
           </div>
           <div className="vertical-tabs">

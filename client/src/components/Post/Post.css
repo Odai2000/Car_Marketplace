@@ -7,6 +7,7 @@
   cursor: pointer;
   transition: box-shadow 0.3s ease, transform 0.2s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 .post:hover {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
@@ -25,6 +26,7 @@
   text-wrap: nowrap;
   flex-grow: 1;
   flex-shrink: 1;
+  overflow: hidden;
 }
 
 .post .post-details > span {
@@ -68,6 +70,9 @@
 
 .post .post-details .car-name {
   grid-column: span 4;
+  max-width: 48ch;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
 }
 
 .post .post-img-container {
@@ -93,7 +98,8 @@
   color: var(--primary);
 }
 .post .post-details .post-location .address {
-  font-size: clamp(0.6rem, 3vw, 1rem);
+  font-size: clamp(0.7rem, 3vw, 1rem);
+  overflow-x: hidden;
   text-overflow: ellipsis;
   color: gray;
 }
@@ -189,6 +195,7 @@
 
   .post .post-details .car-name {
     grid-column: span 6;
+    
   }
 
   .post .post-img-container {

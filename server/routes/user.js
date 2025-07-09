@@ -27,9 +27,12 @@ router.route("/:_id/verify-email").post(userController.verifyEmail);
 router
   .route("/:_id/save-post")
   .post(authenticateToken, userController.savePost);
+
 router
   .route("/:_id/unsave-post")
   .post(authenticateToken, userController.unsavePost);
+
+router.route("/:_id/rate").post(authenticateToken, userController.rateUser);
 
 router.patch(
   "/:id/profile-image",

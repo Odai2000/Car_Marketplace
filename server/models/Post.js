@@ -128,6 +128,11 @@ const postSchema = new mongoose.Schema(
       required: true,
       min: 0,
     },
+      score: {
+      type: Number,
+      min: 0,
+      default:0,
+    },
   },
   {
     timestamps: true,
@@ -159,5 +164,23 @@ postSchema.index({ user_id: 1 });
 postSchema.index({ status: 1 });
 postSchema.index({ "car.make": 1, "car.model": 1 });
 postSchema.index({ price: 1 });
+
+postSchema.methods.calculateScore = function () {
+  const views = this.views || 0;
+  const bids = this.bids?.length || 0;
+  const comments = this.comments?.length || 0;
+  const reputation = this.user?.reputation || 0;
+  const createdAt = this.createdAt;
+
+  const daysOld = Math.floor((Date.now() - new Date(createdAt)) / (1000 * 60 * 60 * 24));
+
+  return 100 + (views * 1) +(bids*20) + (comments * 10) + (reputation * 5 - 20*(reputation>0)) - (daysOld * 0.1);
+};
+
+postSchema.pre('save', async function (next) {
+  this.score = await this.calculateScore();
+  next();
+});
+
 
 module.exports = mongoose.model("Post", postSchema);
