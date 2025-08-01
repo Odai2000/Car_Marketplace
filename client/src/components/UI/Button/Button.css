@@ -88,10 +88,16 @@
 
 .btn.icon {
   padding: 0.5em;
-  color: var(--primary);
+  color: var(--neutral-gray);
   background-color: transparent;
 }
 
 .btn.icon.inverse {
   color: #fff;
+}
+
+
+.btn.icon:hover{
+  color: var(--primary);
+  border-radius: 124px;
 }

@@ -21,7 +21,7 @@ function Button({
       onClick={onClick}
       {...props}
     >
-      {icon && <i className={icon} />} {children}
+      {(icon && <i className='icon' >{children}</i>) ||  children}
     </button>
   );
 }

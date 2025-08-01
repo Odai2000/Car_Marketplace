@@ -25,8 +25,8 @@ const UserAccount = () => {
   const { _id } = useParams();
   const authFetch = useAuthFetch();
   const location = useLocation();
-  
-   const profileImageUploader = useProfileImageUpload(auth?.userData?._id, true);
+
+  const profileImageUploader = useProfileImageUpload(auth?.userData?._id, true);
 
   const imageInput = useRef();
 
@@ -97,11 +97,19 @@ const UserAccount = () => {
       <div className="UserAccount">
         <div className="user-header">
           <div className="profile-image">
-            
-                <div className="edit-pfp-btn" onClick={() => {
-                  imageInput.current.click();
-                }}>edit</div>
-               {auth?.userData?.profileImageUrl?(<img src={auth?.userData?.profileImageUrl}/>): <DefaultProfile size="md" />}
+           {auth && auth?.userData?._id === userData?._id? (<div
+              className="edit-pfp-btn"
+              onClick={() => {
+                imageInput.current.click();
+              }}
+            >
+              edit
+            </div>):''}
+            {auth?.userData?.profileImageUrl ? (
+              <img src={auth?.userData?.profileImageUrl} />
+            ) : (
+              <DefaultProfile size="md" />
+            )}
           </div>
           <div className="user-info">
             <div className="name">{`${userData?.firstName} ${userData?.lastName}`}</div>
@@ -158,13 +166,14 @@ const UserAccount = () => {
               savedPosts?.map((post) => <Post key={post._id} data={post} />)}
           </div>
         </div>
-        
-      <input
-        type="file"
-        ref={imageInput}
-        onChange={profileImageUploader.handleChange}
-        hidden
-        accept={profileImageUploader.acceptString}/>
+
+        <input
+          type="file"
+          ref={imageInput}
+          onChange={profileImageUploader.handleChange}
+          hidden
+          accept={profileImageUploader.acceptString}
+        />
       </div>
     </>
   );

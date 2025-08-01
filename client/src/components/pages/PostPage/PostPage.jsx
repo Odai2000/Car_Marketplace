@@ -468,12 +468,15 @@ const PostPage = () => {
             </div>
 
             <div className="footer flex-col gap-05em">
-              <Input
+              <textarea
                 value={comment}
                 onChange={(e) => {
                   setComment(e.target.value);
                 }}
                 placeholder="Enter comment..."
+                cols={2}
+                rows={3}
+                style={{padding:'1em'}}
               />
               <Button variant="primary" onClick={handleComment}>
                 Comment

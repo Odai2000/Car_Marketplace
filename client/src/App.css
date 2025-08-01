@@ -18,6 +18,7 @@
   --info: #6c757d;
 
   --disabled-gray: hsl(0, 0%, 60%);
+  --neutral-gray:hsl(0,0%,50%);
 
   /* primary hsl breakdown */
   --primary-h: 121;

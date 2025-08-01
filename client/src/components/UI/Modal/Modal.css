@@ -1,0 +1,39 @@
+.Modal {
+  position: fixed;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25em;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99;
+  overflow-x: hidden;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.Modal header {
+  display: flex;
+  align-items: center;
+}
+
+.modal-body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  height: fit-content;
+  padding: 1em 1.75em 2em;
+  gap: 1em;
+}
+
+.Modal .cancel-btn-container {
+  align-self: flex-end;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* position: absolute;
+  top:1em */
+}

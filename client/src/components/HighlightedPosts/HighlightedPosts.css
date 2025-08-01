@@ -8,6 +8,7 @@
 
 .HighlightedPosts > .Carousel .items {
   overflow: scroll;
+  padding: 0.25em 0;
 }
 
 .HighlightedPosts > .Carousel .carousel-btn {

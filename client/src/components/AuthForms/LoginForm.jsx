@@ -1,7 +1,6 @@
 import "./style.css";
 import Input from "../UI/FormControls/Input";
 import Button from "../UI/Button/Button";
-import { FaX } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa6";
 import { IconContext } from "react-icons/lib";
@@ -10,7 +9,7 @@ import useAuth from "../../hooks/useAuth";
 import useToast from "../../hooks/useToast";
 import Alert from "../UI/Alert/Alert";
 
-function LoginForm({ show, onCancel }) {
+function LoginForm({onSuccess}) {
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
 
@@ -24,6 +23,7 @@ function LoginForm({ show, onCancel }) {
     if (result.success) {
       setUsername("");
       setPassword("");
+      onSuccess()
     } else {
       showToast(result.errorMsg, "error");
     }
@@ -34,14 +34,9 @@ function LoginForm({ show, onCancel }) {
   useEffect(() => {
     localStorage.setItem("persist", persist);
   }, [persist]);
-  return show ? (
+  return  (
     <>
-      <div className="authFormContainer">
         <form onSubmit={handleSubmit} className="authForm card">
-          <Button styleName="cross" onClick={onCancel}>
-            <FaX />
-          </Button>
-          <h2 className="col-2">Login</h2>
 
           <Input
             type="text"
@@ -65,7 +60,7 @@ function LoginForm({ show, onCancel }) {
             styleName="col-2"
           />
 
-          <span className="col-2 flex">
+          <span className="col-2 flex gap-05em">
             {`Don't have an account?`} <Button variant="link">Sign up</Button>
           </span>
 
@@ -109,11 +104,9 @@ function LoginForm({ show, onCancel }) {
             </IconContext.Provider>
           </div>
         </form>
-      </div>
+     
     </>
-  ) : (
-    ""
-  );
+  )
 }
 
 export default LoginForm;

@@ -1,8 +1,8 @@
-import { FaBars, FaUser } from "react-icons/fa6";
+import { FaBars } from "react-icons/fa6";
 import Items from "./Items";
 import "./NavBar.css";
-import logo from '../../assets/logo.svg';
-import logoWhite from '../../assets/logo-white.svg';
+import logo from "../../assets/logo.svg";
+import logoWhite from "../../assets/logo-white.svg";
 import { IconContext } from "react-icons/lib";
 import Button from "../UI/Button/Button";
 import RegisterForm from "../AuthForms/RegisterForm";
@@ -11,6 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import DefaultProfile from "../UI/Utility/DefaultProfile/DefaultProfile";
+import Modal from "../UI/Modal/Modal";
 
 function disableScrolling() {
   document.body.style.overflow = "hidden";
@@ -71,11 +72,7 @@ function NavBar() {
           <div id="logo">
             <Link to="/">
               <img
-                src={
-                  !scrolled && location.pathname == "/"
-                    ? logoWhite
-                    : logo
-                }
+                src={!scrolled && location.pathname == "/" ? logoWhite : logo}
                 alt="logo"
               />
             </Link>
@@ -91,10 +88,16 @@ function NavBar() {
         <div className="navBar-rightside">
           {auth ? (
             <>
-                <Button variant="primary" styleName="new-post-btn" onClick={()=>{navigate("/new")}}>
-                  New Post
-                </Button>
-            
+              <Button
+                variant="primary"
+                styleName="new-post-btn"
+                onClick={() => {
+                  navigate("/new");
+                }}
+              >
+                New Post
+              </Button>
+
               <Button
                 variant={`link ${
                   !scrolled && location.pathname == "/" && "inverse"
@@ -104,10 +107,18 @@ function NavBar() {
               >
                 Logout
               </Button>
-                <div className="profile-image" onClick={()=>{navigate("/me")}}>
-                   {auth?.userData?.profileImageUrl?(<img src={auth?.userData?.profileImageUrl}/>): <DefaultProfile size="xs" />}
+              <div
+                className="profile-image"
+                onClick={() => {
+                  navigate("/me");
+                }}
+              >
+                {auth?.userData?.profileImageUrl ? (
+                  <img src={auth?.userData?.profileImageUrl} />
+                ) : (
+                  <DefaultProfile size="xs" />
+                )}
               </div>
-                
             </>
           ) : (
             <div className="btn-group">
@@ -137,8 +148,14 @@ function NavBar() {
           </div>
         </IconContext.Provider>
       </div>
-      <RegisterForm show={showSign} onCancel={toggleSign} />
-      <LoginForm show={showLog} onCancel={toggleLog} />
+
+      <Modal show={showSign} title='Register' onClose={toggleSign} className="auth-modal">
+        <RegisterForm onSuccess={toggleSign} />
+      </Modal>
+
+      <Modal show={showLog} title='Login' onClose={toggleLog} className="auth-modal">
+        <LoginForm onSuccess={toggleLog} />
+      </Modal>
     </>
   );
 }
