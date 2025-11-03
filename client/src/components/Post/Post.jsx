@@ -26,7 +26,7 @@ import useAuthFetch from "../../hooks/useAuthFetch";
 import useToast from "../../hooks/useToast";
 import useConfig from "../../hooks/useConfig";
 import { useState } from "react";
-import { useEffect } from "react";
+import PostSkeleton from "../UI/skeletons/PostSkeleton/PostSkeleton";
 
 const Post = ({ data = null }) => {
   const [isDragging, setIsDragging] = useState(false);
@@ -298,6 +298,9 @@ const Post = ({ data = null }) => {
     </div>
   );
 };
+
+Post.skeleton = PostSkeleton
+
 Post.propTypes = {
   data: PropTypes.shape({
     user_id: PropTypes.string.isRequired,

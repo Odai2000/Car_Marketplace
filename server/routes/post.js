@@ -14,6 +14,7 @@ router
   .patch(authenticateToken,upload.array("images"),postController.updatePost)
   .delete(authenticateToken,postController.deletePost);
 
+router.route("/highest-score/").get(postController.getPostsByHighestScore);
 router.route("/:id").get(optionalAuth,postController.getPostById);
 
 router.route("/user/:user_id/").get(postController.getPostsByUserId);

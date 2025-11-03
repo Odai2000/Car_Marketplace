@@ -224,6 +224,7 @@ const loginUser = asyncHandler(async (req, res) => {
       });
 
       if (!token) return res.status(500).send("server Error");
+      const profileImageUrl = `${process.env.SERVER_URL}/files/${user.profileImageId}`;
       const userData = {
         _id: user._id,
         firstName: user.firstName,
@@ -231,7 +232,7 @@ const loginUser = asyncHandler(async (req, res) => {
         username: user.username,
         email: user.email,
         emailVert: user.emailVert,
-        profileImageId: user.profileImageId,
+        profileImageUrl: profileImageUrl,
         roles: user.roles,
         savedPosts: user.savedPosts,
       };
@@ -343,9 +344,32 @@ const getSavedPosts = asyncHandler(async (req, res) => {
     const user = await User.findById(req.user._id)
       .populate("savedPosts")
       .select("savedPosts")
-      .lean();
+      .exec();
 
-    res.status(200).json({ savedPosts: user?.savedPosts });
+    const savedPosts = [];
+
+    for (const post of user.savedPosts) {
+      const postObject = post.toObject ? post.toObject() : post;
+
+      if (postObject.imageIds && postObject.imageIds.length > 0) {
+        postObject.images = [];
+
+        for (const imageId of postObject.imageIds) {
+          const imageURL = `${process.env.SERVER_URL}/files/${imageId}`;
+
+          postObject.images.push({
+            imageId,
+            imageURL,
+          });
+        }
+
+        delete postObject.imageIds;
+      }
+
+      savedPosts.push(postObject);
+    }
+
+    res.status(200).json({ savedPosts });
   } catch (error) {
     console.error(error);
     res.status(500).json(error);
@@ -382,7 +406,8 @@ const rateUser = asyncHandler(async (req, res) => {
 
   if (!user) return res.status(404).send("User not found.");
 
-  if(user._id.toString() ===rater_id.toString() ) return res.status(400).json({message:'Users can\'t rate themselves'})
+  if (user._id.toString() === rater_id.toString())
+    return res.status(400).json({ message: "Users can't rate themselves" });
   if (
     typeof rate !== "number" ||
     rate < 1 ||
@@ -401,14 +426,12 @@ const rateUser = asyncHandler(async (req, res) => {
   }
   await user.save();
 
-  return res
-    .status(200)
-    .json({
-      message: "Rating saved successfully.",
-      rate: user.rate,
-      ratingCount: user.ratingCount,
-      reputation: user.reputation,
-    });
+  return res.status(200).json({
+    message: "Rating saved successfully.",
+    rate: user.rate,
+    ratingCount: user.ratingCount,
+    reputation: user.reputation,
+  });
 });
 
 // auxiliary functions

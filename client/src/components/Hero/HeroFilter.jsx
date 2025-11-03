@@ -88,10 +88,7 @@ function HeroFilter() {
     navigate(`/posts?${query}`);
   };
 
-  if (loadingCarSpecs) {
-    console.log("loading");
-    return <div>Loading.....</div>;
-  }
+
   return (
     <>
       <div className="herofilter-container">

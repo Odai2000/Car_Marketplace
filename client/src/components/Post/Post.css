@@ -8,17 +8,22 @@
   transition: box-shadow 0.3s ease, transform 0.2s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  width: max(36rem, 75vw);
+  height: 100%;
 }
+
 .post:hover {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   transform: translateY(-2px);
   cursor: pointer;
 }
-.post > .icon {
+
+.post>.icon {
   position: absolute;
   right: 1em;
 }
-.post > .post-details {
+
+.post>.post-details {
   display: grid;
   gap: 0.3em;
   grid-template-columns: repeat(4, minmax(3rem, 1fr));
@@ -29,7 +34,7 @@
   overflow: hidden;
 }
 
-.post .post-details > span {
+.post .post-details>span {
   align-items: center;
   padding: 0.25em;
   font-size: 1.15rem;
@@ -37,20 +42,29 @@
   grid-column: span 2;
   gap: 0.25em;
 }
+
 .post .post-details span span {
   display: block;
 }
+
 .post .post-details span span::first-letter {
   text-transform: uppercase;
 }
+
 .post .post-details .post-title {
   grid-row: span 1;
   grid-column: span 3;
-  max-width: 38ch;
-  overflow: hidden;
+  max-width: 42ch;
+
   font-weight: bold;
   text-wrap: wrap;
   color: var(--primary);
+}
+
+.post .post-details .post-title>* {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .post .post-details .post-price {
@@ -87,6 +101,7 @@
   justify-content: center;
   align-items: center;
 }
+
 .post .post-details .post-location {
   width: 100%;
   overflow: hidden;
@@ -97,6 +112,7 @@
 
   color: var(--primary);
 }
+
 .post .post-details .post-location .address {
   font-size: clamp(0.7rem, 3vw, 1rem);
   overflow-x: hidden;
@@ -108,7 +124,7 @@
   flex-grow: 1;
 }
 
-.post-btn-group > * {
+.post-btn-group>* {
   flex-grow: 1;
 }
 
@@ -118,7 +134,7 @@
   flex-direction: column;
 }
 
-.post-btn-group > * {
+.post-btn-group>* {
   flex-grow: 1;
   font-size: 1em;
 }
@@ -154,6 +170,7 @@
   color: rgba(0, 0, 0, 0.25);
   box-sizing: border-box;
 }
+
 .post .opts-btn {
   position: absolute;
   top: 0.4rem;
@@ -164,6 +181,7 @@
   background-color: rgba(0, 0, 0, 0.1);
   transition: background-color 300ms;
 }
+
 .post .opts-btn:hover {
   background-color: rgba(0, 0, 0, 0.4);
 }
@@ -172,17 +190,23 @@
   .post {
     flex-direction: row;
     /* height: 15em; */
+    min-width: min(55rem, 55vw);
+
   }
+
   .post .icon {
     flex-direction: row;
   }
+
   .post .post-details {
     gap: 0.75em;
     grid-template-columns: repeat(6, minmax(3rem, 1fr));
   }
+
   .post .post-details span {
     grid-column: span 2;
   }
+
   .post .post-details .post-title {
     grid-row: span 2;
     grid-column: span 5;
@@ -195,7 +219,6 @@
 
   .post .post-details .car-name {
     grid-column: span 6;
-    
   }
 
   .post .post-img-container {
@@ -206,6 +229,7 @@
   .post .post-details .post-location {
     grid-column: span 6;
   }
+
   .post-footer {
     grid-column: span 6;
   }
@@ -221,6 +245,7 @@
 
     background-color: transparent;
   }
+
   .post .opts-btn:hover {
     background-color: transparent;
   }

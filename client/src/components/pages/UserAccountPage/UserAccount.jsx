@@ -97,14 +97,18 @@ const UserAccount = () => {
       <div className="UserAccount">
         <div className="user-header">
           <div className="profile-image">
-           {auth && auth?.userData?._id === userData?._id? (<div
-              className="edit-pfp-btn"
-              onClick={() => {
-                imageInput.current.click();
-              }}
-            >
-              edit
-            </div>):''}
+            {auth && auth?.userData?._id === userData?._id ? (
+              <div
+                className="edit-pfp-btn"
+                onClick={() => {
+                  imageInput.current.click();
+                }}
+              >
+                edit
+              </div>
+            ) : (
+              ""
+            )}
             {auth?.userData?.profileImageUrl ? (
               <img src={auth?.userData?.profileImageUrl} />
             ) : (
@@ -158,15 +162,13 @@ const UserAccount = () => {
               Articles
             </div>
           </div>
-
-          <div className="content">
-            {activeTab === "posts" &&
-              posts?.map((post) => <Post key={post._id} data={post} />)}
-            {activeTab === "saved-posts" &&
-              savedPosts?.map((post) => <Post key={post._id} data={post} />)}
-          </div>
         </div>
-
+        <div className="content">
+          {activeTab === "posts" &&
+            posts?.map((post) => <Post key={post._id} data={post} />)}
+          {activeTab === "saved-posts" &&
+            savedPosts?.map((post) => <Post key={post._id} data={post} />)}
+        </div>
         <input
           type="file"
           ref={imageInput}

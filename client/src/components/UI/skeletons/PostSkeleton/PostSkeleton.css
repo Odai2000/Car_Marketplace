@@ -1,0 +1,112 @@
+.PostSkeleton {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid lightgray;
+  background-color: #fff;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  width: max(36rem, 75vw);
+  height: 100%;
+}
+
+.PostSkeleton:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+  cursor: pointer;
+}
+
+.PostSkeleton>.post-details {
+  display: grid;
+  gap: 0.3em;
+  grid-template-columns: repeat(4, minmax(3rem, 1fr));
+  padding: 0.75em;
+  text-wrap: nowrap;
+  flex-grow: 1;
+  flex-shrink: 1;
+  overflow: hidden;
+}
+
+.PostSkeleton span {
+  display: block;
+  align-items: center;
+  padding: 0.25em;
+  font-size: 1.15rem;
+  display: block;
+  grid-column: span 2;
+  gap: 0.25em;
+}
+
+.PostSkeleton .post-details .post-title {
+  grid-row: span 1;
+  grid-column: span 3;
+  max-width: 42ch;
+}
+
+.PostSkeleton .post-details .post-price,
+.PostSkeleton .post-details .post-title {
+  font-size: 1.5rem;
+}
+
+.PostSkeleton .post-details .car-name {
+  grid-column: span 4;
+  max-width: 48ch;
+  overflow-x: hidden;
+}
+
+.PostSkeleton .post-img-container {
+  position: relative;
+  flex-shrink: 0;
+  max-width: none;
+  height: auto;
+  width: 100%;
+  height: 24rem;
+  border: 1px solid lightgray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+@media (min-width: 768px) {
+  .PostSkeleton {
+    flex-direction: row;
+    min-width: min(55rem, 55vw);
+
+  }
+
+  .PostSkeleton .post-details {
+    gap: 0.75em;
+    grid-template-columns: repeat(6, minmax(3rem, 1fr));
+  }
+
+  .PostSkeleton .post-details span {
+    grid-column: span 2;
+  }
+
+  .PostSkeleton .post-details .post-title {
+    grid-row: span 2;
+    grid-column: span 5;
+  }
+
+  .PostSkeleton .post-details .post-price {
+    grid-column: span 1;
+  }
+
+  .PostSkeleton .post-details .car-name {
+    grid-column: span 6;
+  }
+
+  .PostSkeleton .post-img-container {
+    width: max(18em, 25vw);
+    height: 100%;
+    padding-top: 0%;
+  }
+
+
+
+
+
+}
