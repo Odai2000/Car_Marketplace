@@ -26,7 +26,7 @@ const Modal = ({
           }}
         >
           <div className="modal-body card">
-            {" "}
+        
             <div className="cancel-btn-container">
               <Button
                 styleName="cancel-btn"

@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import "./App.css";
 import Layout from "./components/Layout";
 import Home from "./components/pages/Home/Home";
@@ -16,13 +16,27 @@ import UserSettings from "./components/pages/UserSettings/UserSettings";
 import EmailVerification from "./components/EmailVerification/EmailVerification";
 import { ConfigProvider } from "./context/ConfigProvider";
 import PostPage from "./components/pages/PostPage/PostPage";
+import { useEffect } from "react";
+import { AuthModalProvider } from "./context/AuthModalProvider";
 
 function App() {
+  const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+};
   return (
     <ConfigProvider>
       <AppDataProvider>
         <AuthProvider>
-          <ToastProvider>
+            <ToastProvider>
+          <AuthModalProvider>
+        
+            <ScrollToTop/>
             <Routes>
               <Route path="/">
                 <Route element={<PersistLogin />}>
@@ -30,10 +44,7 @@ function App() {
                     <Route index element={<Home />} />
                     <Route path="posts" element={<PostSearchResult />} />
                     <Route path="post/:_id" element={<PostPage />} />
-                    <Route
-                      path="user/:_id/"
-                      element={<UserAccount />}
-                    />
+                    <Route path="user/:_id/" element={<UserAccount />} />
                     <Route
                       path="user/:_id/verify-email"
                       element={<EmailVerification />}
@@ -61,6 +72,7 @@ function App() {
                 <Route path="unAuthorized" element={<UnAuthorized />} />
               </Route>
             </Routes>
+          </AuthModalProvider>
           </ToastProvider>
         </AuthProvider>
       </AppDataProvider>

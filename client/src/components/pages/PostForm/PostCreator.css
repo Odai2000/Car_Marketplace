@@ -14,9 +14,6 @@
   justify-content: flex-start;
   gap: 1em;
 }
-/* .PostCreator-form > div {
-  align-self: flex-start;
-} */
 .form-header {
   text-align: center;
   color: var(--primary);
@@ -98,7 +95,7 @@
     padding: 2em;
   }
   .PostCreator-form {
-    width: 66%;
+    width: 80%;
     gap: 1em;
   }
 

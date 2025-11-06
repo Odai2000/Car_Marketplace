@@ -3,7 +3,6 @@ import "./Carousel.css";
 import { Children, useRef, useState } from "react";
 import Button from "../Button/Button";
 import { FaAngleRight, FaAngleLeft } from "react-icons/fa6";
-import useConfig from "../../../hooks/useConfig";
 
 const Carousel = ({
   single,
@@ -11,7 +10,7 @@ const Carousel = ({
   gap = "0",
   thumbnails,
   children,
-  ...props
+  scrollBy
 }) => {
   const [index, setIndex] = useState(0);
   const ref = useRef(null);
@@ -19,7 +18,7 @@ const Carousel = ({
   const previous = () => {
     setIndex(index > 0 ? index - 1 : index);
     ref.current.scrollBy({
-      left: -ref.current.clientWidth,
+      left: scrollBy? -scrollBy :-ref.current.clientWidth,
       behavior: "smooth",
     });
   };
@@ -28,7 +27,7 @@ const Carousel = ({
     const length = Children.count(children);
     setIndex(index < length - 1 ? index + 1 : index);
     ref.current.scrollBy({
-      left: ref.current.clientWidth,
+      left: scrollBy? scrollBy : ref.current.clientWidth,
       behavior: "smooth",
     });
   };

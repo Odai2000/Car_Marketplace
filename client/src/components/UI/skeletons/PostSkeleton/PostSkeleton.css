@@ -9,7 +9,9 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   width: max(36rem, 75vw);
-  height: 100%;
+  height: 48rem;
+  max-width: 90vw;
+
 }
 
 .PostSkeleton:hover {
@@ -74,7 +76,8 @@
   .PostSkeleton {
     flex-direction: row;
     min-width: min(55rem, 55vw);
-
+    max-width:68rem;
+    height: 20rem;
   }
 
   .PostSkeleton .post-details {

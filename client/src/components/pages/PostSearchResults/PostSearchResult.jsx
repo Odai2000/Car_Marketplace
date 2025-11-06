@@ -97,7 +97,7 @@ const PostSearchResult = () => {
           {posts.length > 0 ? (
             posts.map((post) => <Post key={post.id} data={post} />)
           ) : (
-            <p>No posts found</p>
+            Post.skeletons(15)
           )}
         </div>
       </div>

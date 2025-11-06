@@ -8,20 +8,20 @@ const HighlightedPosts = () => {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
-    fetch(`${config.serverURL}/post/highest-score`).then((response)=>response.json()).then((data)=>setPosts(data)).finally(()=>setIsLoading(true));
+    fetch(`${config.serverURL}/post/highest-score`).then((response)=>response.json()).then((data)=>setPosts(data)).finally(()=>setIsLoading(false));
   }, []);
   return (
     <section className="HighlightedPosts">
       <h2 style={{ color: "var(--primary)", padding: "0.25em" }}>
         Highlighted Offers
       </h2>
-      <Carousal gap="2em">
-        {isLoading ? (
+      <Carousal gap="2em" scrollBy={225}>
+        {!isLoading ? (
           posts.map((post) => (
             <Post key={post.id} data={post} />
           ))
         ) : (
-          [...Array(12)].map((_,index)=><Post.skeleton key={`post-skeleton-${index}`} />)
+          Post.skeletons(12)
         )}
       </Carousal>
     </section>

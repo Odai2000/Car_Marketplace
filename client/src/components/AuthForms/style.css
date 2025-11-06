@@ -14,12 +14,10 @@
 .authForm {
   position: relative;
   height: fit-content;
-  /* max-width: 100vw; */
   min-width: 24em;
-  /* width: 100vw; */
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1em;
+  gap: 0.5em;
   padding: 1em 0em;
   background-color: white;
 }

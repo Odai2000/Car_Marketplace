@@ -8,13 +8,15 @@ import { useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import useToast from "../../hooks/useToast";
 import Alert from "../UI/Alert/Alert";
+import useAuthModal from "../../hooks/useAuthModal";
 
-function LoginForm({onSuccess}) {
+function LoginForm({onSuccess=()=>{}}) {
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
 
   const { persist, setPersist, login } = useAuth();
   const { showToast } = useToast();
+  const {openRegister} = useAuthModal()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,7 +63,7 @@ function LoginForm({onSuccess}) {
           />
 
           <span className="col-2 flex gap-05em">
-            {`Don't have an account?`} <Button variant="link">Sign up</Button>
+            {`Don't have an account?`} <Button variant="link" onClick={openRegister}>Sign up</Button>
           </span>
 
           <div id="remeber-me-container">

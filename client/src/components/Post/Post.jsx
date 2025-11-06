@@ -301,6 +301,7 @@ const Post = ({ data = null }) => {
 
 Post.skeleton = PostSkeleton
 
+Post.skeletons= (count=12)=> ( [...Array(count)].map((_,i)=>(<PostSkeleton key={i}/>)))
 Post.propTypes = {
   data: PropTypes.shape({
     user_id: PropTypes.string.isRequired,

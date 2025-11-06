@@ -1,7 +1,7 @@
 import "./DefaultProfile.css";
 import { FaUser } from "react-icons/fa6";
 
-const DefaultProfile = ({ size = "2em" ,round}) => {
+const DefaultProfile = ({ size = "2em", round }) => {
   let value = size;
   switch (size) {
     case "lg":
@@ -13,14 +13,14 @@ const DefaultProfile = ({ size = "2em" ,round}) => {
     case "sm":
       value = "3em";
       break;
-          case "xs":
+    case "xs":
       value = "1em";
       break;
     default:
       break;
   }
   return (
-    <div className={`DefaultProfile default-profile-image ${round && 'round'}`}>
+    <div className={`DefaultProfile default-profile-image ${round && "round"}`}>
       <FaUser style={{ color: "#aaa", fontSize: value }} />
     </div>
   );

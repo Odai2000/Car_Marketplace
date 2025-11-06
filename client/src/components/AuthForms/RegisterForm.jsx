@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import useToast from "../../hooks/useToast";
 import useAuth from "../../hooks/useAuth";
 import Alert from "../UI/Alert/Alert";
+import useAuthModal from "../../hooks/useAuthModal";
 
 const RegisterForm = ({onSuccess}) => {
   const [firstName, setFirstName] = useState("");
@@ -19,6 +20,7 @@ const RegisterForm = ({onSuccess}) => {
 
   const { register } = useAuth();
   const { showToast } = useToast();
+  const {openLogin} = useAuthModal()
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -1,9 +1,9 @@
-.UserAccount{
+.UserAccount {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap:1em;
+  gap: 1em;
 }
 
 /* temp-fix */
@@ -27,16 +27,19 @@ body {
   flex-direction: column;
   gap: 1em;
 }
+
 .user-info .name {
   font-size: min(2.5em, 4vw);
   font-weight: 800;
   color: var(--primary);
 }
+
 .user-info .username {
   font-size: 1em;
   font-weight: 800;
   color: #666;
 }
+
 .user-header .profile-image {
   position: relative;
   width: 12rem;
@@ -50,29 +53,30 @@ body {
   display: inline-block;
 }
 
-.edit-pfp-btn{display: none;}
+.edit-pfp-btn {
+  display: none;
+}
 
 .UserAccount .edit-user-btn {
   color: #fff;
 }
 
 .UserAccount .account-content {
- display: flex;
- flex-direction: column;
- gap:1em;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
   width: 100%;
-  
+
 }
 
 /* Tabs */
 .UserAccount .tabs {
-  flex:1;
+  flex: 1;
   display: flex;
   justify-content: center;
   gap: 1em;
   font-size: 1.2rem;
 }
-
 
 .UserAccount .tab {
   flex: 1;
@@ -80,13 +84,21 @@ body {
   justify-content: center;
   padding: 0.5em;
   color: gray;
-   transition: all 0.2s ease;
+  transition: all 0.2s ease;
 }
+
+.UserAccount .content {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
 .UserAccount .tab.active {
   border-bottom: 2px solid var(--primary);
   font-weight: 900;
   color: var(--primary);
 }
+
 .UserAccount .tab:hover {
   border-bottom: 2px solid var(--primary);
   cursor: pointer;
@@ -98,11 +110,13 @@ body {
   gap: 1em;
   padding: 1em 2em;
 }
+
 .edit-account-info form {
   display: flex;
   flex-direction: column;
   gap: 1em;
 }
+
 
 /* temp-fix */
 @media (min-width: 768px) {
@@ -111,25 +125,24 @@ body {
   }
 
   .UserAccount .account-content {
-  
-  width: 60%;
-}
+    width: 60%;
+  }
 
-.UserAccount .profile-image:hover .edit-pfp-btn{
-  display: flex;
-}
+  .UserAccount .profile-image:hover .edit-pfp-btn {
+    display: flex;
+  }
 
-.edit-pfp-btn{
-  display:none;
-  justify-content: center;
-  align-items: center;
-  position: absolute; bottom: 0em;
-  height: 2.5em;
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.6)
-  ;
-  color: #ddd;
-  letter-spacing: .025em;
-  cursor: pointer;
-}
+  .edit-pfp-btn {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 0em;
+    height: 2.5em;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #ddd;
+    letter-spacing: .025em;
+    cursor: pointer;
+  }
 }

@@ -4,6 +4,7 @@ import Input from "../../UI/FormControls/Input";
 import Button from "../../UI/Button/Button";
 import Alert from "../../UI/Alert/Alert";
 import useMap from "../../../hooks/useMap";
+import useAuthModal from "../../../hooks/useAuthModal";
 import PropTypes from "prop-types";
 import DefaultProfile from "../../UI/Utility/DefaultProfile/DefaultProfile";
 import useConfig from "../../../hooks/useConfig";
@@ -22,6 +23,8 @@ import useAuth from "../../../hooks/useAuth";
 import useAuthFetch from "../../../hooks/useAuthFetch";
 import ReactStars from "react-rating-stars-component";
 import { FaStarHalfAlt } from "react-icons/fa";
+import Skeleton from "react-loading-skeleton";
+import NumericInput from "../../UI/FormControls/NumericInput/NumericInput";
 
 const PostPage = () => {
   const [comments, setComments] = useState([]);
@@ -35,6 +38,7 @@ const PostPage = () => {
   const authFetch = useAuthFetch();
   const { config } = useConfig();
   const { showToast } = useToast();
+  const { openLogin } = useAuthModal();
   const { getEmbeddedMapURL } = useMap();
   const navigate = useNavigate();
 
@@ -159,7 +163,10 @@ const PostPage = () => {
   const handleBid = async () => {
     try {
       const amount = Number(bid);
-
+      if (!auth?.userData) {
+        openLogin()
+        return
+      }
       if (!amount || isNaN(amount) || amount <= 0) {
         showToast("Please enter a valid bid amount", "error");
         return;
@@ -261,14 +268,15 @@ const PostPage = () => {
             )}
           </section>
           <header>
-            <h1>{data?.title}</h1>
+            <h1>{data?.title || <Skeleton />}</h1>
             <h2 className="">${data?.price?.toLocaleString()}</h2>
             <div className="meta-data">
               <span className="date">
-                Posted on
+                <span>Posted on </span>
                 {data?.createdAt &&
                   new Date(data?.createdAt).toLocaleDateString()}
-              </span>{" "}
+              </span>
+
               <span className="views">views: {data?.views}</span>
             </div>
           </header>
@@ -336,45 +344,53 @@ const PostPage = () => {
             <h2>Vehicle Details</h2>
             <div>
               <span className="label">Make: </span>
-              <span className="data">{data?.car?.make || "N/A"}</span>
+              <span className="data">{data?.car?.make || <Skeleton />}</span>
             </div>
             <div>
               <span className="label">Model: </span>
-              <span className="data">{data?.car?.model || "N/A"}</span>
+              <span className="data">{data?.car?.model || <Skeleton />}</span>
             </div>
             <div>
               <span className="label">Body Type: </span>
-              <span className="data">{data?.car?.bodyType || "N/A"}</span>
+              <span className="data">
+                {data?.car?.bodyType || <Skeleton />}
+              </span>
             </div>
             <div>
               <span className="label">Year: </span>
-              <span className="data">{data?.car?.year || "N/A"}</span>
+              <span className="data">{data?.car?.year || <Skeleton />}</span>
             </div>
             <div>
               <span className="label">Mileage: </span>
               <span className="data">
-                {data?.car?.mileage
-                  ? `${data.car.mileage.toLocaleString()} km`
-                  : "N/A"}
+                {data?.car?.mileage ? (
+                  `${data.car.mileage.toLocaleString()} km`
+                ) : (
+                  <Skeleton />
+                )}
               </span>
             </div>
             <div>
               <span className="label">Condition: </span>
-              <span className="data">{data?.car?.condition || "N/A"}</span>
+              <span className="data">
+                {data?.car?.condition || <Skeleton />}
+              </span>
             </div>
             <div>
               <span className="label">Fuel Type: </span>
-              <span className="data">{data?.car?.fuel || "N/A"}</span>
+              <span className="data">{data?.car?.fuel || <Skeleton />}</span>
             </div>
             <div>
               <span className="label">Horsepower: </span>
               <span className="data">
-                {data?.car?.hp ? `${data.car.hp} HP` : "N/A"}
+                {data?.car?.hp ? `${data.car.hp} HP` : <Skeleton />}
               </span>
             </div>
             <div>
               <span className="label">Transmission: </span>
-              <span className="data">{data?.car?.transmission || "N/A"}</span>
+              <span className="data">
+                {data?.car?.transmission || <Skeleton />}
+              </span>
             </div>
           </section>
           <section className="location">
@@ -382,7 +398,7 @@ const PostPage = () => {
 
             <div className="address">
               <FaLocationDot style={{ color: "var(--primary)" }} />
-              {data?.location?.address || "N/A"}
+              {data?.location?.address || <Skeleton />}
             </div>
             <div className="map">
               <iframe
@@ -408,44 +424,79 @@ const PostPage = () => {
           </section>
           <section className="bids">
             <h2>Bids</h2>
-            <div className="list flex-col gap-1em">
-              {bids?.length ? (
-                bids.map((bid) => (
-                  <div key={bid?._id} className="bid">
-                    <div className="user-profile-image">
-                      {bid?.user?.profileImageUrl ? (
-                        <img src={bid.user.profileImageUrl} />
-                      ) : (
-                        <DefaultProfile size="xs" round />
-                      )}
+            <div className="bids-interface">
+              <div className="list flex-col gap-1em">
+                {bids?.length ? (
+                  bids.map((bid) => (
+                    <div key={bid?._id} className="bid">
+                      <div className="left flex gap-05em" style={{alignItems:"center"}}>
+                        <div className="user-profile-image">
+                          {bid?.user?.profileImageUrl ? (
+                            <img src={bid.user.profileImageUrl} />
+                          ) : (
+                            <DefaultProfile size="xs" round />
+                          )}
+                         
+                        </div> <div className="user-name">{bid?.user?.name}</div>
+                      </div>
+                      <div className="right">
+                     
+                        <div className="amount">
+                          ${bid?.amount?.toLocaleString()}
+                        </div>
+                      </div>
+                    
                     </div>
-                    <div className="user-name">{bid?.user?.name}</div>
-
-                    <div className="amount">
-                      ${bid?.amount?.toLocaleString()}
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="empty-txt">No Bids</div>
-              )}
-            </div>
-
-            <div className="footer flex gap-05em">
-              <Input
-                value={bid}
-                onChange={(e) => {
-                  setBid(e.target.value);
-                }}
-                placeholder="Enter bid..."
-              />
-              <Button variant="primary" onClick={handleBid}>
-                Bid
-              </Button>
+                  ))
+                ) : (
+                  <div className="no-bids"><img src="../../../../dist/assets/hour-glass.svg" style={{width:"16rem",height:"12rem"}}/>
+                  <h1 style={{color:"var(--primary)",fontWeight: "500"}}>No bids yet...</h1></div>
+                )}
+              </div>
+              <div className="bids-control footer flex gap-05em">
+                <h3 className="biggest-bid"style={{letterSpacing:'0.1em'}}>
+                  Biggest bid: {`$${bids[0]?.amount?.toLocaleString() || 0}`}
+                </h3>
+                <NumericInput
+                  value={bid}
+                  onChange={setBid}
+                  placeholder="Enter bid..."
+                  style={{ position: "relative" }}
+                >
+                  <Button
+                    variant="primary"
+                    onClick={handleBid}
+                    style={{
+                      position: "absolute",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      right: ".75em",
+                    }}
+                  >
+                    Make offer
+                  </Button>
+                </NumericInput>
+              </div>
             </div>
           </section>
           <section className="comments">
             <h2>Comments</h2>
+
+            <div className="footer flex-col gap-05em">
+              <textarea
+                value={comment}
+                onChange={(e) => {
+                  setComment(e.target.value);
+                }}
+                placeholder="Enter comment..."
+                cols={2}
+                rows={3}
+                style={{ padding: "1em" }}
+              />
+              <Button variant="primary" onClick={handleComment}>
+                Comment
+              </Button>
+            </div>
             <div className="list flex-col gap-1em">
               {comments?.length ? (
                 comments.map((comment) => (
@@ -465,22 +516,6 @@ const PostPage = () => {
               ) : (
                 <div className="empty-txt">No Comments</div>
               )}
-            </div>
-
-            <div className="footer flex-col gap-05em">
-              <textarea
-                value={comment}
-                onChange={(e) => {
-                  setComment(e.target.value);
-                }}
-                placeholder="Enter comment..."
-                cols={2}
-                rows={3}
-                style={{padding:'1em'}}
-              />
-              <Button variant="primary" onClick={handleComment}>
-                Comment
-              </Button>
             </div>
           </section>
           <section className="similar-posts">

@@ -19,6 +19,7 @@ const UserAccount = () => {
   const [posts, setPosts] = useState([]);
   const [savedPosts, setSavedPosts] = useState([]);
   const [articles, setArticles] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const { auth } = useAuth();
   const { config } = useConfig();
@@ -41,6 +42,7 @@ const UserAccount = () => {
             username: auth?.userData?.username,
             emailVert: auth?.userData?.emailVert,
             user_id: auth?.userData?._id,
+            profileImageUrl:auth?.userData?.profileImageUrl
           });
         }
       } else if (_id) {
@@ -73,6 +75,8 @@ const UserAccount = () => {
     const user_id = userData?.user_id;
     if (!user_id) return;
 
+    setIsLoading(true);
+
     if (activeTab === "posts" && !posts?.length) {
       fetch(`${config.serverURL}/post/user/${user_id}`)
         .then((response) => {
@@ -80,7 +84,8 @@ const UserAccount = () => {
         })
         .then((data) => {
           setPosts(data);
-        });
+        })
+        .finally(()=>setIsLoading(false));
     } else if (activeTab === "saved-posts" && !savedPosts?.length) {
       authFetch(`${config.serverURL}/user/me/saved-posts`)
         .then((response) => {
@@ -88,8 +93,10 @@ const UserAccount = () => {
         })
         .then((data) => {
           setSavedPosts(data.savedPosts);
-        });
+        })
+        .finally(()=>setIsLoading(false));
     }
+    else setIsLoading(false);
   }, [activeTab, userData]);
 
   return (
@@ -109,8 +116,8 @@ const UserAccount = () => {
             ) : (
               ""
             )}
-            {auth?.userData?.profileImageUrl ? (
-              <img src={auth?.userData?.profileImageUrl} />
+            {userData?.profileImageUrl ? (
+              <img src={userData?.profileImageUrl} />
             ) : (
               <DefaultProfile size="md" />
             )}
@@ -164,10 +171,12 @@ const UserAccount = () => {
           </div>
         </div>
         <div className="content">
-          {activeTab === "posts" &&
-            posts?.map((post) => <Post key={post._id} data={post} />)}
-          {activeTab === "saved-posts" &&
-            savedPosts?.map((post) => <Post key={post._id} data={post} />)}
+          {activeTab === "posts" && ( !isLoading
+            ? posts?.map((post) => <Post key={post._id} data={post} />)
+            : Post.skeletons(5))}
+          {activeTab === "saved-posts" && (!isLoading
+            ? savedPosts?.map((post) => <Post key={post._id} data={post} />)
+            : Post.skeletons(5))}
         </div>
         <input
           type="file"

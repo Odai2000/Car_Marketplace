@@ -11,8 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import DefaultProfile from "../UI/Utility/DefaultProfile/DefaultProfile";
-import Modal from "../UI/Modal/Modal";
-
+import useAuthModal from "../../hooks/useAuthModal";
 function disableScrolling() {
   document.body.style.overflow = "hidden";
 }
@@ -30,6 +29,7 @@ function NavBar() {
   const navRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
+  const {openRegister,openLogin} = useAuthModal();
 
   function toggleSign() {
     setShowSignup(!showSign);
@@ -127,14 +127,14 @@ function NavBar() {
                   !scrolled && location.pathname == "/" && "inverse"
                 }`}
                 styleName="login-btn"
-                onClick={toggleLog}
+                onClick={openLogin}
               >
                 Login
               </Button>
               <Button
                 variant="primary"
                 styleName="signup-btn"
-                onClick={toggleSign}
+                onClick={openRegister}
               >
                 Sign up
               </Button>
@@ -148,14 +148,6 @@ function NavBar() {
           </div>
         </IconContext.Provider>
       </div>
-
-      <Modal show={showSign} title='Register' onClose={toggleSign} className="auth-modal">
-        <RegisterForm onSuccess={toggleSign} />
-      </Modal>
-
-      <Modal show={showLog} title='Login' onClose={toggleLog} className="auth-modal">
-        <LoginForm onSuccess={toggleLog} />
-      </Modal>
     </>
   );
 }
