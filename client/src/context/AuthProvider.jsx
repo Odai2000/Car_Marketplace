@@ -48,13 +48,19 @@ const AuthProvider = ({ children }) => {
 
   const googleLogin = async () => {
     const handleGoogleResponse = async (googleResponse) => {
-      fetch(`${import.meta.env.serverURL}/user/google-login`, {
+      fetch(`${config.serverURL}/user/google-login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ credential: googleResponse.credential }),
       })
         .then((response) => response.json())
-        .then((data) => localStorage.setItem("token", data.token));
+        .then((data) =>
+          setAuth({
+            accessToken: data.accessToken,
+            roles: data.userData?.roles || [],
+            userData: data.userData || [],
+          })
+        );
     };
     google.accounts.id.initialize({
       client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
@@ -84,7 +90,7 @@ const AuthProvider = ({ children }) => {
           response.status === 400 ? "Invalid Info" : "Registration failed";
         throw new Error(errorMsg);
       }
-      
+
       return { success: true };
     } catch (error) {
       console.error("Registration error:", error);
