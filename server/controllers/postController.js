@@ -31,7 +31,10 @@ const getPostById = asyncHandler(async (req, res) => {
         path: "comments",
         match: { parent_id: null },
         options: { sort: { createdAt: -1 }, limit: 10 },
-        populate: { path: "user", select: "firstName lastName name profileImageId" },
+        populate: {
+          path: "user",
+          select: "firstName lastName name profileImageId",
+        },
       });
     }
 
@@ -62,7 +65,7 @@ const getPostById = asyncHandler(async (req, res) => {
     if (!post.uniqueViewers?.includes(viewer)) {
       post.uniqueViewers.push(viewer);
       post.views += 1;
-      await post.save({validateBeforeSave:false}); //cuz of unclean dataset
+      await post.save({ validateBeforeSave: false }); //cuz of unclean dataset
     }
 
     // prepares image urls for post photos, pfp and comments
@@ -87,15 +90,15 @@ const getPostById = asyncHandler(async (req, res) => {
     delete postObject?.user?.profileImageId;
 
     // for comments
-   const comments= postObject.comments?.map((comment) => {
+    const comments = postObject.comments?.map((comment) => {
       if (comment?.user?.profileImageId) {
         comment.user.profileImageUrl = `${process.env.SERVER_URL}/files/${comment.user.profileImageId}`;
         delete comment.user.profileImageId;
       }
-      return comment
+      return comment;
     });
 
-    postObject.comments=comments
+    postObject.comments = comments;
 
     return res.status(200).json(postObject);
   } catch (error) {
@@ -121,6 +124,9 @@ const getPosts = asyncHandler(async (req, res) => {
     hpMax,
     priceMin,
     priceMax,
+    limit = 0,
+    page = 0,
+    sortBy,
   } = req.query;
 
   const query = {
@@ -157,7 +163,29 @@ const getPosts = asyncHandler(async (req, res) => {
     if (priceMax) query["car.price"].$lte = parseInt(priceMax);
   }
 
-  const posts = await Post.find(query).lean();
+  let sort = null;
+  switch (sortBy) {
+    case "newest":
+      sort = { createdAt: -1 };
+      break;
+    case "highest-price":
+      sort = { "car.price": -1, createdAt: -1 };
+      break;
+    case "lowest-price":
+      sort = { "car.price": 1, createdAt: -1 };
+      break;
+    case "most-viewed":
+      sort = { views: -1, createdAt: -1 };
+      break;
+    default:
+      sort = { createdAt: -1 };
+      break;
+  }
+  const posts = await Post.find(query)
+    .sort(sort)
+    .skip(limit * (page))
+    .limit(limit)
+    .lean();
 
   if (!posts.length) {
     // return res.status(400).json({ message: "No Posts found." });
@@ -185,7 +213,17 @@ const getPosts = asyncHandler(async (req, res) => {
     delete post.imageIds;
   }
 
-  res.status(200).json(posts);
+  if(limit>0){
+  const totalPosts = await Post.countDocuments(query);
+    res.json({
+      posts: posts,
+      totalPages: Math.ceil(totalPosts / limit),
+      totalPosts: totalPosts,
+    });
+  }
+else res.status(200).json(posts); 
+    
+
 });
 
 const getPostsByUserId = asyncHandler(async (req, res) => {
@@ -221,13 +259,9 @@ const getPostsByUserId = asyncHandler(async (req, res) => {
   res.status(200).json(posts);
 });
 const getPostsByHighestScore = asyncHandler(async (req, res) => {
-  const posts = await Post.find()
-    .sort({ score: -1 })
-    .limit(12)
-    .lean();
+  const posts = await Post.find().sort({ score: -1 }).limit(12).lean();
 
   if (!posts.length) {
-   
     return res.status(200).json(posts);
   }
 

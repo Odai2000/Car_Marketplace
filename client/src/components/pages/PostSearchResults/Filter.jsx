@@ -1,13 +1,13 @@
 /* eslint-disable react/display-name */
-import { useEffect, useState, forwardRef } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useAppData from "../../../../hooks/useAppData";
-import Button from "../../../UI/Button/Button";
-import Select from "../../../UI/FormControls/Select";
+import useAppData from "../../../hooks/useAppData";
+import Button from "../../UI/Button/Button";
+import Select from "../../UI/FormControls/Select";
 import { FaX } from "react-icons/fa6";
 
 const Filter = ({ query, handleToggle, isSmallScreen }) => {
-  const { carSpecsData, loading } = useAppData();
+  const {carSpecsData, loading } = useAppData();
   const [selectedMake, setSelectedMake] = useState({});
 
   const [make, setMake] = useState(query.get("make") || "");
@@ -29,7 +29,7 @@ const Filter = ({ query, handleToggle, isSmallScreen }) => {
       value: toYear - y,
       label: toYear - y,
     }));
-  })(); //notice: this is an array not a function
+  })();
 
   const mileageOptions = ((fromMileage = 0, toMileage = 100000) => {
     return Array.from(
@@ -39,14 +39,15 @@ const Filter = ({ query, handleToggle, isSmallScreen }) => {
         label: fromMileage + y * 10000 + " km",
       })
     );
-  })(); //notice: this is an array not a function
+  })();
 
   const hpOptions = ((fromHp = 20, toHp = 400) => {
     return Array.from({ length: (toHp - fromHp) / 10 + 1 }, (x, y) => ({
       value: fromHp + y * 20,
       label: fromHp + y * 20 + " hp",
     }));
-  })(); //notice: this is an array not a function
+  })();
+
   const bodyOptions = carSpecsData?.bodyTypes?.map((type) => ({
     value: type.toLowerCase(),
     label: type,

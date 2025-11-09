@@ -42,6 +42,9 @@
   right: 1em;
 }
 
+.form-control.select-field {
+  cursor: pointer;
+}
 /* Autocomplete */
 
 .Autocomplete {
@@ -65,4 +68,13 @@
 .Autocomplete .autocomplete-dropdown li:hover,
 .Autocomplete .autocomplete-dropdown li.active {
   background-color: #ddd;
+}
+
+/* inline select */
+
+ .form-control.select-field.inline {
+  height: fit-content;
+  padding: 0 0.5em;
+  border: none;
+  background-color: transparent;
 }

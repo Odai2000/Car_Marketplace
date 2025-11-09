@@ -14,7 +14,7 @@ function LoginForm({onSuccess=()=>{}}) {
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
 
-  const { persist, setPersist, login } = useAuth();
+  const { persist, setPersist, login,googleLogin } = useAuth();
   const { showToast } = useToast();
   const {openRegister} = useAuthModal()
 
@@ -90,7 +90,7 @@ function LoginForm({onSuccess=()=>{}}) {
 
           <div className="container alt col-2">
             <IconContext.Provider value={{ size: "2.5em" }}>
-              <Button variant="secondary link round">
+              <Button variant="secondary link round" onClick={googleLogin}>
                 <FcGoogle /> Continue with Google
               </Button>
               <Button variant="secondary link round">

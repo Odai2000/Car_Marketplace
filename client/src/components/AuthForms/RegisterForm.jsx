@@ -18,7 +18,7 @@ const RegisterForm = ({onSuccess}) => {
   const [password, setPassword] = useState("");
   const [ConfirmPassword, setConfirmpassword] = useState("");
 
-  const { register } = useAuth();
+  const { register,googleLogin,login } = useAuth();
   const { showToast } = useToast();
   const {openLogin} = useAuthModal()
 
@@ -41,7 +41,7 @@ const RegisterForm = ({onSuccess}) => {
       setUsername("");
       setPassword("");
       onSuccess()
-      showToast("User registered. Pls login by urself for now", "success");
+      await login(username,password) //attempt login
     } else {
       showToast(result.errorMsg, "error");
     }
@@ -113,7 +113,7 @@ const RegisterForm = ({onSuccess}) => {
           placeholder="Confirm Password"
         />
         <span className="col-2 flex gap-05em">
-          Already have an account?<Button variant="link"> Login</Button>
+          Already have an account?<Button variant="link" onClick={openLogin}> Login</Button>
         </span>
 
         <Alert className="col-2" type="warning">
@@ -133,7 +133,7 @@ const RegisterForm = ({onSuccess}) => {
 
         <div className="container alt col-2">
           <IconContext.Provider value={{ size: "2.5em" }}>
-            <Button variant="secondary link round">
+            <Button variant="secondary link round" onClick={googleLogin}>
               <FcGoogle /> Continue with Google
             </Button>
             <Button variant="secondary link round">

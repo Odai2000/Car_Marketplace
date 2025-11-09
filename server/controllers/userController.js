@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const EmailManager = require("../modules/email/emailManager");
 const emailManager = new EmailManager("brevo");
 const CloudStorageManager = require("../modules/cloud_storage/cloudStorageManager");
+const { OAuth2Client } = require("google-auth-library");
 
 const folderId = process.env.PCLOUD_FOLDER_ID;
 const cloudStorage = new CloudStorageManager("pcloud");
@@ -248,6 +249,91 @@ const loginUser = asyncHandler(async (req, res) => {
     } else {
       return res.status(401).send("Authentication Failed.");
     }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send(error);
+  }
+});
+
+const googleLogin = asyncHandler(async (req, res) => {
+  try {
+    const { credential } = req.body;
+
+    if (!credential)
+      return res.status(400).send("Google login failed. No credential");
+
+    const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+    const ticket = await client.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const { email, given_name, family_name } = ticket.getPayload();
+
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      // create new user account
+
+      const baseusername = email.split("@")[0];
+      let username = baseusername;
+      let counter = 1;
+      while (await User.exists({ username }))
+        username = `${username}-${counter}`;
+      counter++;
+
+      user = await User.create({
+        firstName: given_name,
+        lastName: family_name,
+        username: username,
+        email: email,
+        emailVert: true,
+      });
+    }
+
+    const accessToken = generateAccessToken(user);
+    const refreshToken = generateRefreshToken(user);
+
+    res.setHeader("Access-Control-Allow-Credentials", true);
+    res.setHeader(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept, authorization"
+    );
+    res.setHeader("Content-Type", "application/json");
+    res.setHeader("Access-Control-Allow-Origin", process.env.CLIENT_URL);
+    res.setHeader(
+      "Access-Control-Allow-METHODS",
+      "GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS, PATCH"
+    );
+
+    const token = await Token.create({
+      userID: user._id,
+      token: refreshToken,
+    });
+
+    if (!token) return res.status(500).send("server Error");
+
+    const profileImageUrl = `${process.env.SERVER_URL}/files/${user.profileImageId}`;
+    const userData = {
+      _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      username: user.username,
+      email: user.email,
+      emailVert: user.emailVert,
+      profileImageUrl: profileImageUrl,
+      roles: user.roles,
+      savedPosts: user.savedPosts,
+    };
+    return res
+      .status(200)
+      .cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: false,
+        maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
+      })
+      .json({ accessToken: accessToken, userData: userData });
   } catch (error) {
     console.log(error);
     return res.status(500).send(error);
@@ -542,8 +628,8 @@ module.exports = {
   createUser,
   updateUser,
   deleteUser,
-
   loginUser,
+  googleLogin,
   logout,
   refreshTheToken,
   changePassword,

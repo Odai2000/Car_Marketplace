@@ -47,6 +47,8 @@ router
 
 router.route("/login").post(userController.loginUser);
 
+router.route("/google-login").post(userController.googleLogin);
+
 router.route("/logout").post(userController.logout);
 
 router.route("/token").post(userController.refreshTheToken);

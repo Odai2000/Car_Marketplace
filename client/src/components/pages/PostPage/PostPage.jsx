@@ -454,9 +454,9 @@ const PostPage = () => {
                 )}
               </div>
               <div className="bids-control footer flex gap-05em">
-                <h3 className="biggest-bid"style={{letterSpacing:'0.1em'}}>
+                <h4 className="biggest-bid"style={{letterSpacing:'0.1em'}}>
                   Biggest bid: {`$${bids[0]?.amount?.toLocaleString() || 0}`}
-                </h3>
+                </h4>
                 <NumericInput
                   value={bid}
                   onChange={setBid}

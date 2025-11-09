@@ -7,8 +7,9 @@ const Select = ({
   id,
   value,
   label,
+  variant="standard",
   onChange,
-  styleName,
+  styleName = "",
   options,
   defaultOption,
   validationRules={},
@@ -62,7 +63,7 @@ const Select = ({
         id={id}
         value={value}
         onChange={(e) => handleChange(e)}
-        className={`form-control select-field ${errorMessage ? "error" : ""}`}
+        className={`form-control select-field ${variant} ${errorMessage ? "error" : ""}`}
         {...props}
       >
         {defaultOption ? (

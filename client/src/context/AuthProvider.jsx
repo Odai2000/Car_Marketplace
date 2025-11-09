@@ -46,6 +46,23 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  const googleLogin = async () => {
+    const handleGoogleResponse = async (googleResponse) => {
+      fetch(`${import.meta.env.serverURL}/user/google-login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ credential: googleResponse.credential }),
+      })
+        .then((response) => response.json())
+        .then((data) => localStorage.setItem("token", data.token));
+    };
+    google.accounts.id.initialize({
+      client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+      callback: handleGoogleResponse,
+    });
+    google.accounts.id.prompt();
+  };
+
   const register = async (firstName, lastName, email, username, password) => {
     try {
       const response = await fetch(`${config.serverURL}/user`, {
@@ -67,8 +84,7 @@ const AuthProvider = ({ children }) => {
           response.status === 400 ? "Invalid Info" : "Registration failed";
         throw new Error(errorMsg);
       }
-
-      const data = await response.json(); //might
+      
       return { success: true };
     } catch (error) {
       console.error("Registration error:", error);
@@ -84,7 +100,7 @@ const AuthProvider = ({ children }) => {
       const response = await fetch(`${config.serverURL}/user/logout`, {
         method: "POST",
         credentials: "include",
-            headers: {
+        headers: {
           "Content-Type": "application/json; charset=UTF-8",
         },
       });
@@ -99,9 +115,19 @@ const AuthProvider = ({ children }) => {
       return { success: false, errorMsg: error.message };
     }
   };
+
   return (
     <AuthContext.Provider
-      value={{ auth, setAuth, persist, setPersist, register, login, logout }}
+      value={{
+        auth,
+        setAuth,
+        persist,
+        setPersist,
+        register,
+        login,
+        googleLogin,
+        logout,
+      }}
     >
       {children}
     </AuthContext.Provider>
