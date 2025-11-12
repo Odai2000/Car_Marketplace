@@ -12,17 +12,20 @@ import useAuthFetch from "../../../hooks/useAuthFetch";
 
 const Chat = () => {
   const { auth } = useAuth();
-  const authFetch  = useAuthFetch();
+  const authFetch = useAuthFetch();
   const { config } = useConfig();
   const { showToast } = useToast();
   const { peer_id } = useParams();
+  const socket = useRef(null);
+  const chatBodyRef = useRef(null);
+
   const [chats, setChats] = useState([]);
   const [chat, setChat] = useState("");
-  const socket = useRef(null);
-  const navigate = useNavigate();
+  const [peerId, setPeerId] = useState(peer_id);
   const [message, setMessage] = useState("");
-  const chatBodyRef = useRef(null);
   const [toggleView, setToggleView] = useState(false);
+
+  const navigate = useNavigate();
 
   const fetchChats = async () => {
     await authFetch(`${config.serverURL}/chat`, {
@@ -45,8 +48,8 @@ const Chat = () => {
       });
   };
 
-  const fetchChat = async (peer_id) => {
-    await authFetch(`${config.serverURL}/chat/${peer_id}`, {
+  const fetchChat = async (peerId) => {
+    await authFetch(`${config.serverURL}/chat/${peerId}`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -75,7 +78,7 @@ const Chat = () => {
       console.log(error);
       showToast("Error fetching chats", "error");
     }
-  }, [peer_id]);
+  }, [peerId]);
 
   useEffect(() => {
     if (chatBodyRef.current) {
@@ -137,8 +140,9 @@ const Chat = () => {
   const handleContactClick = (peer_id) => {
     fetchChat(peer_id);
     setToggleView(true);
+    setPeerId(peer_id)
   };
-  
+
   return (
     <>
       <div className="Chat flex">
@@ -152,17 +156,21 @@ const Chat = () => {
           <div className="contacts flex-col">
             {chats?.map((chat) => (
               <div
-                className="contact"
+                className={`contact ${
+                  (chat.peer?.peer_id === peerId) ? "selected" : ""
+                }`}
                 key={chat._id}
-                onClick={() => handleContactClick(chat.peer.peer_id)}
+                onClick={() => handleContactClick(chat.peer?.peer_id)}
               >
                 <div className="profile-image">
-                  {chat?.peer?.profileImageURL ?
-                  <img
-                    src={chat.peer.profileImageURL}
-                    alt={`${chat.peer.name}'s profile image`}
-                  />:
-                  <DefaultProfile size="2em" />}
+                  {chat?.peer?.profileImageUrl ? (
+                    <img
+                      src={chat.peer.profileImageUrl}
+                      alt={`${chat.peer.name}'s profile image`}
+                    />
+                  ) : (
+                    <DefaultProfile size="2em" />
+                  )}
                 </div>
                 <div className="contact-name">
                   <h3>{chat.peer.name}</h3>
@@ -179,14 +187,16 @@ const Chat = () => {
                 <FaArrowLeft />
               </Button>
               <div className="profile-image">
-              {chat?.peer?.profileImageURL ?
+                {chat?.peer?.profileImageUrl ? (
                   <img
-                    src={chat.peer.profileImageURL}
+                    src={chat.peer.profileImageUrl}
                     alt={`${chat.peer.name}'s profile image`}
-                  />:
-                  <DefaultProfile size="32px" />}
+                  />
+                ) : (
+                  <DefaultProfile size="32px" />
+                )}
               </div>
-              
+
               <div className="contact-name">
                 <h3>{chat.peer?.name}</h3>
               </div>

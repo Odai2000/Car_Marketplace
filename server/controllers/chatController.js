@@ -20,7 +20,12 @@ const getChats = asyncHandler(async (req, res) => {
         const peerUser = await User.findById(peerId)
           .select("firstName lastName profileImageId")
           .lean();
-
+if(!peerUser) return({   ...item,
+          peer: {
+            peer_id: null,
+            name: 'Deleted user',
+            profileImageUrl: null,
+          }})
         const profileImageUrl = await cloudStorage.download(
           peerUser.profileImageId
         );

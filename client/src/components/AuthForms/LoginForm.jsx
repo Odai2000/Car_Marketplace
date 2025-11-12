@@ -70,7 +70,7 @@ function LoginForm({onSuccess=()=>{}}) {
             <Input
               type="checkbox"
               onChange={togglePersist}
-              checked={persist || false}
+              checked={persist || true}
             />
             <label>Remeber Me</label>
           </div>

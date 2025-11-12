@@ -2,7 +2,7 @@ import { FaXmark } from "react-icons/fa6";
 import Button from "../Button/Button";
 import "./Modal.css";
 import { createPortal } from "react-dom";
-
+import useLockBody from "../../../hooks/utility/useLockBody";
 const Modal = ({
   show = false,
   onClose = () => {},
@@ -10,6 +10,7 @@ const Modal = ({
   className = "",
   children,
 }) => {
+  useLockBody(show)
   return (
     show &&
     createPortal(

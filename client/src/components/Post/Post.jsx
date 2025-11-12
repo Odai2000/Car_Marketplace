@@ -15,6 +15,7 @@ import {
   PiGasPumpThin,
   PiEngineThin,
   PiGearThin,
+  PiMapPinThin
 } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
 import useMap from "../../hooks/useMap";
@@ -222,7 +223,7 @@ const Post = ({ data = null }) => {
             e.stopPropagation();
           }}
         >
-          <FaLocationDot />
+          <PiMapPinThin size="1.5em"/>
           <span
             className="address"
             onClick={(e) => {
@@ -320,7 +321,7 @@ Post.propTypes = {
     }),
 
     location: PropTypes.shape({
-      countyCode: PropTypes.string.isRequired,
+      countryCode: PropTypes.string.isRequired,
       latitude: PropTypes.number,
       longitude: PropTypes.number,
     }).isRequired,

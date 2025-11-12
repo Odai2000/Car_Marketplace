@@ -9,7 +9,7 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   width: max(36rem, 75vw);
-  height: 48rem;
+  /* height: 48rem; */
   max-width: 90vw;
 
 }
@@ -75,9 +75,8 @@
 @media (min-width: 768px) {
   .PostSkeleton {
     flex-direction: row;
-    min-width: min(55rem, 55vw);
-    max-width:68rem;
-    height: 20rem;
+    width: max(42rem, 65vw);
+    height: 18.5rem;
   }
 
   .PostSkeleton .post-details {
@@ -107,9 +106,4 @@
     height: 100%;
     padding-top: 0%;
   }
-
-
-
-
-
 }

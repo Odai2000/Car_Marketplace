@@ -9,7 +9,7 @@ const AuthProvider = ({ children }) => {
   const { config } = useConfig();
 
   const [persist, setPersist] = useState(
-    JSON.parse(localStorage.getItem("persist")) || false
+    JSON.parse(localStorage.getItem("persist")) || true
   );
 
   const login = async (username, password) => {
@@ -33,8 +33,10 @@ const AuthProvider = ({ children }) => {
 
       const data = await response.json();
 
+      if (!data?.accessToken || !data?.userData)
+        throw new Error("Failed to login.");
       setAuth({
-        accessToken: data.accessToken,
+        accessToken: data?.accessToken,
         roles: data.userData?.roles || [],
         userData: data.userData || [],
       });
@@ -47,26 +49,34 @@ const AuthProvider = ({ children }) => {
   };
 
   const googleLogin = async () => {
-    const handleGoogleResponse = async (googleResponse) => {
+    try {
+          const handleGoogleResponse = async (googleResponse) => {
       fetch(`${config.serverURL}/user/google-login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ credential: googleResponse.credential }),
       })
         .then((response) => response.json())
-        .then((data) =>
+        .then((data) => {
+          if (!data?.accessToken || !data?.userData)
+            throw new Error("Failed to login.");
+
           setAuth({
             accessToken: data.accessToken,
             roles: data.userData?.roles || [],
             userData: data.userData || [],
-          })
-        );
+          });
+        });
     };
     google.accounts.id.initialize({
       client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
       callback: handleGoogleResponse,
     });
     google.accounts.id.prompt();
+    } catch (error) {
+      console.error(error)
+    }
+
   };
 
   const register = async (firstName, lastName, email, username, password) => {

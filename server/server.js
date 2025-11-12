@@ -60,12 +60,13 @@ const corsOptions = {
   methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
   credentials: true,
 };
+app.use(cors(corsOptions));
 
 // open access for public files streaming
 const openCors = cors({ origin: true });
 app.use("/files", openCors, require("./routes/file"));
 
-app.use(bodyParser.json(), cookieParser(), cors(corsOptions));
+app.use(bodyParser.json(), cookieParser());
 
 //Routes
 app.use("/", require("./routes/root"));

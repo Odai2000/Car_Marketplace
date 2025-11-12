@@ -96,8 +96,3 @@
   color: #fff;
 }
 
-
-.btn.icon:hover{
-  color: var(--primary);
-  border-radius: 124px;
-}

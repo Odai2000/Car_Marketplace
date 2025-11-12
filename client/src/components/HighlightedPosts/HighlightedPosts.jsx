@@ -18,7 +18,7 @@ const HighlightedPosts = () => {
       <Carousal gap="2em" scrollBy={225}>
         {!isLoading ? (
           posts.map((post) => (
-            <Post key={post.id} data={post} />
+            <Post key={post._id} data={post} />
           ))
         ) : (
           Post.skeletons(12)

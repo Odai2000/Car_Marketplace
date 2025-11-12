@@ -10,7 +10,7 @@
   overflow: hidden;
   width: max(36rem, 75vw);
 
-  height: 48rem;
+  /* height: 48rem; */
   max-width: 90vw;
 }
 
@@ -191,9 +191,8 @@
 @media (min-width: 768px) {
   .post {
     flex-direction: row;
-    min-width: min(55rem, 55vw);
-    max-width:68rem;
-    height: 20rem;
+    width: max(42rem, 65vw);
+    height: 18rem;
   }
 
   .post .icon {

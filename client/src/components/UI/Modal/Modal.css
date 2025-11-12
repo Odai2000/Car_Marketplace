@@ -11,6 +11,7 @@
   z-index: 99;
   overflow-x: hidden;
   background-color: rgba(0, 0, 0, 0.2);
+  pointer-events: auto;
 }
 
 .Modal header {

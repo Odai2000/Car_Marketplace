@@ -7,6 +7,8 @@ import { useLocation } from "react-router-dom";
 import useConfig from "../../../hooks/useConfig";
 import useWindowSize from "../../../hooks/useWindow";
 import Select from "../../UI/FormControls/Select";
+import Skeleton from "react-loading-skeleton";
+import useLockBody from "../../../hooks/utility/useLockBody";
 
 const PostSearchResult = () => {
   const [posts, setPosts] = useState([]);
@@ -20,9 +22,11 @@ const PostSearchResult = () => {
 
   const query = new URLSearchParams(search);
 
+   useLockBody((isSmallScreen&&showFilter))
+
   const [sortBy, setSortBy] = useState(query.get("sortBy") || "newest");
   const [limit, setLimit] = useState(Number(query.get("limit")) || 15);
-  const [page, setPage] = useState(Number(query.get("page")) || 1);
+  const [page, setPage] = useState(Number(query.get("page")) || 0);
 
   const make = query.get("make");
   const model = query.get("model");
@@ -57,6 +61,7 @@ const PostSearchResult = () => {
     }).toString();
 
     setPosts([]);
+    setTotalPosts(null)
     fetch(`${config.serverURL}/post?${queryParams}`, {
       method: "GET",
       headers: {
@@ -91,6 +96,7 @@ const PostSearchResult = () => {
     setShowFilter(!showFilter);
   };
 
+  
   return (
     <>
       <div className="PostSearchResult">
@@ -107,7 +113,7 @@ const PostSearchResult = () => {
             <div className="left flex">
               <span
                 style={{ color: "#aaa" }}
-              >{`${totalPosts} posts found`}</span>{" "}
+              >{totalPosts?`${totalPosts} posts found`:<Skeleton style={{width:'12ch'}}/>}</span>
               <Select
                 variant={"inline"}
                 value={sortBy}
@@ -134,7 +140,7 @@ const PostSearchResult = () => {
           {posts?.length > 0
             ? posts.map((post) => <Post key={post._id} data={post} />)
             : Post.skeletons(15)}
-          <div
+          {posts?.length>0?<div
             className="pagination-controls"
             style={{
               display: "flex",
@@ -179,7 +185,7 @@ const PostSearchResult = () => {
                   );
               })}
             </div>
-          </div>
+          </div>:''}
         </div>
       </div>
     </>

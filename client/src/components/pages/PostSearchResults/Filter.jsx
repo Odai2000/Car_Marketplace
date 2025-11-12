@@ -7,7 +7,7 @@ import Select from "../../UI/FormControls/Select";
 import { FaX } from "react-icons/fa6";
 
 const Filter = ({ query, handleToggle, isSmallScreen }) => {
-  const {carSpecsData, loading } = useAppData();
+  const {carSpecsData } = useAppData();
   const [selectedMake, setSelectedMake] = useState({});
 
   const [make, setMake] = useState(query.get("make") || "");
@@ -88,9 +88,27 @@ const Filter = ({ query, handleToggle, isSmallScreen }) => {
     setSelectedMake(makeData);
   };
 
-  const handlesubmit = (e) => {
-    e.preventDefault();
-    const query = new URLSearchParams({
+  // const handlesubmit = (e) => {
+  //   e.preventDefault();
+  //   const query = new URLSearchParams({
+  //     make,
+  //     model,
+  //     yearMin,
+  //     yearMax,
+  //     bodyType,
+  //     mileageMin,
+  //     mileageMax,
+  //     hpMin,
+  //     hpMax,
+  //     priceMin,
+  //     priceMax,
+  //   });
+
+  //   navigate(`/posts?${query}`);
+  // };
+
+  useEffect(()=>{
+      const query = new URLSearchParams({
       make,
       model,
       yearMin,
@@ -105,7 +123,18 @@ const Filter = ({ query, handleToggle, isSmallScreen }) => {
     });
 
     navigate(`/posts?${query}`);
-  };
+  },[   make,
+      model,
+      yearMin,
+      yearMax,
+      bodyType,
+      mileageMin,
+      mileageMax,
+      hpMin,
+      hpMax,
+      priceMin,
+      priceMax
+  ])
 
   useEffect(() => {
     if (query.get("make")) {
@@ -125,14 +154,11 @@ const Filter = ({ query, handleToggle, isSmallScreen }) => {
     }
   }, [query, carSpecsData?.makes]);
 
-  if (loading) {
-    console.log("loading");
-    return <div>Loading.....</div>;
-  }
+
   return (
     <>
       <div className="Filter card">
-       {isSmallScreen && <Button styleName="cross" onClick={handleToggle}>
+       {isSmallScreen && <Button variant="icon" style={{width:"fit-content",alignSelf: "end"}}  onClick={handleToggle}>
           <FaX />
         </Button>}
         <h2>Filter</h2>
@@ -236,9 +262,9 @@ const Filter = ({ query, handleToggle, isSmallScreen }) => {
             options={priceOptions}
             defaultOption={{ label: "To", value: "" }}
           />
-          <Button variant="primary" styleName="col-2" onClick={handlesubmit}>
+          {/* <Button variant="primary" styleName="col-2" onClick={handlesubmit}>
             Filter
-          </Button>
+          </Button> */}
         </form>
       </div>
     </>
