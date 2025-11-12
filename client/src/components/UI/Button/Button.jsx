@@ -4,7 +4,7 @@ function Button({
   styleName,
   id,
   type = "button",
-  variant,
+  variant = "secondary",
   destructive,
   onClick,
   children,

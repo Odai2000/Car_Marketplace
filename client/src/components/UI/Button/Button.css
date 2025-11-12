@@ -30,7 +30,7 @@
 }
 
 .btn.secondary {
-  background-color: transparent;
+  background-color: #fff;
   color: var(--primary);
   border: 1px solid var(--primary);
 }

@@ -47,7 +47,7 @@ const Carousel = ({
       <div
         className={`carousel-container ${single || thumbnails ? "single" : ""}`}
       >
-        <Button styleName="carousel-btn" onClick={previous}>
+        <Button styleName="carousel-btn" variant="icon" onClick={previous}>
           <FaAngleLeft />
         </Button>
         <div
@@ -67,7 +67,7 @@ const Carousel = ({
             </div>
           )}
         </div>
-        <Button styleName="carousel-btn" style={{ right: 0 }} onClick={next}>
+        <Button styleName="carousel-btn" variant="icon" style={{ right: 0 }} onClick={next}>
           <FaAngleRight />
         </Button>
       </div>

@@ -77,6 +77,9 @@ const userSchema = new mongoose.Schema(
 userSchema.virtual("name").get(function () {
   return `${this.firstName} ${this.lastName}`;
 });
+userSchema.virtual("profileImageUrl").get(function () {
+  return this.profileImageId?`${process.env.SERVER_URL}/files/${this.profileImageId}`:null;
+});
 userSchema.virtual("ratingCount").get(function () {
   return this.ratings?.length;
 });

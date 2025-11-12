@@ -9,13 +9,17 @@
 }
 
 .PostPage header {
-  display: flex;
+  grid-column: 1/3;
+  grid-row: 2/3;
+  display: grid;
+  grid-template-columns: auto auto;
   background-color: #fff;
-  flex-direction: row;
   justify-content: space-between;
   align-items: center;
   padding: 0.75em;
 }
+
+.PostPage header {}
 
 .PostPage header .meta-data {
   display: flex;
@@ -121,6 +125,13 @@
   border-radius: 1rem 1rem 0 0;
 }
 
+.PostPage .bids .bids-interface .list.full-border {
+
+  border-left: 1px solid var(--primary);
+  border-bottom: 1px solid var(--primary);
+  border-radius: 1rem;
+}
+
 .PostPage .bids .bids-interface .list .no-bids {
   height: 100%;
   width: 100%;
@@ -144,6 +155,18 @@
 
 .PostPage .bids .bids-interface .bids-control input {
   background-color: #fff;
+}
+
+.PostPage .bids .bids-interface .bids-control .bid-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 1em;
+}
+
+.PostPage .bids .bids-interface .bids-control .bid-options .option:hover {
+  transition: transform 0.5s;
+  transform: translateY(-2px);
 }
 
 .PostPage .bids .bid {
@@ -178,17 +201,19 @@
 .PostPage .comments {
   display: flex;
   flex-direction: column;
-  gap: 0.25em;
+  gap: 1em;
+
 }
 
 .PostPage .comments .comment {
   display: grid;
-  grid-template-columns: repeat(3, fit-content(10rem));
+  grid-template-columns: repeat(3, fit-content(100%));
 
   grid-template-rows: repeat(2, fit-content(4rem));
   gap: 0.5em;
   flex-wrap: nowrap;
   align-items: center;
+  font-size: 1em;
 }
 
 .PostPage .comments .comment .user-profile-image {
@@ -202,9 +227,8 @@
   overflow: hidden;
 }
 
-.PostPage .comments .comment .user-name {
-  grid-column: 2/4;
-  grid-row: 1/2;
+.PostPage .comments .comment .date {
+/* font-size:0.8em; */
   color: #888;
 }
 
@@ -213,19 +237,52 @@
   grid-row: 2/3;
 }
 
+.PostPage .comments .comment .text {
+  grid-column: 2/4;
+  grid-row: 2/3;
+}
+
+.PostPage .comments .comment-box {
+  height: fit-content;
+  flex-direction: column;
+  align-items: end;
+  display: flex;
+  gap: 1em;
+  border: 1px solid var(--primary);
+  border-radius: 2em;
+  padding: 1em;
+}
+
+.PostPage .comments .comment-box .comment-control {
+  display: none;
+}
+
+.PostPage .comments .comment-box>textarea {
+  width: 100%;
+  height: 1rem;
+  resize: none;
+  outline: none;
+  font-size: 1rem;
+}
+
+.PostPage .comments .comment-box>textarea:focus,
+.PostPage .comments .comment-box>textarea:not(:empty) {
+  border: none;
+  outline: none;
+  height: 4em;
+}
+
+.PostPage .comments .comment-box>textarea:focus+.comment-control,
+.PostPage .comments .comment-box>textarea:not(:empty)+.comment-control {
+  display: block;
+}
+
 @media (min-width: 768px) {
   .PostPage>.container {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
 
     grid-template-rows: repeat(7, minmax(5rem, auto));
-  }
-
-  .PostPage header {
-    grid-column: 1/3;
-    grid-row: 2/3;
-    display: grid;
-    grid-template-columns: auto auto;
   }
 
   .PostPage section {
@@ -276,7 +333,7 @@
     padding: 2rem;
     flex-grow: 1;
     border-radius: 1rem 0 0 1rem;
-    border-right: none;
+    /* border-right: none; */
   }
 
   .PostPage .bids .bids-interface .bids-control {

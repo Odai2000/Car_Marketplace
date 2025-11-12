@@ -223,7 +223,7 @@ const Post = ({ data = null }) => {
             e.stopPropagation();
           }}
         >
-          <PiMapPinThin size="1.5em"/>
+          <PiMapPinThin size="1.5rem"/>
           <span
             className="address"
             onClick={(e) => {

@@ -15,14 +15,14 @@ const getPostById = asyncHandler(async (req, res) => {
 
     populateFields.push({
       path: "user",
-      select: "firstName lastName name profileImageId ratings reputation",
+      select: "firstName lastName name profileImageId profileImageUrl ratings reputation",
     });
 
     if (include?.includes("bids")) {
       populateFields.push({
         path: "bids",
         options: { sort: { createdAt: -1 } },
-        populate: { path: "user", select: "firstName lastName name" },
+        populate: { path: "user", select: "firstName lastName name profileImageId profileImageUrl" },
       });
     }
 
@@ -33,7 +33,7 @@ const getPostById = asyncHandler(async (req, res) => {
         options: { sort: { createdAt: -1 }, limit: 10 },
         populate: {
           path: "user",
-          select: "firstName lastName name profileImageId",
+          select: "firstName lastName name profileImageId profileImageUrl",
         },
       });
     }
@@ -86,19 +86,10 @@ const getPostById = asyncHandler(async (req, res) => {
     }
 
     // for user profile image
-    postObject.user.profileImageUrl = `${process.env.SERVER_URL}/files/${postObject?.user?.profileImageId}`;
+
     delete postObject?.user?.profileImageId;
 
-    // for comments
-    const comments = postObject.comments?.map((comment) => {
-      if (comment?.user?.profileImageId) {
-        comment.user.profileImageUrl = `${process.env.SERVER_URL}/files/${comment.user.profileImageId}`;
-        delete comment.user.profileImageId;
-      }
-      return comment;
-    });
 
-    postObject.comments = comments;
 
     return res.status(200).json(postObject);
   } catch (error) {

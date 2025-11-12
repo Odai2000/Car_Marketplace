@@ -32,6 +32,7 @@ const PostPage = () => {
   const [rating, setRating] = useState(0);
   const [bid, setBid] = useState("");
   const [comment, setComment] = useState("");
+  const [commentTextFocus, setCommentTextFocus] = useState(false);
   const [data, setData] = useState({});
 
   const { auth, setAuth } = useAuth();
@@ -84,8 +85,9 @@ const PostPage = () => {
   const isUser = auth?.roles?.includes("USER");
   const isSaved = auth?.userData?.savedPosts?.includes(data?._id);
   const handleMessage = () => {
-    navigate(`/chat/${data?.user_id?._id}`);
+    navigate(`/chat/${data?.user?._id}`);
   };
+
 
   const handleSave = async () => {
     try {
@@ -164,8 +166,8 @@ const PostPage = () => {
     try {
       const amount = Number(bid);
       if (!auth?.userData) {
-        openLogin()
-        return
+        openLogin();
+        return;
       }
       if (!amount || isNaN(amount) || amount <= 0) {
         showToast("Please enter a valid bid amount", "error");
@@ -268,7 +270,7 @@ const PostPage = () => {
             )}
           </section>
           <header>
-            <h1>{data?.title || <Skeleton />}</h1>
+            <h1>{data?.title || <Skeleton width='40ch' />}</h1>
             <h2 className="">${data?.price?.toLocaleString()}</h2>
             <div className="meta-data">
               <span className="date">
@@ -425,38 +427,65 @@ const PostPage = () => {
           <section className="bids">
             <h2>Bids</h2>
             <div className="bids-interface">
-              <div className="list flex-col gap-1em">
+              <div className={`list flex-col gap-1em ${isOwner?"full-border":''}`}>
                 {bids?.length ? (
                   bids.map((bid) => (
                     <div key={bid?._id} className="bid">
-                      <div className="left flex gap-05em" style={{alignItems:"center"}}>
+                      <div
+                        className="left flex gap-05em"
+                        style={{ alignItems: "center" }}
+                      >
                         <div className="user-profile-image">
                           {bid?.user?.profileImageUrl ? (
                             <img src={bid.user.profileImageUrl} />
                           ) : (
                             <DefaultProfile size="xs" round />
                           )}
-                         
-                        </div> <div className="user-name">{bid?.user?.name}</div>
+                        </div>
+                        <div className="user-name">{bid?.user?.name}</div>
+                         <div className="actions">{(isOwner && <Button variant ="link" onClick={()=> navigate(`/chat/${bid?.user?._id}`)}>Chat</Button>)}</div>
                       </div>
                       <div className="right">
-                     
                         <div className="amount">
                           ${bid?.amount?.toLocaleString()}
                         </div>
                       </div>
-                    
                     </div>
                   ))
                 ) : (
-                  <div className="no-bids"><img src="../../../../dist/assets/hour-glass.svg" style={{width:"16rem",height:"12rem"}}/>
-                  <h1 style={{color:"var(--primary)",fontWeight: "500"}}>No bids yet...</h1></div>
+                  <div className="no-bids">
+                    <img
+                      src="../../../../dist/assets/hour-glass.svg"
+                      style={{ width: "16rem", height: "12rem" }}
+                    />
+                    <h1 style={{ color: "var(--primary)", fontWeight: "500" }}>
+                      No bids yet...
+                    </h1>
+                  </div>
                 )}
               </div>
-              <div className="bids-control footer flex gap-05em">
-                <h4 className="biggest-bid"style={{letterSpacing:'0.1em'}}>
-                  Biggest bid: {`$${bids[0]?.amount?.toLocaleString() || 0}`}
-                </h4>
+             { !isOwner && <div className="bids-control footer flex gap-05em">
+                     <h2 className="col-3">Offer a price:</h2>
+                <span className="biggest-bid" style={{fontSize:"1.25em" }}>
+                  Highiest bid: {`$${bids[0]?.amount?.toLocaleString() || 0}`}
+                </span>
+                <div className="bid-options">
+             
+                  {  [0.25, 0.5, 0.75, 1.25, 1.5, 1.75].map((x, i) => {
+                    return (
+                      <Button
+                        styleName="option"
+                        key={`opt-${i}`}
+                        variant="secondary round"
+                        onClick={() => {
+                          setBid((data?.price * x));
+                        }}
+                      >
+                        {(data?.price *x).toLocaleString()}
+                      </Button>
+                    );
+                  })}
+                </div>
                 <NumericInput
                   value={bid}
                   onChange={setBid}
@@ -476,26 +505,28 @@ const PostPage = () => {
                     Make offer
                   </Button>
                 </NumericInput>
-              </div>
+              </div>}
             </div>
           </section>
           <section className="comments">
             <h2>Comments</h2>
 
-            <div className="footer flex-col gap-05em">
+            <div className="comment-box">
               <textarea
+              className={`comment-textarea ${commentTextFocus?"focused":''}`}
                 value={comment}
                 onChange={(e) => {
                   setComment(e.target.value);
                 }}
+                
                 placeholder="Enter comment..."
-                cols={2}
-                rows={3}
-                style={{ padding: "1em" }}
+                // cols={2}
+                // rows={3}
               />
-              <Button variant="primary" onClick={handleComment}>
+              <div className="comment-control">    <Button variant="primary" onClick={handleComment}>
                 Comment
-              </Button>
+              </Button></div>
+          
             </div>
             <div className="list flex-col gap-1em">
               {comments?.length ? (
@@ -508,7 +539,10 @@ const PostPage = () => {
                         <DefaultProfile size="xs" round />
                       )}
                     </div>
-                    <div className="user-name">{comment?.user?.name}</div>
+                  <div className="comment-header flex gap-05em">  <div className="user-name">{comment?.user?.name} </div>
+                  <div className="date">{`posted on ${(comment?.createdAt &&
+                  new Date(comment?.createdAt).toLocaleDateString())}`}</div></div>
+                  
 
                     <div className="text">{comment?.text}</div>
                   </div>

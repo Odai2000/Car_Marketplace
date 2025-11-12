@@ -43,7 +43,7 @@
   position: absolute;
   top: 50%;
   transform: translate(0, -50%);
-  background-color: transparent;
+  background-color: rgba(0, 0, 0, 0.2);
   color: #fff;
   border-radius: 0.25em;
   transition: background-color 300ms;
