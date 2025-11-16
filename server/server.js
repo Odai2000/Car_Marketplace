@@ -1,3 +1,5 @@
+const notificationSocket = require("./sockets/notificationSocket");
+const Notification = require("./models/Notification");
 require("dotenv").config();
 const PORT = process.env.PORT || 3500;
 
@@ -17,6 +19,7 @@ app.set("trust proxy", true);
 const chatSocket = require("./sockets/chatSocket");
 const authenticateSocket = require("./middleware/authenticateSocket");
 const { Server } = require("socket.io");
+
 const io = new Server(server, {
   cors: {
     origin: [process.env.CLIENT_URL],
@@ -29,7 +32,19 @@ io.use(authenticateSocket);
 io.on("connection", (socket) => {
   console.log("a user connected");
   chatSocket(io, socket);
+  notificationSocket(io, socket);
 });
+
+io.sendNotification = async (notification) => {
+  try {
+    await Notification.create(notification)
+    io.to(notification.user_id.toString()).emit("receive-notification", notification);
+  } catch (error) {
+    console.error(error);
+  }
+};
+app.set("io",io);
+
 
 //DB
 const { default: mongoose } = require("mongoose");
@@ -43,7 +58,13 @@ const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
 
 //CORS
 const cors = require("cors");
+
 const whitelist = [process.env.CLIENT_URL];
+
+// open access for public files streaming
+// should always be applied before main cor options
+const openCors = cors({ origin: true });
+app.use("/files", openCors, require("./routes/file"));
 
 const corsOptions = {
   origin: function (origin, callback) {
@@ -62,10 +83,6 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-// open access for public files streaming
-const openCors = cors({ origin: true });
-app.use("/files", openCors, require("./routes/file"));
-
 app.use(bodyParser.json(), cookieParser());
 
 //Routes
@@ -77,6 +94,8 @@ app.use("/chat", require("./routes/chat"));
 app.use("/bid", require("./routes/bid"));
 app.use("/comment", require("./routes/comment"));
 app.use("/cron", require("./routes/cron"));
+app.use("/notification", require("./routes/notification"));
+
 mongoose.connection.once("open", () => {
   server.listen(PORT, () => console.log(`server running on port ${PORT}`));
 });

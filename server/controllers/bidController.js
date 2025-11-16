@@ -73,7 +73,9 @@ const createBid = asyncHandler(async (req, res) => {
     if (!bid) {
       return res.status(400).json({ message: "Invalid Data." });
     }
-
+    //send notification
+    const io = req.app.get("io");
+    io.sendNotification({message:`${bid.user.name} offered $${bid.amount.toLocaleString()} for your vehicle.`,user_id:post.user._id,link:`/post/${post._id}`});
     return res.status(201).json({ message: "Bid created.", bid: populatedBid });
   } catch (error) {
     console.log(error);

@@ -16,7 +16,6 @@ const streamFile = asyncHandler(async (req, res) => {
   upstream.headers.forEach((value, key) => {
     res.setHeader(key, value);
   });
-
   upstream.body.pipe(res);
 });
 

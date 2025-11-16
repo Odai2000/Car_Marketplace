@@ -1,4 +1,5 @@
 const Comment = require("../models/Comment");
+const Post = require("../models/Post");
 const asyncHandler = require("express-async-handler");
 
 const getComments = asyncHandler(async (req, res) => {
@@ -54,13 +55,23 @@ const createComment = asyncHandler(async (req, res) => {
         select: "firstName lastName name profileImageId",
       })
       .exec();
-
+const post =await Post.findById(post_id).populate({
+  path:"user",
+   select: "firstName lastName name",
+}).exec()
+    const io = req.app.get("io");
+    if(!io) throw new error("io failed.")
+    io.sendNotification({
+      message: `${PopulatedComment.user.name} commented on your post: "${comment.text}"`,
+      user_id: post.user._id,
+      link: `/post/${post._id}`,
+    }); 
     return res
       .status(201)
       .json({ message: "Comment created.", comment: PopulatedComment });
   } catch (error) {
     console.log(error);
-    return res.status(500).json(error);
+    return res.status(500).json("Unexcepted server error.");
   }
 });
 

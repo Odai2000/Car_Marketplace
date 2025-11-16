@@ -12,9 +12,11 @@ const folderId = process.env.PCLOUD_FOLDER_ID;
 const cloudStorage = new CloudStorageManager("pcloud");
 
 // auxiliary functions
-const getProfileImageUrl = (profileImageId)=>{
- return profileImageId? `${process.env.SERVER_URL}/files/${profileImageId}`:null;
-} 
+const getProfileImageUrl = (profileImageId) => {
+  return profileImageId
+    ? `${process.env.SERVER_URL}/files/${profileImageId}`
+    : null;
+};
 
 // Route functions
 
@@ -35,8 +37,6 @@ const getUser = asyncHandler(async (req, res) => {
 
   if (!user) return res.status(400).json({ message: "No user found" });
 
-  user.profileImageUrl = getProfileImageUrl(profileImageId);
-  delete user.profileImageId;
   res.status(200).json(user);
 });
 
@@ -44,7 +44,6 @@ const getUserPersonalData = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id).select("-password").lean();
 
   if (!user) return res.status(400).json({ message: "No user found" });
-  user.profileImageUrl = getProfileImageUrl(profileImageId);
   res.status(200).json(user);
 });
 
@@ -207,7 +206,9 @@ const loginUser = asyncHandler(async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    const user = await User.findOne({ username }).lean();
+    const user = await User.findOne({
+      username,
+    }).lean();
 
     if (!user) return res.status(404).send("Username not found.");
 
@@ -484,7 +485,7 @@ const updateProfileImage = asyncHandler(async (req, res) => {
     user.profileImageId = await cloudStorage.upload(file, folderId);
     await user.save();
 
-    const profileImageUrl =  getProfileImageUrl(user.profileImageId);
+    const profileImageUrl = getProfileImageUrl(user.profileImageId);
 
     res.status(200).json({ profileImageUrl: profileImageUrl });
   } catch (error) {

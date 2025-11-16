@@ -89,8 +89,6 @@ const getPostById = asyncHandler(async (req, res) => {
 
     delete postObject?.user?.profileImageId;
 
-
-
     return res.status(200).json(postObject);
   } catch (error) {
     console.log(error);
@@ -213,7 +211,6 @@ const getPosts = asyncHandler(async (req, res) => {
     });
   }
 else res.status(200).json(posts); 
-    
 
 });
 

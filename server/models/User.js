@@ -93,7 +93,6 @@ userSchema.pre("save", function (next) {
   next();
 });
 
-
 userSchema.set("toJSON", { virtuals: true });
 userSchema.set("toObject", { virtuals: true });
 module.exports = mongoose.model("User", userSchema);

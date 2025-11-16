@@ -96,13 +96,16 @@ nav.open > ul > li {
 .menu-toggle {
 }
 
-.op {
+.nav-icons {
   display: block;
   height: 100%;
-  width: 1.5em;
-  color: white;
+  /* width: 1.5em; */
+  color: var(--primary);
 }
+.nav-wrapper.style-transparent .nav-icons {
 
+  color: #fff;
+}
 .navBar-rightside {
   height: fit-content;
   display: flex;
@@ -121,9 +124,25 @@ nav.open > ul > li {
 cursor:pointer;
 } 
 
+.notification-li{
+max-width: 60ch;
+  width:100%;
+padding: 1em !important;
+color: #000;
+
+}
+.notification-li .text{
+  width:100%;
+display:block;
+overflow: hidden;
+text-overflow: ellipsis;
+text-wrap: nowrap;
+}
+.notification-li.read{
+background-color: #ddd;
+}
+
 @media (min-width: 700px) {
-  nav .btn-group {
-  }
 
   nav {
     display: block;

@@ -16,6 +16,7 @@ const useAuthFetch = () => {
   };
 
   const authFetch = async (url, options = {}) => {
+    try {
     let accessToken = auth?.accessToken;
 
     if (!isTokenValid(accessToken)) {
@@ -42,6 +43,10 @@ const useAuthFetch = () => {
     }
 
     return res;
+      
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   return authFetch;

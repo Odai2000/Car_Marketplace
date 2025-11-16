@@ -6,7 +6,7 @@ const chatSocket = (io, socket) => {
         try {
         const chat = await Chat.findById(chat_id).lean();
 
-        if (!chat.participants.map(id=>id.toString()).includes(socket.user_id)){
+        if (!chat.participants.map(id=>id.toString()).includes(socket88.user_id)){
           return socket.emit("error", "Unauthorized access to room.");
         }
         socket.join(chat_id)
