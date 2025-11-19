@@ -10,7 +10,7 @@
   padding: 0.5em 1em;
 }
 
-.nav-wrapper.scrolled{
+.nav-wrapper.scrolled {
   position: fixed;
 }
 
@@ -22,12 +22,15 @@
 .nav-wrapper.style-transparent {
   background-color: transparent;
 }
+
 .nav-wrapper.style-transparent li a {
   color: #fff;
 }
-.navBar-rightside > .btn.secondary {
+
+.navBar-rightside>.btn.secondary {
   color: var(--primary);
 }
+
 .nav-container {
   display: flex;
   justify-content: space-between;
@@ -43,7 +46,7 @@ nav {
   height: 100%;
 }
 
-nav > ul {
+nav>ul {
   height: 100%;
   display: flex;
   justify-content: space-around;
@@ -51,7 +54,7 @@ nav > ul {
   padding: 0 1em;
 }
 
-nav > ul > li {
+nav>ul>li {
   height: 100%;
   display: flex;
   align-items: center;
@@ -59,12 +62,12 @@ nav > ul > li {
   color: black;
 }
 
-.nav > ul > li a {
+.nav>ul>li a {
   font-weight: 900;
   color: white;
 }
 
-nav > ul > li:hover {
+nav>ul>li:hover {
   background-color: rgba(0, 0, 0, 0.1);
   color: white;
 }
@@ -76,14 +79,14 @@ nav.open {
   right: 0;
 }
 
-nav.open > ul {
+nav.open>ul {
   flex-direction: column;
   justify-content: flex-start;
   height: 100vh;
   background-color: white;
 }
 
-nav.open > ul > li {
+nav.open>ul>li {
   width: 100%;
   display: flex;
   padding: 2em;
@@ -93,8 +96,7 @@ nav.open > ul > li {
   border-bottom: 1px solid #a7a7a7;
 }
 
-.menu-toggle {
-}
+.menu-toggle {}
 
 .nav-icons {
   display: block;
@@ -102,10 +104,12 @@ nav.open > ul > li {
   /* width: 1.5em; */
   color: var(--primary);
 }
+
 .nav-wrapper.style-transparent .nav-icons {
 
   color: #fff;
 }
+
 .navBar-rightside {
   height: fit-content;
   display: flex;
@@ -113,33 +117,50 @@ nav.open > ul > li {
 }
 
 /* to replace later */
-.navBar-rightside .profile-image{
+.navBar-rightside .profile-image {
   height: 2.5em;
   width: 2.5em;
   border: 1px #ddd solid;
   border-radius: 100%;
   overflow: hidden;
-} 
-.navBar-rightside .profile-image:hover{
-cursor:pointer;
-} 
+}
 
-.notification-li{
-max-width: 60ch;
-  width:100%;
-padding: 1em !important;
-color: #000;
+.navBar-rightside .profile-image:hover {
+  cursor: pointer;
+}
+
+.notification-li {
+  justify-content: flex-start !important;
+  max-width: 60ch;
+  width: 100%;
+  padding: 1em !important;
+  color: #000;
+  border: 1px solid #bbb;
+}
+.notification-li .content {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
 
 }
-.notification-li .text{
-  width:100%;
-display:block;
-overflow: hidden;
-text-overflow: ellipsis;
-text-wrap: nowrap;
+.notification-li .profile-image {
+flex-shrink: 0;
 }
-.notification-li.read{
-background-color: #ddd;
+.notification-li .text {
+  width: 100%;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-wrap: nowrap;
+  max-width: 50ch;
+}
+.notification-li.read {
+  background-color: #ddd;
+}
+.notification-li .notification-control {
+align-self: flex-end;
+display: flex;
+gap:1em
 }
 
 @media (min-width: 700px) {
@@ -149,12 +170,12 @@ background-color: #ddd;
     position: static;
   }
 
-  nav > ul {
+  nav>ul {
     position: relative;
     flex-direction: row;
   }
 
-  nav > ul > li {
+  nav>ul>li {
     display: inline-block;
     font-size: 18px;
     padding: 0.75em;
@@ -162,16 +183,16 @@ background-color: #ddd;
     transition: background-color 0.4s ease-in-out;
   }
 
-  .nav > ul > li > a {
+  .nav>ul>li>a {
     color: var(--primary);
   }
-  
-  nav > ul > li:hover {
+
+  nav>ul>li:hover {
     cursor: pointer;
     background-color: var(--primary);
   }
 
-  .nav > ul > li:hover > a {
+  .nav>ul>li:hover>a {
     color: white;
   }
 

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import useAppData from "../../../../hooks/useAppData";
 import Input from "../../../UI/FormControls/Input";
 import Select from "../../../UI/FormControls/Select";
+import NumericInput from "../../../UI/FormControls/NumericInput/NumericInput";
 
 const CarInfoStep = ({
   formData,
@@ -191,14 +192,14 @@ const CarInfoStep = ({
         <option value="Fair">Fair</option>
         <option value="Salvage">Salvage</option>
       </Select>
-      <Input
+      <NumericInput
         type="text"
         name="mileage"
         value={formData.car.mileage}
-        onChange={(e) =>
+        onChange={(value) =>
           setFormData({
             ...formData,
-            car: { ...formData.car, [e.target.name]: e.target.value },
+            car: { ...formData.car, 'mileage': value },
           })
         }
         validationRules={{ required: true, maxLength: 8, numeric: true }}
@@ -206,14 +207,14 @@ const CarInfoStep = ({
         onValidationChange={(value) => handleValidateChange("mileage", value)}
       />
 
-      <Input
+      <NumericInput
         type="text"
         name="hp"
         value={formData.car.hp}
-        onChange={(e) =>
+        onChange={(value) =>
           setFormData({
             ...formData,
-            car: { ...formData.car, [e.target.name]: e.target.value },
+            car: { ...formData.car, 'hp': value },
           })
         }
         placeholder="HP"

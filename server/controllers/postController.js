@@ -30,7 +30,7 @@ const getPostById = asyncHandler(async (req, res) => {
       populateFields.push({
         path: "comments",
         match: { parent_id: null },
-        options: { sort: { createdAt: -1 }, limit: 10 },
+        options: { sort: { createdAt: -1 }, limit:  process.env.COMMENT_LIMIT?parseInt( process.env.COMMENT_LIMIT ):10 },
         populate: {
           path: "user",
           select: "firstName lastName name profileImageId profileImageUrl",

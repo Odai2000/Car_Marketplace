@@ -9,7 +9,7 @@ const notificationSchema = new mongoose.Schema(
     },
     message: {
       type: String,
-      required: true,
+      required: false,
     },
     hasRead: {
       type: Boolean,
@@ -18,6 +18,18 @@ const notificationSchema = new mongoose.Schema(
     link: {
       type: String,
     },
+    actor:{
+      user:{
+       type: mongoose.Types.ObjectId,
+       ref:"User",
+       default:null
+      },
+      action:{
+        type:String,
+        enum:['comment','reply','bid','rate'],
+        required:true
+      }
+    }
   },
   { timestamps: true }
 );

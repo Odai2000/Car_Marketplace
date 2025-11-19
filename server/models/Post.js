@@ -171,10 +171,12 @@ postSchema.methods.calculateScore = function () {
   const comments = this.comments?.length || 0;
   const reputation = this.user?.reputation || 0;
   const createdAt = this.createdAt;
+  
+  const hasNoPhotos = !this.imageIds.length()>0;
 
   const daysOld = Math.floor((Date.now() - new Date(createdAt)) / (1000 * 60 * 60 * 24));
 
-  return 100 + (views * 1) +(bids*20) + (comments * 10) + (reputation * 5 - 20*(reputation>0)) - (daysOld * 0.1);
+  return 100 + (views * 1) +(bids*20) + (comments * 10) + (reputation * 5 - 20*(reputation>0)) - (daysOld * 0.1) - (hasNoPhotos * 30);
 };
 
 postSchema.pre('save', async function (next) {

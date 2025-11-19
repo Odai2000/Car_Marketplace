@@ -110,3 +110,6 @@ header.home-header {
   gap:1em;
 }
 
+.round{
+  border-radius: 32px;
+}

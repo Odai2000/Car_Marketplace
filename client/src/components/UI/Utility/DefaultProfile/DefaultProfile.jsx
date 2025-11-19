@@ -1,20 +1,20 @@
 import "./DefaultProfile.css";
 import { FaUser } from "react-icons/fa6";
 
-const DefaultProfile = ({ size = "2em", round }) => {
+const DefaultProfile = ({ size = "2rem", round }) => {
   let value = size;
   switch (size) {
     case "lg":
-      value = "7em";
+      value = "7rem";
       break;
     case "md":
-      value = "5em";
+      value = "5rem";
       break;
     case "sm":
-      value = "3em";
+      value = "3rem";
       break;
     case "xs":
-      value = "1em";
+      value = "1.5rem";
       break;
     default:
       break;

@@ -11,18 +11,13 @@ const { OAuth2Client } = require("google-auth-library");
 const folderId = process.env.PCLOUD_FOLDER_ID;
 const cloudStorage = new CloudStorageManager("pcloud");
 
-// auxiliary functions
-const getProfileImageUrl = (profileImageId) => {
-  return profileImageId
-    ? `${process.env.SERVER_URL}/files/${profileImageId}`
-    : null;
-};
+
 
 // Route functions
 
 //get users
 const getAllUsers = asyncHandler(async (req, res) => {
-  const users = await User.find().select("-password").lean();
+  const users = await User.find().select("-password");
 
   if (!users.length) return res.status(400).json({ message: "No users found" });
 
@@ -33,7 +28,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
 const getUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params._id)
     .select("-password -savedPosts")
-    .lean();
+
 
   if (!user) return res.status(400).json({ message: "No user found" });
 
@@ -41,7 +36,7 @@ const getUser = asyncHandler(async (req, res) => {
 });
 
 const getUserPersonalData = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id).select("-password").lean();
+  const user = await User.findById(req.user._id).select("-password");
 
   if (!user) return res.status(400).json({ message: "No user found" });
   res.status(200).json(user);
@@ -149,7 +144,7 @@ const updateUser = asyncHandler(async (req, res) => {
     username: updatedUser.username,
     email: updatedUser.email,
     emailVert: updatedUser.emailVert,
-    profileImageId: updatedUser.profileImageId,
+    profileImageUrl: updatedUser.profileImageUrl,
     roles: updatedUser.roles,
   };
   res.status(200).json({ message: "User updated", userData: userData });
@@ -208,7 +203,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
     const user = await User.findOne({
       username,
-    }).lean();
+    })
 
     if (!user) return res.status(404).send("Username not found.");
 
@@ -233,7 +228,6 @@ const loginUser = asyncHandler(async (req, res) => {
       });
 
       if (!token) return res.status(500).send("server Error");
-      const profileImageUrl = getProfileImageUrl(user.profileImageId);
       const userData = {
         _id: user._id,
         firstName: user.firstName,
@@ -241,7 +235,7 @@ const loginUser = asyncHandler(async (req, res) => {
         username: user.username,
         email: user.email,
         emailVert: user.emailVert,
-        profileImageUrl: profileImageUrl,
+        profileImageUrl: user.profileImageUrl,
         roles: user.roles,
         savedPosts: user.savedPosts,
       };
@@ -322,7 +316,6 @@ const googleLogin = asyncHandler(async (req, res) => {
 
     if (!token) return res.status(500).send("server Error");
 
-    const profileImageUrl = getProfileImageUrl(user.profileImageId);
     const userData = {
       _id: user._id,
       firstName: user.firstName,
@@ -330,7 +323,7 @@ const googleLogin = asyncHandler(async (req, res) => {
       username: user.username,
       email: user.email,
       emailVert: user.emailVert,
-      profileImageUrl: profileImageUrl,
+      profileImageUrl: user.profileImageUrl,
       roles: user.roles,
       savedPosts: user.savedPosts,
     };
@@ -406,7 +399,6 @@ const savePost = asyncHandler(async (req, res) => {
 
     const updatedUser = await User.findById(user_id)
       .select("savedPosts")
-      .lean();
 
     res.status(200).json({ savedPosts: updatedUser.savedPosts });
   } catch (error) {
@@ -485,9 +477,8 @@ const updateProfileImage = asyncHandler(async (req, res) => {
     user.profileImageId = await cloudStorage.upload(file, folderId);
     await user.save();
 
-    const profileImageUrl = getProfileImageUrl(user.profileImageId);
 
-    res.status(200).json({ profileImageUrl: profileImageUrl });
+    res.status(200).json({ profileImageUrl: user.profileImageUrl });
   } catch (error) {
     console.error(error);
     res.status(500).json(error);
@@ -608,7 +599,6 @@ const refreshTheToken = asyncHandler(async (req, res) => {
       if (!user) res.status(403).send(`Invalid token: ${err}`);
 
       const accessToken = generateAccessToken(user);
-      const profileImageUrl = getProfileImageUrl(user.profileImageId);
 
       const userData = {
         _id: user._id,
@@ -619,7 +609,7 @@ const refreshTheToken = asyncHandler(async (req, res) => {
         emailVert: user.emailVert,
         roles: user.roles,
         savedPosts: user.savedPosts,
-        profileImageUrl: profileImageUrl,
+        profileImageUrl: user.profileImageUrl,
       };
 
       res.status(200).json({ accessToken: accessToken, userData: userData });

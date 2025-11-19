@@ -33,18 +33,22 @@ const getNotificationById = asyncHandler(async (req, res) => {
       .status(404)
       .json({ message: `No notification with id ${_id} was found.` });
 
-  return res.status(200).json( notification );
+  return res.status(200).json(notification);
 });
 
 const getNotificationsByUserId = asyncHandler(async (req, res) => {
-  const user_id  = req.user._id;
-  const { step } = req.query.step || 1;
+  const user_id = req.user._id;
+  const { page, limit } = req.query || 1;
 
-  if (!user_id) return res.status(400).json({ message: "Invalid inpuut."});
+  if (!user_id) return res.status(400).json({ message: "Invalid inpuut." });
+  const totalNotifications = await Notification.find({
+    user_id,
+  }).countDocuments({ user_id });
   const notifications = await Notification.find({ user_id })
+    .populate("actor.user", "firstName lastName name profileImageId profileImageUrl")
     .sort({ createdAt: -1 })
-    .limit(5)
-    .skip((step - 1) * 5)
+    .limit(limit)
+    .skip(page * limit)
     .exec();
 
   if (!(await User.findById(user_id)))
@@ -52,7 +56,7 @@ const getNotificationsByUserId = asyncHandler(async (req, res) => {
       .status(404)
       .json({ message: `No user with id: ${user_id} was found.` });
 
-  return res.status(200).json(notifications);
+  return res.status(200).json({ notifications, totalNotifications });
 });
 
 const deleteNotification = asyncHandler(async (req, res) => {
@@ -60,7 +64,7 @@ const deleteNotification = asyncHandler(async (req, res) => {
   const user_id = req.user._id;
 
   const notification = await Notification.findById(_id);
-  if (notification)
+  if (!notification)
     return res
       .status(404)
       .json({ message: `No notification with id: ${_id} was found.` });
@@ -68,7 +72,7 @@ const deleteNotification = asyncHandler(async (req, res) => {
   if (notification.user_id.toString() != user_id)
     return res.status(403).json({ message: "Forbidden action" });
 
-  const result = await Notification.remove({ _id });
+  const result = await Notification.deleteOne({ _id });
 
   if (!result)
     return res

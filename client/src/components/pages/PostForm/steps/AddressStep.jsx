@@ -224,7 +224,7 @@ const AddressStep = ({
         validationRules={{ required: false }}
         onValidationChange={(value) => handleValidateChange("address", value)}
       ></Autocomplete>
-
+{/* 
       {formData?.location?.longitude || formData?.location?.latitude ? (
         <>
           <h3 className="col-2">Coords</h3>
@@ -259,7 +259,7 @@ const AddressStep = ({
         </>
       ) : (
         ""
-      )}
+      )} */}
       <Button
         styleName={"geolocation-btn"}
         variant={"primary"}

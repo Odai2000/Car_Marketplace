@@ -13,12 +13,15 @@ import DefaultProfile from "../UI/Utility/DefaultProfile/DefaultProfile";
 import useAuthModal from "../../hooks/useAuthModal";
 import useConfig from "../../hooks/useConfig";
 import useAuthFetch from "../../hooks/useAuthFetch";
+import useToast from "../../hooks/useToast";
 import { PiBell, PiChat, PiSignOut, PiUser } from "react-icons/pi";
 
 function NavBar() {
   const [scrolled, setScrolled] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [hasUnreadNoti, setHasUnreadNoti] = useState(false);
+  const [notificationPagination, setNotificationPagination] = useState(0);
+  const [totalNotifications, setTotalNotifications] = useState(0);
 
   const { auth, logout } = useAuth();
   const navRef = useRef(null);
@@ -28,32 +31,127 @@ function NavBar() {
   const { openRegister, openLogin } = useAuthModal();
   const { config } = useConfig();
   const authFetch = useAuthFetch();
+  const { showToast } = useToast();
 
-const handleNotificationClick = async (noti) => {
-  try {
-    const response = await authFetch(
-      `${config.serverURL}/notification/${noti?._id.toString()}/read`,
-      { method: "PATCH" }
-    );
-
-    if(!response.ok) throw new Error("Failed to mark notification as read.")
-    const data = await response.json();
-
-    if (data?.notification) {
-      setNotifications((prev) =>
-        prev.map((n) =>
-          n._id === data.notification._id ? data.notification : n
-        )
+  
+  const handleNotificationClick = async (noti) => {
+    try {
+      const response = await authFetch(
+        `${config.serverURL}/notification/${noti?._id.toString()}/read`,
+        { method: "PATCH" }
       );
-    }
 
-    if (noti?.link) {
-      navigate(noti.link);
+      if (!response.ok) throw new Error("Failed to mark notification as read.");
+      const data = await response.json();
+
+      if (data?.notification) {
+        setNotifications((prev) =>
+          prev.map((n) =>
+            n._id === data.notification._id ? {...n,hasRead:data.notification.hasRead} : n
+          )
+        );
+      }
+
+      if (noti?.link) {
+        navigate(noti.link);
+      }
+    } catch (error) {
+      console.error(error);
     }
-  } catch (error) {
-    console.error( error);
-  }
-};
+  };
+
+  const handleReadNotification = async (_id) => {
+    try {
+      const response = await authFetch(
+        `${config.serverURL}/notification/${_id.toString()}/read`,
+        { method: "PATCH" }
+      );
+
+      if (!response.ok) throw new Error("Failed to mark notification as read.");
+      const data = await response.json();
+
+      if (data?.notification) {
+       setNotifications((prev) =>
+          prev.map((n) =>
+            n._id === data.notification._id ? {...n,hasRead:data.notification.hasRead} : n
+          )
+        );
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+    const handleDeleteNotification = async (_id) => {
+    try {
+      const response = await authFetch(
+        `${config.serverURL}/notification/${_id.toString()}`,
+        { method: "DELETE" }
+      );
+
+      if (!response.ok) throw new Error("Failed to delete notification.");
+
+        setNotifications((prev) =>
+          prev.filter((n) =>
+            n._id !== _id 
+          )
+        );
+      
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const loadNotifications = async () => {
+    try {
+      const response = await authFetch(
+        `${config.serverURL}/notification?page=${notificationPagination}&limit=${config?.notificationLimit}`
+      );
+      const nextPage = notificationPagination + 1;
+
+      const data = await response.json();
+
+      const processedNotifications = data.notifications.map((noti) => {
+        if (!noti.actor) return noti;
+        switch (noti.actor?.action) {
+          case "comment":
+            return {
+              ...noti,
+              message: (
+                <>
+                  <span>{noti.actor.user.name}</span> commented on your post.
+                </>
+              ),
+            };
+          case "reply":
+            return {
+              ...noti,
+              message: (
+                <>
+                  <span>{noti.actor.user.name}</span> replied on your post.
+                </>
+              ),
+            };
+          case "bid":
+            return {
+              ...noti,
+              message: (
+                <>
+                  <span>{noti.actor.user.name}</span> made you an offer.
+                </>
+              ),
+            };
+          default:
+            return noti;
+        }
+      });
+      setNotifications((prev) => [...prev, ...processedNotifications]);
+      setNotificationPagination(nextPage);
+      setTotalNotifications(data?.totalNotifications);
+    } catch (error) {
+      showToast("Failed to load comments", "error");
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -64,11 +162,9 @@ const handleNotificationClick = async (noti) => {
 
   //fetch user notifications
   useEffect(() => {
-    authFetch(`${config?.serverURL}/notification`)
-      .then((response) => response.json())
-      .then((data) => setNotifications(data));
-  }, [auth]);
-  
+    auth && loadNotifications();
+  }, []);
+
   // notification listener
   useEffect(() => {
     if (!socket.current && auth) {
@@ -100,7 +196,7 @@ const handleNotificationClick = async (noti) => {
         user_id: auth.userData._id,
       };
 
-      socket.current.connect(); 
+      socket.current.connect();
       console.log("socket: ", socket.current);
     }
   }, [auth]);
@@ -187,7 +283,7 @@ const handleNotificationClick = async (noti) => {
                     </Button>
                   }
                 >
-                  {notifications?.length > 0 ? (
+                  {(notifications?.length > 0 || totalNotifications>0 )? (
                     <IconContext.Provider value={{ color: "#000" }}>
                       {notifications?.map((noti, i) => {
                         if (!noti?.hasRead && !hasUnreadNoti)
@@ -195,14 +291,47 @@ const handleNotificationClick = async (noti) => {
 
                         return (
                           <li
-                            className={`notification-li ${noti?.hasRead?"read":''}`}
+                            className={`flex-col notification-li ${
+                              noti?.hasRead ? "read" : ""
+                            }`}
                             key={`noti-${i}`}
                             onClick={() => handleNotificationClick(noti)}
                           >
-                            <span className={`text`}>{noti?.message}</span>
+                            <div className="content flex gap-1em"> {noti?.actor?.user?.profileImageUrl ? (
+                              <div className="profile-image round" style={{overflow:"hidden",height:"2.25rem",width:"2.25rem"}}>
+                                {noti?.actor?.user?.profileImageUrl ? (
+                                  <img
+                                    src={noti?.actor?.user?.profileImageUrl}
+                                  />
+                                ) : (
+                                  <DefaultProfile size="xs" />
+                                )}
+                              </div>
+                            ) : (
+                              ""
+                            )}
+                            <span className={`text`}>{noti?.message}</span></div>
+                           
+                            <div className="notification-control"><Button variant="link" onClick={(e)=>{e.stopPropagation(); handleDeleteNotification(noti?._id)}}>delete</Button><Button variant="link" onClick={(e)=>{e.stopPropagation();handleReadNotification(noti?._id)}}>mark as read</Button></div>
                           </li>
                         );
                       })}
+                      {totalNotifications -
+                        notificationPagination * config?.notificationLimit >
+                        0 && (
+                        <div
+                          className="flex"
+                          style={{
+                            justifyContent: "center",
+                            alignItems: "center",
+                            padding: "1em",
+                          }}
+                        >
+                          <Button variant="link" onClick={loadNotifications}>
+                            Show more notifications
+                          </Button>
+                        </div>
+                      )}
                     </IconContext.Provider>
                   ) : (
                     ""

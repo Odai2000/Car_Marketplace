@@ -18,61 +18,66 @@ import { ConfigProvider } from "./context/ConfigProvider";
 import PostPage from "./components/pages/PostPage/PostPage";
 import { useEffect } from "react";
 import { AuthModalProvider } from "./context/AuthModalProvider";
+import { DialogProvider } from "./context/DialogProvider";
 
 function App() {
   const ScrollToTop = () => {
-  const { pathname } = useLocation();
+    const { pathname } = useLocation();
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
+    useEffect(() => {
+      window.scrollTo(0, 0);
+    }, [pathname]);
 
-  return null;
-};
+    return null;
+  };
   return (
     <ConfigProvider>
       <AppDataProvider>
         <AuthProvider>
-            <ToastProvider>
-          <AuthModalProvider>
-        
-            <ScrollToTop/>
-            <Routes>
-              <Route path="/">
-                <Route element={<PersistLogin />}>
-                  <Route element={<Layout />}>
-                    <Route index element={<Home />} />
-                    <Route path="posts" element={<PostSearchResult />} />
-                    <Route path="post/:_id" element={<PostPage />} />
-                    <Route path="user/:_id/" element={<UserAccount />} />
-                    <Route
-                      path="user/:_id/verify-email"
-                      element={<EmailVerification />}
-                    />
+          <ToastProvider>
+            <AuthModalProvider>
+              <DialogProvider>
+                <ScrollToTop />
+                <Routes>
+                  <Route path="/">
+                    <Route element={<PersistLogin />}>
+                      <Route element={<Layout />}>
+                        <Route index element={<Home />} />
+                        <Route path="posts" element={<PostSearchResult />} />
+                        <Route path="post/:_id" element={<PostPage />} />
+                        <Route path="user/:_id/" element={<UserAccount />} />
+                        <Route
+                          path="user/:_id/verify-email"
+                          element={<EmailVerification />}
+                        />
 
-                    <Route element={<ReqAuth allowedRoles={["USER"]} />}>
-                      <Route path="new" element={<PostForm />} />
-                      <Route
-                        path="edit"
-                        element={<PostForm isUpdating={true} />}
-                      />
-                      <Route path="me" element={<UserAccount />} />
+                        <Route element={<ReqAuth allowedRoles={["USER"]} />}>
+                          <Route path="new" element={<PostForm />} />
+                          <Route
+                            path="edit"
+                            element={<PostForm isUpdating={true} />}
+                          />
+                          <Route path="me" element={<UserAccount />} />
+                        </Route>
+                      </Route>
+
+                      <Route>
+                        <Route element={<ReqAuth allowedRoles={["USER"]} />}>
+                          <Route
+                            path="me/settings"
+                            element={<UserSettings />}
+                          />
+                          <Route path="chat" element={<Chat />} />
+                          <Route path="chat/:peer_id" element={<Chat />} />
+                        </Route>
+                      </Route>
                     </Route>
-                  </Route>
 
-                  <Route>
-                    <Route element={<ReqAuth allowedRoles={["USER"]} />}>
-                      <Route path="me/settings" element={<UserSettings />} />
-                      <Route path="chat" element={<Chat />} />
-                      <Route path="chat/:peer_id" element={<Chat />} />
-                    </Route>
+                    <Route path="unAuthorized" element={<UnAuthorized />} />
                   </Route>
-                </Route>
-
-                <Route path="unAuthorized" element={<UnAuthorized />} />
-              </Route>
-            </Routes>
-          </AuthModalProvider>
+                </Routes>
+              </DialogProvider>
+            </AuthModalProvider>
           </ToastProvider>
         </AuthProvider>
       </AppDataProvider>

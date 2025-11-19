@@ -3,31 +3,33 @@ import Button from "../Button/Button";
 import "./Modal.css";
 import { createPortal } from "react-dom";
 import useLockBody from "../../../hooks/utility/useLockBody";
+import { useState } from "react";
 const Modal = ({
   show = false,
   onClose = () => {},
-  title,
+  title = "",
+  text = "",
   className = "",
   children,
 }) => {
-  useLockBody(show)
+  useLockBody(show);
   return (
     show &&
     createPortal(
       <>
         <div
-        tabIndex='-1'
+          tabIndex="-1"
           autoFocus
           className={`Modal ${className}`}
           onKeyDown={(e) => {
             console.log(String.fromCharCode(e.charCode));
             if (e.key == "Escape") {
+  
               onClose();
             }
           }}
         >
           <div className="modal-body card">
-        
             <div className="cancel-btn-container">
               <Button
                 styleName="cancel-btn"

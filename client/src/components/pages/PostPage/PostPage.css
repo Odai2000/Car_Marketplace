@@ -93,6 +93,21 @@
   flex: 1;
 }
 
+.PostPage .share-container {
+  border: "1px solid var(--primary)";
+  padding: ".5em";
+  overflow: "hidden";
+  justify-content: "space-between";
+  align-items: "center";
+  text-wrap: "nowrap";
+}
+
+.PostPage .share-container>span {
+  max-width: 40ch;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 .PostPage section.user .profile-image {
   height: 8em;
   width: 8em;
@@ -126,7 +141,6 @@
 }
 
 .PostPage .bids .bids-interface .list.full-border {
-
   border-left: 1px solid var(--primary);
   border-bottom: 1px solid var(--primary);
   border-radius: 1rem;
@@ -150,7 +164,6 @@
   background-color: var(--primary);
   color: #fff;
   border-radius: 0 0 1rem 1rem;
-
 }
 
 .PostPage .bids .bids-interface .bids-control input {
@@ -186,7 +199,7 @@
   width: 2em;
   display: flex;
   align-items: center;
-
+  overflow: hidden;
 }
 
 .PostPage .bids .bid .user-name {
@@ -221,6 +234,7 @@
   grid-row: span 2;
   height: fit-content;
   width: fit-content;
+  align-items: flex-start;
   height: 2em;
   width: 2em;
   border-radius: 24em;
@@ -228,7 +242,7 @@
 }
 
 .PostPage .comments .comment .date {
-/* font-size:0.8em; */
+  /* font-size:0.8em; */
   color: #888;
 }
 
@@ -242,6 +256,11 @@
   grid-row: 2/3;
 }
 
+.PostPage .comments .comment .comment-control {
+  grid-column: 2/4;
+  grid-row: 3/3;
+}
+
 .PostPage .comments .comment-box {
   height: fit-content;
   flex-direction: column;
@@ -253,7 +272,7 @@
   padding: 1em;
 }
 
-.PostPage .comments .comment-box .comment-control {
+.PostPage .comments .comment-box .comment-box-control {
   display: none;
 }
 
@@ -272,8 +291,8 @@
   height: 4em;
 }
 
-.PostPage .comments .comment-box>textarea:focus+.comment-control,
-.PostPage .comments .comment-box>textarea:not(:empty)+.comment-control {
+.PostPage .comments .comment-box>textarea:focus+.comment-box-control,
+.PostPage .comments .comment-box>textarea:not(:empty)+.comment-box-control {
   display: block;
 }
 

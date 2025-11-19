@@ -15,7 +15,7 @@ import {
   PiGasPumpThin,
   PiEngineThin,
   PiGearThin,
-  PiMapPinThin
+  PiMapPinThin,
 } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
 import useMap from "../../hooks/useMap";
@@ -28,6 +28,7 @@ import useToast from "../../hooks/useToast";
 import useConfig from "../../hooks/useConfig";
 import { useState } from "react";
 import PostSkeleton from "../UI/skeletons/PostSkeleton/PostSkeleton";
+import useAuthModal from "../../hooks/useAuthModal";
 
 const Post = ({ data = null }) => {
   const [isDragging, setIsDragging] = useState(false);
@@ -38,6 +39,7 @@ const Post = ({ data = null }) => {
   const authFetch = useAuthFetch();
   const { showToast } = useToast();
   const { config } = useConfig();
+  const { openLogin } = useAuthModal();
 
   const isOwner = auth?.userData?._id === data.user_id;
   const isAdmin = auth?.roles?.includes("ADMIN");
@@ -45,9 +47,12 @@ const Post = ({ data = null }) => {
   const isSaved = auth?.userData?.savedPosts?.includes(data?._id);
 
   const handleMessage = () => {
-    navigate(`/chat/${data?.user_id}`);
+    !auth ? openLogin() : navigate(`/chat/${data?.user_id}`);
   };
 
+  const handleCall = () => {
+    !auth ? openLogin() : ''
+  };
   const handleSave = async () => {
     try {
       await authFetch(
@@ -131,7 +136,7 @@ const Post = ({ data = null }) => {
       <FaCamera style={{ height: "2em", width: "2em" }} /> No Photos
     </div>,
   ];
-  const DropdownOpts = (
+  const dropdownOpts = (
     <>
       {isOwner || isAdmin ? (
         <>
@@ -223,7 +228,7 @@ const Post = ({ data = null }) => {
             e.stopPropagation();
           }}
         >
-          <PiMapPinThin size="1.5rem"/>
+          <PiMapPinThin size="1.5rem" />
           <span
             className="address"
             onClick={(e) => {
@@ -263,7 +268,10 @@ const Post = ({ data = null }) => {
               </Button>
             ) : (
               <>
-                <Button variant="primary">
+                <Button variant="primary"         onClick={(e) => {
+                    e.stopPropagation();
+                    handleCall();
+                  }}>
                   <FaPhone /> Call
                 </Button>
                 <Button
@@ -291,7 +299,7 @@ const Post = ({ data = null }) => {
                 </Button>
               }
             >
-              <ul>{DropdownOpts} </ul>
+              <ul>{dropdownOpts} </ul>
             </Dropdown>
           </div>
         </div>
@@ -300,9 +308,10 @@ const Post = ({ data = null }) => {
   );
 };
 
-Post.skeleton = PostSkeleton
+Post.skeleton = PostSkeleton;
 
-Post.skeletons= (count=12)=> ( [...Array(count)].map((_,i)=>(<PostSkeleton key={i}/>)))
+Post.skeletons = (count = 12) =>
+  [...Array(count)].map((_, i) => <PostSkeleton key={i} />);
 Post.propTypes = {
   data: PropTypes.shape({
     user_id: PropTypes.string.isRequired,

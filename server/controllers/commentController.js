@@ -25,6 +25,29 @@ const getCommentsByUserId = asyncHandler(async (req, res) => {
   }
 });
 
+const getCommentsByPostId = asyncHandler(async (req, res) => {
+  try {
+    const post_id = req.params.post_id;
+
+    if (!(await Post.findById(post_id)))
+      return res.status(400).json({ message: "Missing post _id." });
+    const totalCommetns = await Comment.find({ post_id }).count();
+    const comments = await Comment.find({ post_id })
+      .populate({
+        path: "user",
+        select: "firstName lastName name profileImageId profileImageUrl",
+      })
+      .sort({ createdAt: -1 })
+      .skip(req.query.page * req.query.limit || 0)
+      .limit(req.query.limit || 10);
+
+    return res.status(200).json({ comments, totalCommetns });
+  } catch (error) {
+    console.error("Error fetching comments by user:", error);
+    res.status(500).json(error);
+  }
+});
+
 const createComment = asyncHandler(async (req, res) => {
   try {
     const { text, post_id, parent_id } = req.body;
@@ -55,17 +78,23 @@ const createComment = asyncHandler(async (req, res) => {
         select: "firstName lastName name profileImageId",
       })
       .exec();
-const post =await Post.findById(post_id).populate({
-  path:"user",
-   select: "firstName lastName name",
-}).exec()
+
+    const post = await Post.findById(post_id)
+      .populate({
+        path: "user",
+        select: "firstName lastName name",
+      })
+      .exec();
+
     const io = req.app.get("io");
-    if(!io) throw new error("io failed.")
+    if (!io) throw new error("io failed.");
     io.sendNotification({
-      message: `${PopulatedComment.user.name} commented on your post: "${comment.text}"`,
       user_id: post.user._id,
       link: `/post/${post._id}`,
-    }); 
+      actor: { user: PopulatedComment.user._id, action: "comment" },
+      payload:{text}
+    });
+
     return res
       .status(201)
       .json({ message: "Comment created.", comment: PopulatedComment });
@@ -126,8 +155,7 @@ const updateComment = asyncHandler(async (req, res) => {
 
 const deleteComment = asyncHandler(async (req, res) => {
   try {
-    const data = JSON.parse(req.body.data);
-    const { _id } = data;
+    const { _id } = req.params;
     const comment = await Comment.findById(_id).exec();
 
     if (!comment) {
@@ -135,12 +163,11 @@ const deleteComment = asyncHandler(async (req, res) => {
         .status(400)
         .json({ message: `No comment with id: ${_id} was found` });
     }
-
-    if (req.user._id !== comment.user_id && !req.user.roles.includes("ADMIN")) {
-      return res.status(403).send("Forcommentden");
+    if (req.user._id.toString() !== comment.user_id.toString() && !req.user.roles.includes("ADMIN")) {
+      return res.status(403).send("Forbidden");
     }
 
-    const result = await comment.deleteOne(_id).exec();
+    const result = await Comment.findByIdAndDelete(_id).exec();
 
     if (!result)
       return res
@@ -159,6 +186,7 @@ const deleteComment = asyncHandler(async (req, res) => {
 module.exports = {
   getComments,
   getCommentsByUserId,
+  getCommentsByPostId,
   createComment,
   updateComment,
   deleteComment,

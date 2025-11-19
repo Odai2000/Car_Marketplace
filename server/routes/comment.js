@@ -11,9 +11,12 @@ router
   .get(commentController.getComments)
   .post(authenticateToken, commentController.createComment)
   .patch(authenticateToken,commentController.updateComment)
+
+  router.route("/:_id")
+  .get(authenticateToken,commentController.getCommentsByUserId)
   .delete(authenticateToken,commentController.deleteComment);
 
-
 router.route("/user/:user_id/").get(commentController.getCommentsByUserId);
+router.route("/post/:post_id/").get(commentController.getCommentsByPostId);
 
 module.exports = router;

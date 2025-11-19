@@ -37,14 +37,17 @@ io.on("connection", (socket) => {
 
 io.sendNotification = async (notification) => {
   try {
-    await Notification.create(notification)
-    io.to(notification.user_id.toString()).emit("receive-notification", notification);
+
+    const noti= await createNotification(notification);
+    io.to(notification.user_id.toString()).emit(
+      "receive-notification",
+      noti
+    );
   } catch (error) {
     console.error(error);
   }
 };
-app.set("io",io);
-
+app.set("io", io);
 
 //DB
 const { default: mongoose } = require("mongoose");
@@ -58,6 +61,7 @@ const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
 
 //CORS
 const cors = require("cors");
+const { createNotification } = require("./services/notificationServices");
 
 const whitelist = [process.env.CLIENT_URL];
 
