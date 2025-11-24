@@ -104,18 +104,7 @@ body {
   cursor: pointer;
 }
 
-.edit-account-info {
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-  padding: 1em 2em;
-}
 
-.edit-account-info form {
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-}
 
 
 /* temp-fix */

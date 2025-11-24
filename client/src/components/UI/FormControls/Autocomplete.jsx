@@ -7,6 +7,7 @@ const Autocomplete = ({
   data,
   value,
   onChange,
+  onBlur,
   minLength = 2,
   getDisplayValue,
   onSelection,
@@ -41,10 +42,11 @@ const Autocomplete = ({
     }
   };
 
-  const handleBlur = ()=>{
+  const handleBlur = (e)=>{
        if (!isMouseOverSuggestions) {
       setSuggestions([]);
     }
+    if(onBlur) onBlur(e);
   }
 
   useEffect(() => {

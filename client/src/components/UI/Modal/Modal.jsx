@@ -10,6 +10,7 @@ const Modal = ({
   title = "",
   text = "",
   className = "",
+  dialog = false,
   children,
 }) => {
   useLockBody(show);
@@ -20,32 +21,39 @@ const Modal = ({
         <div
           tabIndex="-1"
           autoFocus
-          className={`Modal ${className}`}
+          className={`Modal ${dialog?'dialog':''} ${className}`}
           onKeyDown={(e) => {
             console.log(String.fromCharCode(e.charCode));
             if (e.key == "Escape") {
-  
               onClose();
             }
           }}
         >
           <div className="modal-body card">
-            <div className="cancel-btn-container">
-              <Button
-                styleName="cancel-btn"
-                variant="icon"
-                icon
-                onClick={onClose}
-              >
-                <FaXmark />
-              </Button>
-            </div>
-            {title && (
+ 
               <header>
-                <h2>{title}</h2>
+                {" "}
+                {title && <h2>{title}</h2>}
+      
+                  <div className="cancel-btn-container">
+                    <Button
+                      styleName="cancel-btn"
+                      variant="icon"
+                      icon
+                      onClick={onClose}
+                      style={{ fontSize: "1rem", paddingBottom: "0" }}
+                    >
+                      <FaXmark />
+                    </Button>
+                  </div>
+         
               </header>
-            )}
-            <div className="content">{children}</div>
+     
+
+            <div className="content">
+              {text ? <span>{text}</span> : ""}
+              {children}
+            </div>
           </div>
         </div>
       </>,

@@ -45,7 +45,7 @@ function App() {
                         <Route index element={<Home />} />
                         <Route path="posts" element={<PostSearchResult />} />
                         <Route path="post/:_id" element={<PostPage />} />
-                        <Route path="user/:_id/" element={<UserAccount />} />
+                        <Route path="user/:identifier/" element={<UserAccount />} />
                         <Route
                           path="user/:_id/verify-email"
                           element={<EmailVerification />}

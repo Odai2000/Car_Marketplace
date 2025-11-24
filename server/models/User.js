@@ -1,5 +1,24 @@
 const mongoose = require("mongoose");
 
+
+const Country = require("./Country");
+
+const locationSchema = new mongoose.Schema({
+  latitude: { type: Number },
+  longitude: { type: Number },
+  countryCode: {
+    type: String,
+    required: true,
+    validate: {
+      validator: async (countryCode) => {
+        return await Country.exists({ code: countryCode }).lean();
+      },
+    },
+  },
+  address: {
+    type: String,
+  },
+});
 const ratingSchema = new mongoose.Schema({
   rate: { type: Number, required: true },
   user_id: {
@@ -54,10 +73,12 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-
+    location: {
+      type: locationSchema,
+    },
     status: {
       type: [String],
-      enum: ["offline", "online", "soft_deleted"],
+      enum: ["offline", "online", "deleted"],
       default: ["offline"],
     },
     roles: {

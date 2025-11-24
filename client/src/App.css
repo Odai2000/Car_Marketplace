@@ -24,6 +24,9 @@
   --primary-h: 121;
   --primary-s: 54%;
   --primary-l: 31%;
+
+  --smBreakpoint: 576px;
+  --mdBreakpoint: 768px;
 }
 #root {
   display: contents;
@@ -97,6 +100,11 @@ header.home-header {
 }
 .flex {
   display: flex;
+  flex-direction: row;
+}
+.center {
+justify-content: center;
+align-items: center;
 }
 
 .gap-05em {
@@ -107,9 +115,23 @@ header.home-header {
 }
 
 .gap-2em {
-  gap:1em;
+  gap:2em;
+}
+
+.gap-4em {
+  gap:4em;
+}
+
+.gap-5em {
+  gap:5em;
 }
 
 .round{
-  border-radius: 32px;
+  border-radius: 999px;
 }
+
+.round-hid{
+  border-radius: 100%;
+  overflow: hidden;
+}
+

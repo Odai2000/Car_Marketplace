@@ -14,7 +14,7 @@ import useAuthModal from "../../hooks/useAuthModal";
 import useConfig from "../../hooks/useConfig";
 import useAuthFetch from "../../hooks/useAuthFetch";
 import useToast from "../../hooks/useToast";
-import { PiBell, PiChat, PiSignOut, PiUser } from "react-icons/pi";
+import { PiBell, PiChat, PiGear, PiSignOut, PiUser } from "react-icons/pi";
 
 function NavBar() {
   const [scrolled, setScrolled] = useState(false);
@@ -370,7 +370,10 @@ function NavBar() {
                       }}
                     >
                       <PiUser /> Profile
-                    </li>{" "}
+                    </li>
+                           <li onClick={()=>navigate("me/settings")}>
+                      <PiGear /> Settings
+                    </li>
                     <li onClick={logout}>
                       <PiSignOut /> Logout
                     </li>

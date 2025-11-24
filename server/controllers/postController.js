@@ -15,14 +15,14 @@ const getPostById = asyncHandler(async (req, res) => {
 
     populateFields.push({
       path: "user",
-      select: "firstName lastName name profileImageId profileImageUrl ratings reputation",
+      select: "firstName lastName name username profileImageId profileImageUrl ratings reputation",
     });
 
     if (include?.includes("bids")) {
       populateFields.push({
         path: "bids",
         options: { sort: { createdAt: -1 } },
-        populate: { path: "user", select: "firstName lastName name profileImageId profileImageUrl" },
+        populate: { path: "user", select: "firstName lastName name username profileImageId profileImageUrl" },
       });
     }
 
@@ -33,7 +33,7 @@ const getPostById = asyncHandler(async (req, res) => {
         options: { sort: { createdAt: -1 }, limit:  process.env.COMMENT_LIMIT?parseInt( process.env.COMMENT_LIMIT ):10 },
         populate: {
           path: "user",
-          select: "firstName lastName name profileImageId profileImageUrl",
+          select: "firstName lastName name username profileImageId profileImageUrl",
         },
       });
     }

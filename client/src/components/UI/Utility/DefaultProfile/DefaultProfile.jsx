@@ -8,15 +8,16 @@ const DefaultProfile = ({ size = "2rem", round }) => {
       value = "7rem";
       break;
     case "md":
-      value = "5rem";
+      value = "4.5rem";
       break;
     case "sm":
-      value = "3rem";
+      value = "2rem";
       break;
     case "xs":
-      value = "1.5rem";
+      value = "1rem";
       break;
     default:
+      value
       break;
   }
   return (

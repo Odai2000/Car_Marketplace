@@ -7,8 +7,8 @@ import Button from "../../UI/Button/Button";
 import Input from "../../UI/FormControls/Input";
 import { FaArrowLeft } from "react-icons/fa";
 import { useParams, useNavigate } from "react-router-dom";
-import DefaultProfile from "../../UI/Utility/DefaultProfile/DefaultProfile";
 import useAuthFetch from "../../../hooks/useAuthFetch";
+import ProfileImage from "../../UI/Utility/ProfileImage/ProfileImage";
 
 const Chat = () => {
   const { auth } = useAuth();
@@ -162,16 +162,8 @@ const Chat = () => {
                 key={chat._id}
                 onClick={() => handleContactClick(chat.peer?.peer_id)}
               >
-                <div className="profile-image">
-                  {chat?.peer?.profileImageUrl ? (
-                    <img
-                      src={chat.peer.profileImageUrl}
-                      alt={`${chat.peer.name}'s profile image`}
-                    />
-                  ) : (
-                    <DefaultProfile size="2em" />
-                  )}
-                </div>
+             <ProfileImage round src={chat.peer?.profileImageUrl} size="sm"/>
+
                 <div className="contact-name">
                   <h3>{chat.peer.name}</h3>
                 </div>
@@ -186,16 +178,8 @@ const Chat = () => {
               <Button variant={"icon"} onClick={() => setToggleView(false)}>
                 <FaArrowLeft />
               </Button>
-              <div className="profile-image">
-                {chat?.peer?.profileImageUrl ? (
-                  <img
-                    src={chat.peer.profileImageUrl}
-                    alt={`${chat.peer.name}'s profile image`}
-                  />
-                ) : (
-                  <DefaultProfile size="32px" />
-                )}
-              </div>
+                   <ProfileImage round src={chat.peer?.profileImageUrl} size="sm"/>
+
 
               <div className="contact-name">
                 <h3>{chat.peer?.name}</h3>

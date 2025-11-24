@@ -35,7 +35,7 @@ const getCommentsByPostId = asyncHandler(async (req, res) => {
     const comments = await Comment.find({ post_id })
       .populate({
         path: "user",
-        select: "firstName lastName name profileImageId profileImageUrl",
+        select: "firstName lastName name username profileImageId profileImageUrl",
       })
       .sort({ createdAt: -1 })
       .skip(req.query.page * req.query.limit || 0)
@@ -75,14 +75,14 @@ const createComment = asyncHandler(async (req, res) => {
     const PopulatedComment = await Comment.findById(comment._id)
       .populate({
         path: "user",
-        select: "firstName lastName name profileImageId",
+        select: "firstName lastName name username profileImageId",
       })
       .exec();
 
     const post = await Post.findById(post_id)
       .populate({
         path: "user",
-        select: "firstName lastName name",
+        select: "firstName lastName name username",
       })
       .exec();
 

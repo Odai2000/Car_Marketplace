@@ -16,7 +16,7 @@ export const DialogProvider = ({ children }) => {
         title: config.title || "",
         text: config.text || "",
         actions: config.actions || [{ label: "Ok",value:true ,variant: "primary" }],
-        cancellable: config.cancellable,
+        cancellable: config.cancellable ||true,
         isVisible: true,
       });
     });
@@ -34,14 +34,14 @@ export const DialogProvider = ({ children }) => {
 
       {options?.isVisible && (
         <Modal
+        title={options.title}
+        text={options.text}
           cancellable={options.cancellable}
           show={options.isVisible}
-          onClose={() => closeDialog("cancel")}
+          onClose={() => closeDialog(false)}
+          dialog
         >
-          <h2>{options.title}</h2>
-          <span>{options.text}</span>
-
-          <div style={{ marginTop: "1rem" }}>
+          <div className="flex gap-05em" style={{justifyContent:"end",marginTop:"1em"}}>
             {options.actions.map((action, i) => (
               <Button
                 key={`dialog-action-${i}`}

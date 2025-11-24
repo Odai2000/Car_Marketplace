@@ -172,7 +172,7 @@ postSchema.methods.calculateScore = function () {
   const reputation = this.user?.reputation || 0;
   const createdAt = this.createdAt;
   
-  const hasNoPhotos = !this.imageIds.length()>0;
+  const hasNoPhotos = !this.imageIds.length>0;
 
   const daysOld = Math.floor((Date.now() - new Date(createdAt)) / (1000 * 60 * 60 * 24));
 

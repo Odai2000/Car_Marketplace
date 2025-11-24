@@ -11,8 +11,6 @@ const { OAuth2Client } = require("google-auth-library");
 const folderId = process.env.PCLOUD_FOLDER_ID;
 const cloudStorage = new CloudStorageManager("pcloud");
 
-
-
 // Route functions
 
 //get users
@@ -24,13 +22,18 @@ const getAllUsers = asyncHandler(async (req, res) => {
   res.status(200).json(users);
 });
 
-// *check how to combine these two
 const getUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params._id)
-    .select("-password -savedPosts")
+  const identifier = req.params.identifier;
+  let user;
+  if (/^[0-9a-fA-F]{24}$/.test(identifier)) {
+    user = await User.findById(identifier).select("-password -savedPosts");
+  } else {
+    user = await User.findOne({ username: identifier }).select(
+      "-password -savedPosts"
+    );
+  }
 
-
-  if (!user) return res.status(400).json({ message: "No user found" });
+  if (!user) return res.status(404).json({ message: "No user found" });
 
   res.status(200).json(user);
 });
@@ -91,7 +94,7 @@ const createUser = asyncHandler(async (req, res) => {
 });
 
 const updateUser = asyncHandler(async (req, res) => {
-  const { _id, username, email, firstName, lastName, roles } = req.body;
+  const { _id, username, email, location,firstName, lastName, roles } = req.body;
 
   if (req.user._id !== _id && !req.user.roles.includes("ADMIN")) {
     console.log(`${req.user._id} === ${_id} `);
@@ -117,6 +120,7 @@ const updateUser = asyncHandler(async (req, res) => {
     ...(firstName && { firstName }),
     ...(lastName && { lastName }),
     ...(email && { email }),
+    ...(location && { location }),
     ...(roles && { roles }),
   });
 
@@ -137,17 +141,8 @@ const updateUser = asyncHandler(async (req, res) => {
     return res.status(400).send("Update failed");
   }
 
-  const userData = {
-    _id: updatedUser._id,
-    firstName: updatedUser.firstName,
-    lastName: updatedUser.lastName,
-    username: updatedUser.username,
-    email: updatedUser.email,
-    emailVert: updatedUser.emailVert,
-    profileImageUrl: updatedUser.profileImageUrl,
-    roles: updatedUser.roles,
-  };
-  res.status(200).json({ message: "User updated", userData: userData });
+
+  res.status(200).json({ message: "User updated", userData: updatedUser });
 });
 
 const changePassword = asyncHandler(async (req, res) => {
@@ -203,7 +198,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
     const user = await User.findOne({
       username,
-    })
+    });
 
     if (!user) return res.status(404).send("Username not found.");
 
@@ -228,17 +223,7 @@ const loginUser = asyncHandler(async (req, res) => {
       });
 
       if (!token) return res.status(500).send("server Error");
-      const userData = {
-        _id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        username: user.username,
-        email: user.email,
-        emailVert: user.emailVert,
-        profileImageUrl: user.profileImageUrl,
-        roles: user.roles,
-        savedPosts: user.savedPosts,
-      };
+
       return res
         .status(200)
         .cookie("refreshToken", refreshToken, {
@@ -247,7 +232,7 @@ const loginUser = asyncHandler(async (req, res) => {
           // sameSite: 'none',
           maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
         })
-        .json({ accessToken: accessToken, userData: userData });
+        .json({ accessToken: accessToken, userData: user });
     } else {
       return res.status(401).send("Authentication Failed.");
     }
@@ -316,17 +301,7 @@ const googleLogin = asyncHandler(async (req, res) => {
 
     if (!token) return res.status(500).send("server Error");
 
-    const userData = {
-      _id: user._id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      username: user.username,
-      email: user.email,
-      emailVert: user.emailVert,
-      profileImageUrl: user.profileImageUrl,
-      roles: user.roles,
-      savedPosts: user.savedPosts,
-    };
+
     return res
       .status(200)
       .cookie("refreshToken", refreshToken, {
@@ -334,7 +309,7 @@ const googleLogin = asyncHandler(async (req, res) => {
         secure: false,
         maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
       })
-      .json({ accessToken: accessToken, userData: userData });
+      .json({ accessToken: accessToken, userData: user });
   } catch (error) {
     console.log(error);
     return res.status(500).send(error);
@@ -397,8 +372,7 @@ const savePost = asyncHandler(async (req, res) => {
       { $addToSet: { savedPosts: post_id } }
     );
 
-    const updatedUser = await User.findById(user_id)
-      .select("savedPosts")
+    const updatedUser = await User.findById(user_id).select("savedPosts");
 
     res.status(200).json({ savedPosts: updatedUser.savedPosts });
   } catch (error) {
@@ -476,7 +450,6 @@ const updateProfileImage = asyncHandler(async (req, res) => {
 
     user.profileImageId = await cloudStorage.upload(file, folderId);
     await user.save();
-
 
     res.status(200).json({ profileImageUrl: user.profileImageUrl });
   } catch (error) {
@@ -595,24 +568,14 @@ const refreshTheToken = asyncHandler(async (req, res) => {
     jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, async (err, data) => {
       if (err) return res.status(403).send(`Invalid token: ${err}`);
 
-      const user = await User.findById(data._id).lean();
-      if (!user) res.status(403).send(`Invalid token: ${err}`);
+      const user = await User.findById(data._id);
+      if (!user) return res.status(403).send(`Invalid token: ${err}`);
 
       const accessToken = generateAccessToken(user);
 
-      const userData = {
-        _id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        username: user.username,
-        email: user.email,
-        emailVert: user.emailVert,
-        roles: user.roles,
-        savedPosts: user.savedPosts,
-        profileImageUrl: user.profileImageUrl,
-      };
 
-      res.status(200).json({ accessToken: accessToken, userData: userData });
+
+      res.status(200).json({ accessToken: accessToken, userData: user });
     });
   } catch (error) {
     console.log(error);

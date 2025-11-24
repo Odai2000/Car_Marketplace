@@ -20,7 +20,7 @@ router
   .route("/me/change-password")
   .patch(authenticateToken, userController.changePassword);
 
-router.route("/:_id").get(userController.getUser);
+router.route("/:identifier").get(userController.getUser);
 
 router.route("/:_id/verify-email").post(userController.verifyEmail);
 

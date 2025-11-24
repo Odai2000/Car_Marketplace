@@ -8,7 +8,9 @@ export const ConfigProvider = ({children})=>{
         geocodingProviderURL: import.meta.env.VITE_PHOTON_API_URL,
         mapServiceProviderURL: import.meta.env.VITE_OPENSTREET_URL,
         commentLimit:import.meta.env.VITE_COMMENT_LIMIT,
-        notificationLimit:import.meta.env.VITE_NOTIFICATION_LIMIT
+        notificationLimit:import.meta.env.VITE_NOTIFICATION_LIMIT,
+        smBreakpoint:576,
+        mdBreakpoint:764,
     });
 
     return(

@@ -66,7 +66,7 @@ const createBid = asyncHandler(async (req, res) => {
     const populatedBid = await Bid.findById(bid._id)
       .populate({
         path: "user",
-        select: "firstName lastName name profileImageId",
+        select: "firstName lastName name username profileImageId",
       })
       .exec();
 

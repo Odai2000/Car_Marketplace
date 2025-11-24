@@ -6,7 +6,7 @@ import Alert from "../../UI/Alert/Alert";
 import useMap from "../../../hooks/useMap";
 import useAuthModal from "../../../hooks/useAuthModal";
 import PropTypes from "prop-types";
-import DefaultProfile from "../../UI/Utility/DefaultProfile/DefaultProfile";
+import ProfileImage from "../../UI/Utility/ProfileImage/ProfileImage";
 import useConfig from "../../../hooks/useConfig";
 import { useNavigate, useParams } from "react-router-dom";
 import Carousel from "../../UI/Carousel/Carousel";
@@ -175,14 +175,11 @@ const PostPage = () => {
   };
   const handleDeleteComment = async (_id) => {
     try {
-      const response = await authFetch(
-        `${config.serverURL}/comment/${_id}`,
-        {
-          method: "DELETE",
-        }
-      );
-      if (!response.ok) throw new Error('Failed to delete comment')
-      setComments(prev=>prev.filter((cmt)=>cmt._id!==_id))
+      const response = await authFetch(`${config.serverURL}/comment/${_id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) throw new Error("Failed to delete comment");
+      setComments((prev) => prev.filter((cmt) => cmt._id !== _id));
     } catch (error) {
       showToast("Failed to delete comment", "error");
 
@@ -385,7 +382,7 @@ const PostPage = () => {
               >
                 <span>{document.URL}</span>
                 <Button
-                  variant="primary"
+                  variant="primary round"
                   onClick={() => {
                     navigator.clipboard.writeText(document.URL);
                     showToast("Copied", "success");
@@ -417,17 +414,14 @@ const PostPage = () => {
           </section>
           <section
             className="user"
-            onClick={() => navigate(`/user/${data?.user_id}`)}
+            onClick={() => navigate(`/user/${data?.user?.username}`)}
           >
-            <div className="profile-image">
-              {data?.user?.profileImageUrl ? (
-                <img src={data?.user?.profileImageUrl} />
-              ) : (
-                <DefaultProfile size="sm" />
-              )}
-            </div>
+            <ProfileImage src={data?.user?.profileImageUrl} round size="md" />
             <div className="user-details">
-              <h2 className="name">{data?.user?.name}</h2>
+              <Button variant="link">
+                {" "}
+                <h2 className="name">{data?.user?.name}</h2>
+              </Button>
               <div className="rating" onClick={(e) => e.stopPropagation()}>
                 <ReactStars
                   key={rating}
@@ -548,14 +542,21 @@ const PostPage = () => {
                         className="left flex gap-05em"
                         style={{ alignItems: "center" }}
                       >
-                        <div className="user-profile-image round">
-                          {bid?.user?.profileImageUrl ? (
-                            <img src={bid.user.profileImageUrl} />
-                          ) : (
-                            <DefaultProfile size="xs" round />
-                          )}
+                        <ProfileImage
+                          src={bid?.user?.profileImageUrl}
+                          round
+                          size="xs"
+                        />
+                        <div className="user-name">
+                          <Button
+                            variant="link"
+                            onClick={() =>
+                              navigate(`/user/${bid?.user?.username}`)
+                            }
+                          >
+                            {bid?.user?.name}
+                          </Button>
                         </div>
-                        <div className="user-name"><Button varaint="link"  onClick={()=>navigate(`/user/${comment?.user?._id}`)} >{bid?.user?.name}</Button></div>
                         <div className="actions">
                           {isOwner && (
                             <Button
@@ -652,7 +653,7 @@ const PostPage = () => {
               <div className="comment-box-control">
                 {" "}
                 <Button
-                  variant="primary"
+                  variant="primary round"
                   onClick={auth ? handleComment : openLogin}
                 >
                   Comment
@@ -663,15 +664,24 @@ const PostPage = () => {
               {comments?.length ? (
                 comments.map((comment) => (
                   <div key={comment?._id} className="comment">
-                    <div className="user-profile-image round">
-                      {comment?.user?.profileImageUrl ? (
-                        <img src={comment.user.profileImageUrl} />
-                      ) : (
-                        <DefaultProfile size="xs" round />
-                      )}
-                    </div>
+                 
+                      <ProfileImage className="user-profile-image round"
+                        src={comment?.user?.profileImageUrl}
+                        round
+                        size="2.5rem"
+                      />
+                 
                     <div className="comment-header flex gap-05em">
-                      <div className="user-name"><Button variant="link" onClick={()=>navigate(`/user/${comment?.user?._id}`)}>{comment?.user?.name}</Button> </div>
+                      <div className="user-name">
+                        <Button
+                          variant="link"
+                          onClick={() =>
+                            navigate(`/user/${comment?.user?.username}`)
+                          }
+                        >
+                          {comment?.user?.name}
+                        </Button>{" "}
+                      </div>
                       <div className="date">{`posted on ${
                         comment?.createdAt &&
                         new Date(comment?.createdAt).toLocaleDateString()
@@ -680,13 +690,23 @@ const PostPage = () => {
 
                     <div className="text">{comment?.text}</div>
                     <div className="comment-control flex gap-0.5em">
-                      {auth?.userData?._id===comment?.user?._id?<>
-                  
-                      <Button variant="link" onClick={() => handleDeleteComment(comment._id)}>
-                        delete
-                      </Button></>:<>    <Button variant="link" onClick={() => {}}>
-                        reply
-                      </Button></>}
+                      {auth?.userData?._id === comment?.user?._id ? (
+                        <>
+                          <Button
+                            variant="link"
+                            onClick={() => handleDeleteComment(comment._id)}
+                          >
+                            delete
+                          </Button>
+                        </>
+                      ) : (
+                        <>
+                          {" "}
+                          <Button variant="link" onClick={() => {}}>
+                            reply
+                          </Button>
+                        </>
+                      )}
                     </div>
                   </div>
                 ))

@@ -1,23 +1,24 @@
 .UserSettings {
-  height: 100%;
+  height: 100vh;
   display: flex;
-  justify-content: space-between;
-  gap: 2em;
+  /* gap: 2em; */
+  overflow-y:clip ;
 }
 
 .UserSettings .sidebar {
-  height: 100%;
-  padding: 2em 1em;
-  display: flex;
+  display: none;
   flex-direction: column;
   justify-content: flex-start;
-  /* align-items: center; */
+  flex-grow: 1;
   gap: 2em;
+  height: 100%;
+  padding: 2em 1em;
   background-color: var(--primary);
   color: white;
   border-top-right-radius: 4px;
 }
-.UserSettings .sidebar .footer{
+
+.UserSettings .sidebar .footer {
   width: fit-content;
   margin-top: auto;
   display: flex;
@@ -31,11 +32,12 @@
   font-size: 1.4rem;
 }
 
-.UserSettings .sidebar .profile-container{
+.UserSettings .sidebar .profile-container {
   align-items: center;
-  gap:0.5em
+  gap: 0.5em
 }
-.UserSettings .sidebar .profile-container .profile-image{
+
+.UserSettings .sidebar .profile-container .profile-image {
   position: relative;
   width: 3rem;
   height: 3rem;
@@ -43,6 +45,10 @@
   border-radius: 100%;
   overflow: hidden;
 }
+.UserSettings .sidebar .profile-container .name {
+text-wrap: nowrap;
+}
+
 .UserSettings .sidebar .vertical-tabs {
   display: flex;
   flex-direction: column;
@@ -60,31 +66,116 @@
 .UserSettings .sidebar .tab:hover {
   background-color: #186d20;
 }
-.UserSettings .sidebar .tab.active {
-  background-color: white;
-  color: var(--primary);
-}
+
+
+
 /* Config panel */
 
 .UserSettings .config-panel {
+  display: none;
+  flex-direction: column;
   flex-grow: 1;
+  padding: 1em;
+  overflow-y: auto;
+}
+
+.UserSettings .config-panel header {
+  align-items: center;
 }
 
 .UserSettings .view {
   display: flex;
   flex-direction: column;
-  gap: 2em;
-  padding: 2em 0;
+  gap: 1em;
+  padding: 1em 0;
+  height: 100%;
 }
 
-.UserSettings .view * {
-  flex: 0;
-}
-
-.config-panel form{
+.config-panel form {
   width: 100%;
-  flex: 1;
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
-  gap:0.75em;
+  gap: 1em;
+  /* align-items: end; */
+}
+
+.UserSettings .config-panel .profile-view .profile-image {
+  position: relative;
+  width: 5rem;
+  height: 5rem;
+  /* border: 1px #ddd solid; */
+  border-radius: 100%;
+  overflow: hidden;
+}
+
+.UserSettings .config-panel .profile-view .btn-group .btn{
+width:max-content;
+}
+
+.UserSettings .config-panel .view > .container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  border: 1px solid var(--primary);
+  border-radius: 8px;
+  padding: 1em 2em;
+}
+
+
+
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+
+.UserSettings .config-panel .view .btn {
+  width: 100%;
+}
+
+.UserSettings .config-panel .location {
+gap:1em
+}
+.UserSettings .config-panel .location .container {
+  flex-wrap: wrap;
+  gap:1em
+}
+.UserSettings .config-panel .location-details{
+  flex-grow: 1;
+}
+
+.UserSettings .toggled {
+  display: flex;
+}
+
+
+
+@media (min-width: 768px) {
+
+  .UserSettings .config-panel {
+    display: flex;
+    flex-grow: 1;
+  }
+
+  .UserSettings .config-panel .view .btn {
+    max-width: fit-content;
+  }
+
+  .UserSettings .sidebar {
+    display: flex;
+    flex-grow: 0;
+  }
+
+  .UserSettings .sidebar .tab.active {
+    background-color: #fff;
+    color: var(--primary);
+  }
+
+  .UserSettings .config-panel .view {
+    /* max-width: 64em; */
+  }
+
 }

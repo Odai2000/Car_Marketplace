@@ -22,8 +22,6 @@ function useProfileImageUpload(user_id, autoSubmit) {
     const formData = new FormData();
     formData.append("image", selectedFile);
 
-
-
     try {
       const response = await authFetch(
         `${config?.serverURL}/user/${user_id}/profile-image`,

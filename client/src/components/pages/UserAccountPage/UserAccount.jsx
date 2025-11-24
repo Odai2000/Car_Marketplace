@@ -9,6 +9,7 @@ import Post from "../../Post/Post";
 import useConfig from "../../../hooks/useConfig";
 import useProfileImageUpload from "../../../hooks/useProfileImageUpload";
 import { useRef } from "react";
+import ProfileImage from "../../UI/Utility/ProfileImage/ProfileImage";
 
 const UserAccount = () => {
   const [userData, setUserData] = useState(null);
@@ -23,7 +24,7 @@ const UserAccount = () => {
 
   const { auth } = useAuth();
   const { config } = useConfig();
-  const { _id } = useParams();
+  const { identifier } = useParams();
   const authFetch = useAuthFetch();
   const location = useLocation();
 
@@ -42,25 +43,42 @@ const UserAccount = () => {
             username: auth?.userData?.username,
             emailVert: auth?.userData?.emailVert,
             user_id: auth?.userData?._id,
-            profileImageUrl:auth?.userData?.profileImageUrl
+            profileImageUrl: auth?.userData?.profileImageUrl,
           });
         }
-      } else if (_id) {
-        //  fetch user data by id
-        await fetch(`${config.serverURL}/user/${_id}`)
-          .then((response) => {
-            return response.json();
-          })
-          .then((data) => {
-            setUserData({
-              firstName: data?.firstName,
-              lastName: data?.lastName,
-              username: data?.username,
-              emailVert: data?.emailVert,
-              user_id: data?._id,
-              profileImageUrl: data?.profileImageUrl,
+      } else if (identifier) {
+        if (/^[0-9a-fA-F]{24}$/.test(identifier)) {
+          //  fetch user data by id
+          await fetch(`${config.serverURL}/user/${identifier}`)
+            .then((response) => {
+              return response.json();
+            })
+            .then((data) => {
+              setUserData({
+                firstName: data?.firstName,
+                lastName: data?.lastName,
+                username: data?.username,
+                emailVert: data?.emailVert,
+                user_id: data?._id,
+                profileImageUrl: data?.profileImageUrl,
+              });
             });
+        }
+        else{
+          // fetch by username
+         const result = await fetch(`${config.serverURL}/user/${identifier}`)
+         if(result.ok){
+          const data = await result.json();
+          setUserData({
+            firstName: data?.firstName,
+            lastName: data?.lastName,
+            username: data?.username,
+            emailVert: data?.emailVert,
+            user_id: data?._id,
+            profileImageUrl: data?.profileImageUrl,
           });
+         }
+        }
       }
     } catch (error) {
       console.error("Failed to load user data:", error);
@@ -85,7 +103,7 @@ const UserAccount = () => {
         .then((data) => {
           setPosts(data);
         })
-        .finally(()=>setIsLoading(false));
+        .finally(() => setIsLoading(false));
     } else if (activeTab === "saved-posts" && !savedPosts?.length) {
       authFetch(`${config.serverURL}/user/me/saved-posts`)
         .then((response) => {
@@ -94,34 +112,28 @@ const UserAccount = () => {
         .then((data) => {
           setSavedPosts(data.savedPosts);
         })
-        .finally(()=>setIsLoading(false));
-    }
-    else setIsLoading(false);
+        .finally(() => setIsLoading(false));
+    } else setIsLoading(false);
   }, [activeTab, userData]);
 
   return (
     <>
       <div className="UserAccount">
         <div className="user-header">
-          <div className="profile-image">
-            {auth && auth?.userData?._id === userData?._id ? (
-              <div
-                className="edit-pfp-btn"
-                onClick={() => {
-                  imageInput.current.click();
-                }}
-              >
-                edit
-              </div>
-            ) : (
-              ""
-            )}
-            {userData?.profileImageUrl ? (
-              <img src={userData?.profileImageUrl} />
-            ) : (
-              <DefaultProfile size="md" />
-            )}
-          </div>
+          {auth && auth?.userData?._id === userData?._id ? (
+            <div
+              className="edit-pfp-btn"
+              onClick={() => {
+                imageInput.current.click();
+              }}
+            >
+              edit
+            </div>
+          ) : (
+            ""
+          )}
+          <ProfileImage round src={userData?.profileImageUrl} size="md" />
+
           <div className="user-info">
             <div className="name">{`${userData?.firstName} ${userData?.lastName}`}</div>
             <div className="username">@{userData?.username}</div>
@@ -171,12 +183,14 @@ const UserAccount = () => {
           </div>
         </div>
         <div className="content">
-          {activeTab === "posts" && ( !isLoading
-            ? posts?.map((post) => <Post key={post._id} data={post} />)
-            : Post.skeletons(5))}
-          {activeTab === "saved-posts" && (!isLoading
-            ? savedPosts?.map((post) => <Post key={post._id} data={post} />)
-            : Post.skeletons(5))}
+          {activeTab === "posts" &&
+            (!isLoading
+              ? posts?.map((post) => <Post key={post._id} data={post} />)
+              : Post.skeletons(5))}
+          {activeTab === "saved-posts" &&
+            (!isLoading
+              ? savedPosts?.map((post) => <Post key={post._id} data={post} />)
+              : Post.skeletons(5))}
         </div>
         <input
           type="file"

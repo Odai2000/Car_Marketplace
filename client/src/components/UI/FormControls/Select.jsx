@@ -15,7 +15,7 @@ const Select = ({
   validationRules={},
   onValidationChange,
   children,
-  props
+  ...props
 }) => {
   const [errorMessage, setErrorMessage] = useState("");
 
