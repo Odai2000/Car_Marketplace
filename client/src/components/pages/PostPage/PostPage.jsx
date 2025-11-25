@@ -60,6 +60,18 @@ const PostPage = () => {
         const response = await fetch(
           `${config.serverURL}/post/${_id}?include=bids,comments&user_id=${auth?.userData?._id}`
         );
+    if (!response.ok) {
+      switch (response.status) {
+        case 404:
+          navigate('/not-found');
+          return;
+        case 500:
+          showToast("Unexcepted Server error. Please try again later.", "error");
+          return;
+        default:
+          showToast(`Failed to load data (${response.status})`, "error");
+          return;
+      }}
         const data = await response.json();
         setData(data);
         setBids([...(data?.bids || [])].sort((a, b) => b.amount - a.amount));

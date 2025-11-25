@@ -10,6 +10,7 @@ import useConfig from "../../../hooks/useConfig";
 import useProfileImageUpload from "../../../hooks/useProfileImageUpload";
 import { useRef } from "react";
 import ProfileImage from "../../UI/Utility/ProfileImage/ProfileImage";
+import useToast from "../../../hooks/useToast";
 
 const UserAccount = () => {
   const [userData, setUserData] = useState(null);
@@ -27,6 +28,9 @@ const UserAccount = () => {
   const { identifier } = useParams();
   const authFetch = useAuthFetch();
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const { showToast } = useToast();
 
   const profileImageUploader = useProfileImageUpload(auth?.userData?._id, true);
 
@@ -63,12 +67,28 @@ const UserAccount = () => {
                 profileImageUrl: data?.profileImageUrl,
               });
             });
-        }
-        else{
+        } else {
           // fetch by username
-         const result = await fetch(`${config.serverURL}/user/${identifier}`)
-         if(result.ok){
-          const data = await result.json();
+          const response = await fetch(
+            `${config.serverURL}/user/${identifier}`
+          );
+          if (!response.ok) {
+            switch (response.status) {
+              case 404:
+                navigate("/not-found");
+                return;
+              case 500:
+                showToast(
+                  "Unexcepted Server error. Please try again later.",
+                  "error"
+                );
+                return;
+              default:
+                showToast(`Failed to load data (${response.status})`, "error");
+                return;
+            }
+          }
+          const data = await response.json();
           setUserData({
             firstName: data?.firstName,
             lastName: data?.lastName,
@@ -77,11 +97,11 @@ const UserAccount = () => {
             user_id: data?._id,
             profileImageUrl: data?.profileImageUrl,
           });
-         }
         }
       }
     } catch (error) {
       console.error("Failed to load user data:", error);
+      showToast("Unexcepted Server error. Please try again later.", "error");
     }
   };
 

@@ -334,7 +334,10 @@ function NavBar() {
                       )}
                     </IconContext.Provider>
                   ) : (
-                    ""
+                    <div className="no-notifications-placeholder flex-col center gap-05em" style={{padding:"1.5em"}}>
+                      <PiBell size={109} color="#999"/>
+                    <h3 style={{color:"#888"}}>No Notificatoins Yet</h3>
+                    </div>
                   )}
                 </Dropdown>
 

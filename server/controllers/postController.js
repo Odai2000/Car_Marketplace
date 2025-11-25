@@ -6,12 +6,21 @@ const folderId = process.env.PCLOUD_FOLDER_ID;
 const Bid = require("../models/Bid");
 const Comment = require("../models/Comment");
 const crypto = require("crypto");
+const mongoose = require("mongoose");
 
+
+const isValidObjectId = (_id) => {
+  return mongoose.Types.ObjectId.isValid(_id);
+};
 const getPostById = asyncHandler(async (req, res) => {
   try {
     const { include, user_id } = req.query;
     const populateFields = [];
-    let query = Post.findById(req.params.id);
+
+    const _id = req.params._id
+    
+    if (!isValidObjectId(_id)) return res.status(404).json({ message: "No post found" })
+    let query = Post.findById(_id);
 
     populateFields.push({
       path: "user",

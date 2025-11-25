@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import "./App.css";
 import Layout from "./components/Layout";
 import Home from "./components/pages/Home/Home";
@@ -19,6 +19,7 @@ import PostPage from "./components/pages/PostPage/PostPage";
 import { useEffect } from "react";
 import { AuthModalProvider } from "./context/AuthModalProvider";
 import { DialogProvider } from "./context/DialogProvider";
+import NotFound from "./components/pages/NotFound/NotFound";
 
 function App() {
   const ScrollToTop = () => {
@@ -45,7 +46,10 @@ function App() {
                         <Route index element={<Home />} />
                         <Route path="posts" element={<PostSearchResult />} />
                         <Route path="post/:_id" element={<PostPage />} />
-                        <Route path="user/:identifier/" element={<UserAccount />} />
+                        <Route
+                          path="user/:identifier/"
+                          element={<UserAccount />}
+                        />
                         <Route
                           path="user/:_id/verify-email"
                           element={<EmailVerification />}
@@ -59,6 +63,13 @@ function App() {
                           />
                           <Route path="me" element={<UserAccount />} />
                         </Route>
+
+                        <Route path="unauthorized" element={<UnAuthorized />} />
+                        <Route
+                          path="*"
+                          element={<Navigate to="/not-found" replace />}
+                        />
+                        <Route path="/not-found" element={<NotFound />} />
                       </Route>
 
                       <Route>
@@ -70,10 +81,12 @@ function App() {
                           <Route path="chat" element={<Chat />} />
                           <Route path="chat/:peer_id" element={<Chat />} />
                         </Route>
+                        <Route
+                          path="*"
+                          element={<Navigate to="/not-found" replace />}
+                        />
                       </Route>
                     </Route>
-
-                    <Route path="unAuthorized" element={<UnAuthorized />} />
                   </Route>
                 </Routes>
               </DialogProvider>

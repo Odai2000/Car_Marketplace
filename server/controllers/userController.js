@@ -7,9 +7,14 @@ const EmailManager = require("../modules/email/emailManager");
 const emailManager = new EmailManager("brevo");
 const CloudStorageManager = require("../modules/cloud_storage/cloudStorageManager");
 const { OAuth2Client } = require("google-auth-library");
+const mongoose = require("mongoose");
 
 const folderId = process.env.PCLOUD_FOLDER_ID;
 const cloudStorage = new CloudStorageManager("pcloud");
+
+const isValidObjectId = (_id) => {
+  return mongoose.Types.ObjectId.isValid(_id);
+};
 
 // Route functions
 
@@ -26,6 +31,7 @@ const getUser = asyncHandler(async (req, res) => {
   const identifier = req.params.identifier;
   let user;
   if (/^[0-9a-fA-F]{24}$/.test(identifier)) {
+    if (!isValidObjectId(identifier)) return res.status(404).json({ message: "No user found" })
     user = await User.findById(identifier).select("-password -savedPosts");
   } else {
     user = await User.findOne({ username: identifier }).select(
