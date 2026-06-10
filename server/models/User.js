@@ -83,7 +83,7 @@ const userSchema = new mongoose.Schema(
     },
     roles: {
       type: [String],
-      enum: ["USER", "ADMIN"],
+      enum: ["USER", "ADMIN","SUPERADMIN"],
       default: ["USER"],
     },
     savedPosts: [

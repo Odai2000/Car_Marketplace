@@ -20,6 +20,7 @@ import { useEffect } from "react";
 import { AuthModalProvider } from "./context/AuthModalProvider";
 import { DialogProvider } from "./context/DialogProvider";
 import NotFound from "./components/pages/NotFound/NotFound";
+import AdminPanel from "./components/pages/AdminPanel/AdminPanel";
 
 function App() {
   const ScrollToTop = () => {
@@ -28,7 +29,7 @@ function App() {
     useEffect(() => {
       window.scrollTo(0, 0);
     }, [pathname]);
-
+    9;
     return null;
   };
   return (
@@ -55,21 +56,17 @@ function App() {
                           element={<EmailVerification />}
                         />
 
-                        <Route element={<ReqAuth allowedRoles={["USER"]} />}>
-                          <Route path="new" element={<PostForm />} />
-                          <Route
-                            path="edit"
-                            element={<PostForm isUpdating={true} />}
-                          />
-                          <Route path="me" element={<UserAccount />} />
-                        </Route>
-
-                        <Route path="unauthorized" element={<UnAuthorized />} />
                         <Route
-                          path="*"
-                          element={<Navigate to="/not-found" replace />}
+                          element={<ReqAuth allowedRoles={["USER"]} />}
+                        >
+                          
+                        <Route path="new" element={<PostForm />} />
+                        <Route
+                          path="edit"
+                          element={<PostForm isUpdating={true} />}
                         />
-                        <Route path="/not-found" element={<NotFound />} />
+                        <Route path="me" element={<UserAccount />} />
+                        </Route>
                       </Route>
 
                       <Route>
@@ -82,11 +79,25 @@ function App() {
                           <Route path="chat/:peer_id" element={<Chat />} />
                         </Route>
                         <Route
-                          path="*"
-                          element={<Navigate to="/not-found" replace />}
-                        />
+                          element={
+                            <ReqAuth
+                              allowedRoles={["USER", "ADMIN", "SUPERADMIN"]}
+                            />
+                          }
+                        >
+                        </Route>
+
                       </Route>
+
                     </Route>
+                          <Route
+                            path="control-panel"
+                            element={<AdminPanel />}
+                          />
+                      <Route
+                        path="*"
+                        element={<Navigate to="/not-found" replace element={NotFound} />}
+                      />
                   </Route>
                 </Routes>
               </DialogProvider>

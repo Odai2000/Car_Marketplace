@@ -4,6 +4,7 @@ import "./Modal.css";
 import { createPortal } from "react-dom";
 import useLockBody from "../../../hooks/utility/useLockBody";
 import { useState } from "react";
+
 const Modal = ({
   show = false,
   onClose = () => {},

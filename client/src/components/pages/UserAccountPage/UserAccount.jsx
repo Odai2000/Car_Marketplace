@@ -3,7 +3,6 @@ import Button from "../../UI/Button/Button";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import useAuth from "../../../hooks/useAuth";
-import DefaultProfile from "../../UI/Utility/DefaultProfile/DefaultProfile";
 import useAuthFetch from "../../../hooks/useAuthFetch";
 import Post from "../../Post/Post";
 import useConfig from "../../../hooks/useConfig";
