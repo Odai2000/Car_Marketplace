@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
+import useConfig from "./useConfig";
 
-const useWindowSize = ({ smallScreenBreakpoint = 768 } = {}) => {
+
+const useWindowSize = () => {
+  const config = useConfig();
+
+  const smallScreenBreakpoint = config?.smallScreenBreakpoint || 500;
   const [isSmallScreen, setIsSmallScreen] = useState(
     () => window.innerWidth <= smallScreenBreakpoint
   );

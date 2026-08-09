@@ -136,7 +136,7 @@ const ProfileView = () => {
       }))
     )
       return;
-    await authFetch(`${config.serverURL}/user`, {
+    await authFetch(`${config.serverURL}/user/me`, {
       method: "DELETE",
       credentials: "include",
       headers: {

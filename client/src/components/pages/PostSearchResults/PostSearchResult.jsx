@@ -113,7 +113,7 @@ const PostSearchResult = () => {
             <div className="left flex">
               <span
                 style={{ color: "#aaa" }}
-              >{totalPosts?`${totalPosts} posts found`:<Skeleton style={{width:'12ch'}}/>}</span>
+              >{!(totalPosts === null)?`${totalPosts} posts found`:<Skeleton style={{width:'12ch'}}/>}</span>
               <Select
                 variant={"inline"}
                 value={sortBy}
@@ -137,8 +137,8 @@ const PostSearchResult = () => {
             </div>
           </div>
 
-          {posts?.length > 0
-            ? posts.map((post) => <Post key={post._id} data={post} />)
+          {!(totalPosts === null)?
+            posts.map((post) => <Post key={post._id} data={post} />)
             : Post.skeletons(15)}
           {posts?.length>0?<div
             className="pagination-controls"

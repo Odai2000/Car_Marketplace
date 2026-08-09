@@ -29,7 +29,6 @@ function App() {
     useEffect(() => {
       window.scrollTo(0, 0);
     }, [pathname]);
-    9;
     return null;
   };
   return (
@@ -56,16 +55,13 @@ function App() {
                           element={<EmailVerification />}
                         />
 
-                        <Route
-                          element={<ReqAuth allowedRoles={["USER"]} />}
-                        >
-                          
-                        <Route path="new" element={<PostForm />} />
-                        <Route
-                          path="edit"
-                          element={<PostForm isUpdating={true} />}
-                        />
-                        <Route path="me" element={<UserAccount />} />
+                        <Route element={<ReqAuth allowedRoles={["USER"]} />}>
+                          <Route path="new" element={<PostForm />} />
+                          <Route
+                            path="edit"
+                            element={<PostForm isUpdating={true} />}
+                          />
+                          <Route path="me" element={<UserAccount />} />
                         </Route>
                       </Route>
 
@@ -84,20 +80,15 @@ function App() {
                               allowedRoles={["USER", "ADMIN", "SUPERADMIN"]}
                             />
                           }
-                        >
-                        </Route>
-
+                        ></Route>
                       </Route>
-
                     </Route>
-                          <Route
-                            path="control-panel"
-                            element={<AdminPanel />}
-                          />
-                      <Route
-                        path="*"
-                        element={<Navigate to="/not-found" replace element={NotFound} />}
-                      />
+                    <Route path="control-panel" element={<AdminPanel />} />
+                    <Route path="not-found" element={<NotFound />} />
+                    <Route
+                      path="*"
+                      element={<Navigate to="/not-found" replace />}
+                    />
                   </Route>
                 </Routes>
               </DialogProvider>

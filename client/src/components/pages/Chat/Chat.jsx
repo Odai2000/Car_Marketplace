@@ -78,7 +78,7 @@ const Chat = () => {
       console.log(error);
       showToast("Error fetching chats", "error");
     }
-  }, [peerId]);
+  }, []);
 
   useEffect(() => {
     if (chatBodyRef.current) {
@@ -177,7 +177,7 @@ const Chat = () => {
             <div className="chat-header contact">
               <Button variant={"icon"} onClick={() => setToggleView(false)}>
                 <FaArrowLeft />
-              </Button>
+            </Button>
                    <ProfileImage round src={chat.peer?.profileImageUrl} size="sm"/>
 
 

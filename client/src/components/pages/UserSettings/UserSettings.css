@@ -3,6 +3,7 @@
   display: flex;
   /* gap: 2em; */
   overflow-y:clip ;
+  box-sizing: border-box;
 }
 
 .UserSettings .sidebar {
@@ -88,7 +89,7 @@ text-wrap: nowrap;
   flex-direction: column;
   gap: 1em;
   padding: 1em 0;
-  height: 100%;
+  /* height: 100%; */
 }
 
 .config-panel form {

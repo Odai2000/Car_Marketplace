@@ -93,7 +93,7 @@ const UserSettings = () => {
               </div>
             </div>
             <Button variant = "icon" styleName="logout-icon" onClick={logout}>
-              <FaArrowRightFromBracket color="#fff" size=".85em" />
+              <FaArrowRightFromBracket color="#fff" size="1em" />
             </Button>
           </div>
         </div>

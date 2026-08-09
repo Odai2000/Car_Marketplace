@@ -1,5 +1,9 @@
 const User = require("../models/User");
 const Token = require("../models/Token");
+const Post = require("../models/Post");
+const Comment = require("../models/Comment");
+const Bid = require("../models/Bid");
+const Notification = require("../models/Notification");
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -17,7 +21,6 @@ const isValidObjectId = (_id) => {
 };
 
 // Route functions
-
 //get users
 const getAllUsers = asyncHandler(async (req, res) => {
   const users = await User.find().select("-password");
@@ -31,11 +34,12 @@ const getUser = asyncHandler(async (req, res) => {
   const identifier = req.params.identifier;
   let user;
   if (/^[0-9a-fA-F]{24}$/.test(identifier)) {
-    if (!isValidObjectId(identifier)) return res.status(404).json({ message: "No user found" })
+    if (!isValidObjectId(identifier))
+      return res.status(404).json({ message: "No user found" });
     user = await User.findById(identifier).select("-password -savedPosts");
   } else {
     user = await User.findOne({ username: identifier }).select(
-      "-password -savedPosts"
+      "-password -savedPosts",
     );
   }
 
@@ -99,8 +103,10 @@ const createUser = asyncHandler(async (req, res) => {
   });
 });
 
+//Note: need to rework this to handle different use cases aka update by user verus by admin. 
 const updateUser = asyncHandler(async (req, res) => {
-  const { _id, username, email, location,firstName, lastName, roles } = req.body;
+  const { _id, username, email, location, firstName, lastName, roles } =
+    req.body;
 
   if (req.user._id !== _id && !req.user.roles.includes("ADMIN")) {
     console.log(`${req.user._id} === ${_id} `);
@@ -147,7 +153,6 @@ const updateUser = asyncHandler(async (req, res) => {
     return res.status(400).send("Update failed");
   }
 
-
   res.status(200).json({ message: "User updated", userData: updatedUser });
 });
 
@@ -184,18 +189,62 @@ const changePassword = asyncHandler(async (req, res) => {
 });
 
 const deleteUser = asyncHandler(async (req, res) => {
-  const { _id } = req.body;
+  const requestingUserId = req.user._id;
+  const targetUserId = req.body._id || requestingUserId;
 
-  if (req.user._id !== _id && !req.user.roles.includes("ADMIN")) {
-    console.log(`${req.user._id} === ${_id} `);
-    return res.status(403).send("Forbidden");
+  if (!isValidObjectId(targetUserId)) {
+    return res.status(400).json({ message: "Invalid user id." });
   }
 
-  const queryResult = await User.findByIdAndDelete(_id).lean();
+  const isOwner = requestingUserId.toString() === targetUserId.toString();
+  const isAuthorized = req.user.roles.some(
+    (role) => role === "ADMIN" || role === "SUPER_ADMIN",
+  );
 
-  res.json({
-    message: `User ${queryResult.username} with id: ${queryResult._id} deleted.`,
-  });
+  if (!isOwner && !isAuthorized) {
+    return res
+      .status(403)
+      .json({ message: "Forbidden. insufficient permissions." });
+  }
+
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
+
+    const user = await User.findById(targetUserId).session(session);
+    if (!user) {
+      await session.abortTransaction();
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    await Token.deleteMany({ user_id: targetUserId }).session(session);
+
+    const posts = await Post.find({ user_id: targetUserId }).session(session);
+    for (const post of posts) {
+      for (const imageId of post.imageIds) {
+        await cloudStorage.delete(imageId);
+      }
+    }
+    await Post.deleteMany({ user_id: targetUserId }).session(session);
+
+    await Comment.deleteMany({ user_id: targetUserId }).session(session);
+    await Bid.deleteMany({ user_id: targetUserId }).session(session);
+    await Notification.deleteMany({ user_id: targetUserId }).session(session);
+
+    await user.deleteOne({ session });
+
+    await session.commitTransaction();
+
+    const message = isOwner
+      ? "Your account has been deleted."
+      : `User ${user.username} with id: ${user._id} deleted.`;
+    return res.json({ message });
+  } catch (error) {
+    await session.abortTransaction();
+    throw error;
+  } finally {
+    session.endSession();
+  }
 });
 
 const loginUser = asyncHandler(async (req, res) => {
@@ -206,7 +255,7 @@ const loginUser = asyncHandler(async (req, res) => {
       username,
     });
 
-    if (!user) return res.status(404).send("Username not found.");
+    if (!user) return res.status(401).send("Username or password is incorrect.");
 
     if (await bcrypt.compare(password, user.password)) {
       const accessToken = generateAccessToken(user);
@@ -214,17 +263,17 @@ const loginUser = asyncHandler(async (req, res) => {
       res.setHeader("Access-Control-Allow-Credentials", true);
       res.setHeader(
         "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept, authorization"
+        "Origin, X-Requested-With, Content-Type, Accept, authorization",
       );
       res.setHeader("Content-Type", "application/json");
       res.setHeader("Access-Control-Allow-Origin", process.env.CLIENT_URL);
       res.setHeader(
         "Access-Control-Allow-METHODS",
-        "GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS, PATCH"
+        "GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS, PATCH",
       );
 
       const token = await Token.create({
-        userID: user._id,
+        user_id: user._id,
         token: refreshToken,
       });
 
@@ -240,7 +289,7 @@ const loginUser = asyncHandler(async (req, res) => {
         })
         .json({ accessToken: accessToken, userData: user });
     } else {
-      return res.status(401).send("Authentication Failed.");
+      return res.status(401).send("Username or password is incorrect.");
     }
   } catch (error) {
     console.log(error);
@@ -291,13 +340,13 @@ const googleLogin = asyncHandler(async (req, res) => {
     res.setHeader("Access-Control-Allow-Credentials", true);
     res.setHeader(
       "Access-Control-Allow-Headers",
-      "Origin, X-Requested-With, Content-Type, Accept, authorization"
+      "Origin, X-Requested-With, Content-Type, Accept, authorization",
     );
     res.setHeader("Content-Type", "application/json");
     res.setHeader("Access-Control-Allow-Origin", process.env.CLIENT_URL);
     res.setHeader(
       "Access-Control-Allow-METHODS",
-      "GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS, PATCH"
+      "GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS, PATCH",
     );
 
     const token = await Token.create({
@@ -306,7 +355,6 @@ const googleLogin = asyncHandler(async (req, res) => {
     });
 
     if (!token) return res.status(500).send("server Error");
-
 
     return res
       .status(200)
@@ -375,7 +423,7 @@ const savePost = asyncHandler(async (req, res) => {
   try {
     await User.updateOne(
       { _id: user_id },
-      { $addToSet: { savedPosts: post_id } }
+      { $addToSet: { savedPosts: post_id } },
     );
 
     const updatedUser = await User.findById(user_id).select("savedPosts");
@@ -482,7 +530,7 @@ const rateUser = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "Invalid value for rate" });
   }
   const existingRating = user.ratings.find(
-    (rating) => rating.user_id.toString() === rater_id.toString()
+    (rating) => rating.user_id.toString() === rater_id.toString(),
   );
   if (existingRating) {
     existingRating.rate = rate;
@@ -510,7 +558,7 @@ const generateAccessToken = (user) => {
     process.env.ACCESS_TOKEN_SECRET,
     {
       expiresIn: "600s",
-    }
+    },
   );
 };
 
@@ -523,7 +571,7 @@ const generateRefreshToken = (user) => {
     process.env.REFRESH_TOKEN_SECRET,
     {
       expiresIn: "15d",
-    }
+    },
   );
 };
 
@@ -532,7 +580,7 @@ const sendVerificationLink = async (user) => {
     const token = jwt.sign(
       { email: user.email },
       process.env.EMAIL_VERIFICATION_TOKEN_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "1h" },
     );
     const verificationLink = `${process.env.CLIENT_URL}/user/${user._id}/verify-email?token=${token}`;
 
@@ -579,8 +627,6 @@ const refreshTheToken = asyncHandler(async (req, res) => {
 
       const accessToken = generateAccessToken(user);
 
-
-
       res.status(200).json({ accessToken: accessToken, userData: user });
     });
   } catch (error) {
@@ -589,13 +635,14 @@ const refreshTheToken = asyncHandler(async (req, res) => {
   }
 });
 
+
 module.exports = {
   getAllUsers,
   getUser,
   getUserPersonalData,
   createUser,
   updateUser,
-  deleteUser,
+deleteUser,
   loginUser,
   googleLogin,
   logout,

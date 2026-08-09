@@ -1,8 +1,9 @@
 const postController = require("../controllers/postController");
 const express = require("express");
 const router = express.Router();
-const authenticateToken = require("../middleware/authenticateToken")
-const optionalAuth = require("../middleware/optionalAuth")
+const authenticateToken = require("../middleware/authenticateToken");
+const optionalAuth = require("../middleware/optionalAuth");
+const Post = require("../models/Post");
 const multer = require("multer");
 
 const upload = multer({ dest: "temp/" });
@@ -10,8 +11,12 @@ const upload = multer({ dest: "temp/" });
 router
   .route("/")
   .get(postController.getPosts)
-  .post(authenticateToken,upload.array("images"), postController.createPost)
-  .patch(authenticateToken,upload.array("images"),postController.updatePost)
+  .post(authenticateToken, upload.array("images"), postController.createPost)
+  .patch(
+    authenticateToken,
+    upload.array("images"),
+    postController.updatePost
+  )
   .delete(authenticateToken,postController.deletePost);
 
 router.route("/highest-score/").get(postController.getPostsByHighestScore);

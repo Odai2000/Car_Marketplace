@@ -147,4 +147,7 @@ align-self: center;
   .Chat > * {
     display: flex;
   }
+  .chat-view .chat-header .btn.icon{
+    display: none;
+  }
 }

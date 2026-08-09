@@ -185,10 +185,10 @@ const getPosts = asyncHandler(async (req, res) => {
     .limit(limit)
     .lean();
 
-  if (!posts.length) {
-    // return res.status(400).json({ message: "No Posts found." });
-    return res.status(200).json(posts);
-  }
+  // if (!posts.length) {
+  //   // return res.status(400).json({ message: "No Posts found." });
+  //   return res.status(200).json(posts);
+  // }
 
   // populate post.images and remove remove post.imageIds
   for (const post of posts) {

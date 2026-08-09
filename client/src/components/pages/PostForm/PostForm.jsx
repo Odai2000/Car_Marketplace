@@ -39,7 +39,7 @@ const PostForm = ({ isUpdating = false }) => {
   });
 
   const [formData, setFormData] = useState(
-    postData || {
+    (isUpdating && postData) || {
       title: "",
       car: {},
       price: '',
@@ -56,6 +56,8 @@ const PostForm = ({ isUpdating = false }) => {
       (valid) => valid === true
     );
     setIsStepValid(isValid);
+   setFormData(postData);
+   return ()=>location.state.postData = null;
   }, []);
 
   useEffect(() => {

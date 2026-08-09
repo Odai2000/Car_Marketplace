@@ -11,6 +11,7 @@
   border: 1px rgba(88, 84, 84, 0.808) solid;
   border-radius: 8px;
   background-color: transparent;
+  font-size: 1rem;
 }
 
  .form-control-label {

@@ -3,16 +3,24 @@ const authenticateToken = require("../middleware/authenticateToken");
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
+const authorizeRole = require("../middleware/authorizeRole");
 
 const upload = multer({ dest: "temp/" });
 router
   .route("/")
-  .get(authenticateToken, userController.getAllUsers)
+  .get(authenticateToken, authorizeRole("ADMIN","SUPERADMIN"), userController.getAllUsers)
   .post(userController.createUser)
   .patch(authenticateToken, userController.updateUser)
-  .delete(authenticateToken, userController.deleteUser);
+  .delete(
+    authenticateToken,
+    authorizeRole("ADMIN","SUPERADMIN"),
+    userController.deleteUser,
+  );
 
-router.route("/me").get(authenticateToken, userController.getUserPersonalData);
+router
+  .route("/me")
+  .get(authenticateToken, userController.getUserPersonalData)
+  .delete(authenticateToken, userController.deleteUser);
 router
   .route("/me/saved-posts")
   .get(authenticateToken, userController.getSavedPosts);
@@ -38,7 +46,7 @@ router.patch(
   "/:id/profile-image",
   authenticateToken,
   upload.single("image"),
-  userController.updateProfileImage
+  userController.updateProfileImage,
 );
 
 router
