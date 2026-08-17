@@ -23,11 +23,14 @@ import useToast from "../../../hooks/useToast";
 import useDialog from "../../../hooks/useDialog";
 import useAuth from "../../../hooks/useAuth";
 import useAuthFetch from "../../../hooks/useAuthFetch";
-import ReactStars from "react-rating-stars-component";
+import ReactStarsBase from "react-rating-stars-component";
 import { FaStarHalfAlt } from "react-icons/fa";
 import Skeleton from "react-loading-skeleton";
 import NumericInput from "../../UI/FormControls/NumericInput/NumericInput";
 import Dropdown from "../../UI/Dropdown/Dropdown";
+import HourGlass from "./assets/hour-glass.svg";
+
+const ReactStars = ReactStarsBase?.default ?? ReactStarsBase; //NOTE: AI temp fix. check later
 
 const PostPage = () => {
   const [comments, setComments] = useState([]);
@@ -592,7 +595,7 @@ const PostPage = () => {
                 ) : (
                   <div className="no-bids">
                     <img
-                      src="../../../../dist/assets/hour-glass.svg"
+                      src={HourGlass}
                       style={{ width: "16rem", height: "12rem" }}
                     />
                     <h1 style={{ color: "var(--primary)", fontWeight: "500" }}>

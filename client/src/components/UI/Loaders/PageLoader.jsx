@@ -1,4 +1,4 @@
-import FadeLoader from "react-spinners/FadeLoader";
+import { FadeLoader } from "react-spinners";
 
 const PageLoader = ({ isLoading = true, color = "var(--primary)", size = 150 }) => {
   return (
