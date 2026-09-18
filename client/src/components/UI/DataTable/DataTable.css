@@ -1,0 +1,97 @@
+.DataTable{
+  align-items: stretch;
+}
+
+.data-table {
+  border-collapse: seperate;
+  border-spacing:0;
+  /* border-radius: 1em; */
+  font-size:0.75em
+}
+
+/* th td */
+.data-table th, .data-table td {
+  border: 1px solid rgb(245, 243, 243);
+  padding: .5em;
+
+}
+
+.data-table th {
+  color: gray;
+  border-bottom: none;
+  background-color: var(--table-main);
+
+  font-weight: 700;
+}
+
+/* .data-table tr:nth-child(even) {
+ background-color: rgba(212, 255, 177, 0.425); 
+ background-color:var(--light-primary); 
+} */
+
+
+.data-table th:first-child
+ {
+  border-bottom: none;
+   border-top-left-radius:4px;
+}
+.data-table th:last-child
+ {
+   border-top-right-radius:4px;
+}
+.data-tabletr:last-child td {
+  border-bottom: none;
+}
+
+.data-table th.sortable-header {
+  cursor: pointer;
+}
+
+/* rows */
+
+.data-table tr {
+  border: 1px solid rgb(245, 243, 243);
+  padding: .5em;
+
+}
+
+.data-table tr.selected {
+background-color: var(--light-primary);
+  padding: .5em;
+
+}
+.data-table tr.selected > .btn.secondary {
+background-color: var(--light-primary);
+  padding: .5em;
+
+}
+
+/* others */
+.data-table .table-controls {
+  padding: .25em;
+}
+.data-table .table-controls .btn{
+  padding: .5em;
+  font-size: 1em;
+  
+}
+
+
+.BulkActionsBar{
+  position:absolute; bottom: 1em;left:50%;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 20rem;
+  background-color: var(--table-main);
+  /* color: gray; */
+  padding: .75rem;
+  padding-right: 1.25rem;
+  border-radius: 32px;
+  /* font-weight: 600; */
+
+}
+
+.BulkActionsBar .cancel-btn:hover{
+color: var(--primary);
+font-weight: 700;
+}

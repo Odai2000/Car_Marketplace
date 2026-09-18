@@ -32,10 +32,6 @@ const Modal = ({
         >
           <div className="modal-body card">
  
-              <header>
-                {" "}
-                {title && <h2>{title}</h2>}
-      
                   <div className="cancel-btn-container">
                     <Button
                       styleName="cancel-btn"
@@ -47,6 +43,10 @@ const Modal = ({
                       <FaXmark />
                     </Button>
                   </div>
+              <header>
+                {" "}
+                {title && <h2>{title}</h2>}
+      
          
               </header>
      

@@ -121,8 +121,12 @@ width:max-content;
   border: 1px solid var(--primary);
   border-radius: 8px;
   padding: 1em 2em;
+
 }
 
+.UserSettings .config-panel .view > .container * {
+max-width: 100%;
+}
 
 
 
@@ -143,6 +147,7 @@ gap:1em
 .UserSettings .config-panel .location .container {
   flex-wrap: wrap;
   gap:1em
+
 }
 .UserSettings .config-panel .location-details{
   flex-grow: 1;

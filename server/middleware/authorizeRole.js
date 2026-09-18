@@ -1,7 +1,7 @@
 const authorizeRole = (...roles) => {
   return (req, res, next) => {
     const userRoles = req.user?.roles;
-
+console.log(userRoles)
     if (!userRoles) {
       return res
         .status(401)
@@ -17,6 +17,7 @@ const authorizeRole = (...roles) => {
       next();
     } else {
       res.status(403).json({ message: "Forbidden. insufficient permissions." });
+      console.log(`user roles allowedRoles ${allowedRoles}`)
     }
   };
 };

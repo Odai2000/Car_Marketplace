@@ -1,24 +1,23 @@
-.AdminPanel {
-  height: 100vh;
+.Dashboard {
+  height: 100%;
   display: flex;
   /* gap: 2em; */
-  overflow-y:clip ;
+  /* overflow-y: clip; */
 }
 
-.AdminPanel .sidebar {
+.Dashboard .sidebar {
   display: none;
   flex-direction: column;
   justify-content: flex-start;
   flex-grow: 1;
   gap: 2em;
-  height: 100%;
   padding: 2em 1em;
   background-color: var(--primary);
   color: white;
   border-top-right-radius: 4px;
 }
 
-.AdminPanel .sidebar .footer {
+.Dashboard .sidebar .footer {
   width: fit-content;
   margin-top: auto;
   display: flex;
@@ -32,12 +31,12 @@
   font-size: 1.4rem;
 }
 
-.AdminPanel .sidebar .profile-container {
+.Dashboard .sidebar .profile-container {
   align-items: center;
-  gap: 0.5em
+  gap: 0.5em;
 }
 
-.AdminPanel .sidebar .profile-container .profile-image {
+.Dashboard .sidebar .profile-container .profile-image {
   position: relative;
   width: 3rem;
   height: 3rem;
@@ -45,49 +44,53 @@
   border-radius: 100%;
   overflow: hidden;
 }
-.AdminPanel .sidebar .profile-container .name {
-text-wrap: nowrap;
+.Dashboard .sidebar .profile-container .name {
+  text-wrap: nowrap;
 }
 
-.AdminPanel .sidebar .vertical-tabs {
+.Dashboard .sidebar .vertical-tabs {
   display: flex;
   flex-direction: column;
   gap: 1em;
   padding: 0 2em;
 }
 
-.AdminPanel .sidebar .tab {
+.Dashboard .sidebar .tab {
   font-size: 1.2em;
   font-weight: bold;
   padding: 1em;
   text-align: left;
 }
 
-.AdminPanel .sidebar .tab:hover {
+.Dashboard .sidebar .tab:hover {
   background-color: #186d20;
 }
 
 /* Config panel */
 
-.AdminPanel .config-panel {
+.Dashboard .config-panel {
   display: none;
   flex-direction: column;
   flex-grow: 1;
   padding: 1em;
-  overflow-y: auto;
+  /* overflow-y: auto; */
 }
 
-.AdminPanel .config-panel header {
+.Dashboard .config-panel header {
   align-items: center;
 }
 
-.AdminPanel .view {
+.Dashboard .view {
   display: flex;
   flex-direction: column;
   gap: 1em;
-  padding: 1em 0;
-  height: 100%;
+  padding: 1em;
+  overflow-y: auto;
+
 }
+
+/* database view */
+
 
 .config-panel form {
   width: 100%;
@@ -98,7 +101,7 @@ text-wrap: nowrap;
   /* align-items: end; */
 }
 
-.AdminPanel .config-panel .profile-view .profile-image {
+.Dashboard .config-panel .profile-view .profile-image {
   position: relative;
   width: 5rem;
   height: 5rem;
@@ -107,11 +110,11 @@ text-wrap: nowrap;
   overflow: hidden;
 }
 
-.AdminPanel .config-panel .profile-view .btn-group .btn{
-width:max-content;
+.Dashboard .config-panel .profile-view .btn-group .btn {
+  width: max-content;
 }
 
-.AdminPanel .config-panel .view > .container {
+.Dashboard .config-panel .view > .container {
   display: flex;
   flex-direction: column;
   gap: 0.5em;
@@ -120,60 +123,52 @@ width:max-content;
   padding: 1em 2em;
 }
 
-
-
-
 .details {
   display: flex;
   flex-direction: column;
   gap: 1em;
 }
 
-
-.AdminPanel .config-panel .view .btn {
+.Dashboard .config-panel .view .btn {
   width: 100%;
 }
 
-.AdminPanel .config-panel .location {
-gap:1em
+.Dashboard .config-panel .location {
+  gap: 1em;
 }
-.AdminPanel .config-panel .location .container {
+.Dashboard .config-panel .location .container {
   flex-wrap: wrap;
-  gap:1em
+  gap: 1em;
 }
-.AdminPanel .config-panel .location-details{
+.Dashboard .config-panel .location-details {
   flex-grow: 1;
 }
 
-.AdminPanel .toggled {
+.Dashboard .toggled {
   display: flex;
 }
 
-
-
 @media (min-width: 768px) {
-
-  .AdminPanel .config-panel {
+  .Dashboard .config-panel {
     display: flex;
     flex-grow: 1;
   }
 
-  .AdminPanel .config-panel .view .btn {
+  .Dashboard .config-panel .view .btn {
     max-width: fit-content;
   }
 
-  .AdminPanel .sidebar {
+  .Dashboard .sidebar {
     display: flex;
     flex-grow: 0;
   }
 
-  .AdminPanel .sidebar .tab.active {
+  .Dashboard .sidebar .tab.active {
     background-color: #fff;
     color: var(--primary);
   }
 
-  .AdminPanel .config-panel .view {
+  .Dashboard .config-panel .view {
     /* max-width: 64em; */
   }
-
 }

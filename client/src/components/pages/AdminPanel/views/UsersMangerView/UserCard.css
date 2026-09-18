@@ -1,0 +1,26 @@
+.UserCard h4 {
+    color: gray;
+}
+
+.UserCard .user-details{
+    display: grid;
+    grid-template-columns: repeat(2, fit-content(100%));
+    gap: 1em;
+    align-self: stretch;
+    justify-content: center;
+
+}
+
+.UserCard .user-details .detail{
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    gap:0.5em;
+    width: fit-content;
+    font-size: var(--sm);
+}
+.user-details label{
+    color: var(--neutral-gray);
+
+    color: gray;
+}

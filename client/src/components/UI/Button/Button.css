@@ -9,6 +9,7 @@
   font-size: 0.9rem;
   font-weight: 500;
   letter-spacing: 0.75px;
+  background-color: transparent;
 }
 
 .btn:hover {
@@ -41,6 +42,10 @@
   border: none;
 }
 
+.btn.secondary:hover {
+  background-color: var(--shade);
+}
+
 .btn.link {
   padding: 0;
   background-color: transparent;
@@ -54,8 +59,9 @@
   text-decoration: underline;
 }
 
-/* .destructive {
+/* .btn.destructive {
     color: var(--destructive);
+    border-color:var(--destructive) ;
   } */
 
 .btn.primary.destructive {
@@ -63,9 +69,12 @@
 }
 
 .btn.secondary.destructive {
-  background-color: transparent;
+  background-color: #fff;
   color: var(--destructive);
   border-color: var(--destructive);
+}
+.btn.secondary.destructive:hover {
+  background-color: var(--shade);
 }
 
 .btn.link.destructive {
@@ -96,4 +105,3 @@
 .btn.icon.inverse {
   color: #fff;
 }
-

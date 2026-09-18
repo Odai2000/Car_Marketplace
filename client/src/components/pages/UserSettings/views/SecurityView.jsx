@@ -23,7 +23,7 @@ const SecurityView = () => {
     await authFetch(`${config.serverURL}/me/change-password`, {
       method: "PATCH",
       headers: {
-        "content-Type": "application/json",
+        "content-type": "application/json",
       },
       body: JSON.stringify({
         password: password,

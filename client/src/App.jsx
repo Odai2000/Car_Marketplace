@@ -20,7 +20,9 @@ import { useEffect } from "react";
 import { AuthModalProvider } from "./context/AuthModalProvider";
 import { DialogProvider } from "./context/DialogProvider";
 import NotFound from "./components/pages/NotFound/NotFound";
-import AdminPanel from "./components/pages/AdminPanel/AdminPanel";
+import AdminPanel from "./components/pages/AdminPanel/Dashboard";
+import Modal from "./components/UI/Modal/Modal";
+import { ModalProvider } from "./context/ModalProvider";
 
 function App() {
   const ScrollToTop = () => {
@@ -36,6 +38,7 @@ function App() {
       <AppDataProvider>
         <AuthProvider>
           <ToastProvider>
+            <ModalProvider>
             <AuthModalProvider>
               <DialogProvider>
                 <ScrollToTop />
@@ -93,6 +96,7 @@ function App() {
                 </Routes>
               </DialogProvider>
             </AuthModalProvider>
+              </ModalProvider>
           </ToastProvider>
         </AuthProvider>
       </AppDataProvider>

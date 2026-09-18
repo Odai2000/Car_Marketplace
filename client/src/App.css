@@ -11,22 +11,58 @@
 }
 
 :root {
-  --primary: hsl(121, 54%, 31%);
+  /* primary hsl breakdown */
+  --primary-h: 121;
+  --primary-s: 55%;
+  --primary-l: 35%;
+
+  --primary: hsl(var(--primary-h), var(--primary-s), var(--primary-l));
   --success: #28a745;
   --destructive: #de0d0d;
   --warning: #b45309;
   --info: #6c757d;
 
-  --disabled-gray: hsl(0, 0%, 60%);
-  --neutral-gray:hsl(0,0%,50%);
+  --light-primary: hsl(var(--primary-h), var(--primary-s), 90%);
+  --shade-primary: hsl(var(--primary-h), var(--primary-s), 99%);
 
-  /* primary hsl breakdown */
-  --primary-h: 121;
-  --primary-s: 54%;
-  --primary-l: 31%;
+  --disabled-gray: hsl(0, 0%, 60%);
+  --neutral-gray: hsl(0, 0%, 50%);
+
+  --shade: hsla(0, 0%, 98%);
+
+  /* table colors */
+  --table-main: hsl(130, 100%, 80%);
+
+  /* role colors */
+  --role-owner-h: 5; /* red */
+  --role-admin-h: 30; /* amber */
+  --role-moderator-h: 150; /* green */
+  --role-user-h: 121; /* primary */
+
+  --role-owner: hsl(var(--role-owner-h), 100%, 30%);
+  --role-admin: hsl(var(--role-admin-h), 100%, 30%);
+  --role-moderator: hsl(var(--role-moderator-h), 100%, 30%);
+  --role-user: hsl(var(--role-user-h), 100%, 30%);
+
+  --role-owner-light: hsl(var(--role-owner-h), 100%, 95%);
+  --role-admin-light: hsl(var(--role-admin-h), 100%, 95%);
+  --role-moderator-light: hsl(var(--role-moderator-h), 100%, 95%);
+  --role-user-light: hsl(
+    var(--role-user-h),
+    100%,
+    98%
+  ); /* primary greenish gray*/
 
   --smBreakpoint: 576px;
   --mdBreakpoint: 768px;
+
+  --xxl: 1.75rem;
+  --xl: 1.5rem;
+  --lg: 1.25rem;
+  --m: 1rem;
+  --sm: 0.75rem;
+  --xs: 0.5rem;
+  --xxs: 0.25rem;
 }
 #root {
   display: contents;
@@ -39,13 +75,13 @@ img {
 html {
   height: 100%;
   width: 100%;
-  font-size: clamp(14px, 1.25vw, 20px); 
+  font-size: clamp(14px, 1.25vw, 20px);
 }
 
 body {
   height: 100%;
   width: 100%;
-  font-size:1rem;
+  font-size: 1rem;
 }
 
 h2 {
@@ -105,35 +141,53 @@ header.home-header {
   flex-direction: row;
 }
 .center {
-justify-content: center;
-align-items: center;
+  justify-content: center;
+  align-items: center;
 }
 
 .gap-05em {
-  gap:.5em;
+  gap: 0.5em;
 }
 .gap-1em {
-  gap:1em;
+  gap: 1em;
 }
 
 .gap-2em {
-  gap:2em;
+  gap: 2em;
 }
 
 .gap-4em {
-  gap:4em;
+  gap: 4em;
 }
 
 .gap-5em {
-  gap:5em;
+  gap: 5em;
 }
 
-.round{
+.round {
   border-radius: 999px;
 }
 
-.round-hid{
+.round-hid {
   border-radius: 100%;
   overflow: hidden;
 }
 
+/* fonts */
+.font-xs {
+  font-size: 0.75rem;
+}
+.font-sm {
+  font-size: 0.85rem;
+}
+.font-m {
+  font-size: 1rem;
+}
+
+.font-lg {
+  font-size: 1.25rem;
+}
+
+.font-xl {
+  font-size: 1.5rem;
+}

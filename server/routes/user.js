@@ -8,12 +8,13 @@ const authorizeRole = require("../middleware/authorizeRole");
 const upload = multer({ dest: "temp/" });
 router
   .route("/")
-  .get(authenticateToken, authorizeRole("ADMIN","SUPERADMIN"), userController.getAllUsers)
+  .get(authenticateToken,     authorizeRole("ADMIN","SUPERADMIN","USER"),
+ userController.getAllUsers)
   .post(userController.createUser)
   .patch(authenticateToken, userController.updateUser)
   .delete(
     authenticateToken,
-    authorizeRole("ADMIN","SUPERADMIN"),
+    authorizeRole("ADMIN","SUPERADMIN","USER"),
     userController.deleteUser,
   );
 

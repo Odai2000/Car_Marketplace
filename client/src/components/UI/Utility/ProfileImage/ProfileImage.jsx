@@ -29,7 +29,7 @@ const ProfileImage = ({
   return (
     <div
       className={`ProfileImage profile-image ${round && "round"} ${className}`}
-      style={{ width:value,height:value }}
+      style={{ width:value,height:value,overflow:"clip" }}
     >
       {src ? (
         <img src={src} alt="profile-image" />

@@ -56,8 +56,8 @@ const PostForm = ({ isUpdating = false }) => {
       (valid) => valid === true
     );
     setIsStepValid(isValid);
-   setFormData(postData);
-   return ()=>location.state.postData = null;
+   setFormData(formData);
+   return ()=>(location?.state?.postData && (location.state.postData = null));
   }, []);
 
   useEffect(() => {

@@ -34,7 +34,7 @@ const Chat = () => {
       },
     })
       .then((response) => {
-        if (response.ok) {
+        if (response?.ok) {
           return response.json();
         }
         throw new Error("Failed to load chats");
@@ -55,7 +55,7 @@ const Chat = () => {
       },
     })
       .then((response) => {
-        if (response.ok) {
+        if (response?.ok) {
           return response.json();
         }
         throw new Error("Failed to fetch chat with the specified user.");

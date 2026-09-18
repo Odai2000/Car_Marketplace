@@ -50,7 +50,6 @@ const RegisterForm = ({onSuccess}) => {
   useEffect(() => {}, []);
   return (
     <>
-    <h2>register</h2>
       <form className="authForm" onSubmit={handleSubmit}>
         <Input
           type="text"

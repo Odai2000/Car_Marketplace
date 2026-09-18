@@ -1,13 +1,14 @@
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
 import Button from "../../UI/Button/Button";
-import "./AdminPanel.css"
+import "./Dashboard.css"
 import { useState,useEffect} from "react";
 import useWindowSize from "../../../hooks/useWindow";
 import { FaArrowLeft, FaLock, FaUser } from "react-icons/fa6";
+import DatabaseView from "./views/UsersMangerView/UserManagerView";
 
 
-const AdminPanel = ()=>{
+const Dashboard = ()=>{
  const [activeTab, setActiveTab] = useState("Data");
   const [toggleView, setToggleView] = useState(false);
 
@@ -18,7 +19,7 @@ const AdminPanel = ()=>{
     setToggleView(true);
   };
     return (
-        <div className="AdminPanel">
+        <div className="Dashboard">
                    <div className={`sidebar ${!toggleView ? "toggled" : ""}`}>
 
           <header className="flex gap-0.5em center">
@@ -47,11 +48,11 @@ const AdminPanel = ()=>{
             <Button
               styleName={`tab ${activeTab === "Perferences" ? "active" : ""}`}
               onClick={() => {
-                handleTabClick("Perferences");
+                handleTabClick("Preferences");
               }}
               variant="primary round"
             >
-               Perferences
+               Preferences
             </Button>
           </div>
 
@@ -77,7 +78,7 @@ const AdminPanel = ()=>{
             <h1>{activeTab}</h1>
 
           </header>
-          {/* {activeTab === "Data" ? <Prof /> : ""} */}
+          {activeTab === "Data" ? <DatabaseView /> : null}
 
           {/* {activeTab === "Security" ? (
             <>
@@ -93,4 +94,4 @@ const AdminPanel = ()=>{
     )
 }
 
-export default AdminPanel;
+export default Dashboard;

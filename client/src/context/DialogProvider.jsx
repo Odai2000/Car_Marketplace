@@ -6,7 +6,7 @@ export const DialogContext = createContext();
 
 export const DialogProvider = ({ children }) => {
   const [options, setOptions] = useState(null);
-  const [resolver, setResolver] = useState(null);
+  const [resolver, setResolver] = useState(null); //resolver is used to
 
   const openDialog = useCallback((config = {}) => {
     return new Promise((resolve) => {
