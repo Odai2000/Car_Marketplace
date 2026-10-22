@@ -1,25 +1,25 @@
-.DataTable{
+.DataTable {
   align-items: stretch;
 }
 
 .data-table {
   border-collapse: seperate;
-  border-spacing:0;
+  border-spacing: 0;
   /* border-radius: 1em; */
-  font-size:0.75em
+  font-size: 0.75em;
 }
 
 /* th td */
-.data-table th, .data-table td {
+.data-table th,
+.data-table td {
   border: 1px solid rgb(245, 243, 243);
-  padding: .5em;
-
+  padding: 0.5em;
 }
 
 .data-table th {
-  color: gray;
+  color: #fff;
   border-bottom: none;
-  background-color: var(--table-main);
+  background-color: var(--primary);
 
   font-weight: 700;
 }
@@ -29,15 +29,12 @@
  background-color:var(--light-primary); 
 } */
 
-
-.data-table th:first-child
- {
+.data-table th:first-child {
   border-bottom: none;
-   border-top-left-radius:4px;
+  border-top-left-radius: 4px;
 }
-.data-table th:last-child
- {
-   border-top-right-radius:4px;
+.data-table th:last-child {
+  border-top-right-radius: 4px;
 }
 .data-tabletr:last-child td {
   border-bottom: none;
@@ -51,47 +48,59 @@
 
 .data-table tr {
   border: 1px solid rgb(245, 243, 243);
-  padding: .5em;
+  padding: 0.5em;
+}
 
+.data-table tr:nth-child(even) {
+  background-color: rgb(248, 248, 248);
 }
 
 .data-table tr.selected {
-background-color: var(--light-primary);
-  padding: .5em;
-
+  background-color: var(--light-primary);
+  padding: 0.5em;
 }
 .data-table tr.selected > .btn.secondary {
-background-color: var(--light-primary);
-  padding: .5em;
-
+  background-color: var(--primary);
+  padding: 0.5em;
 }
 
 /* others */
-.data-table .table-controls {
-  padding: .25em;
+.DataTable .table-controls .toolbar{
+  display: flex;
+  padding: 0.25em;
+
+  justify-content: space-between;
 }
-.data-table .table-controls .btn{
-  padding: .5em;
+.data-table .table-controls .btn {
+  padding: 0.5em;
   font-size: 1em;
-  
 }
 
+.DataTable .tags .Chip .btn{
+  padding:0;
+}
 
-.BulkActionsBar{
-  position:absolute; bottom: 1em;left:50%;
+.BulkActionsBar {
+  position: absolute;
+  bottom: 1em;
+  left: 50%;
   align-items: center;
   justify-content: space-between;
   min-width: 20rem;
-  background-color: var(--table-main);
-  /* color: gray; */
-  padding: .75rem;
+  background-color: var(--primary);
+  color: #fff;
+  padding: 0.75rem;
   padding-right: 1.25rem;
   border-radius: 32px;
   /* font-weight: 600; */
-
 }
 
-.BulkActionsBar .cancel-btn:hover{
-color: var(--primary);
+.BulkActionsBar .cancel-btn:hover {
+  color: #fff;
+  font-weight: 700;
+}
+
+/* .BulkActionsBar .action-btn{
+color: #fff;
 font-weight: 700;
-}
+} */

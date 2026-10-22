@@ -5,7 +5,7 @@ import Button from "../../UI/Button/Button";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import useConfig from "../../../hooks/useConfig";
-import useWindowSize from "../../../hooks/useWindow";
+import useWindowSize from "../../../hooks/useWindowSize";
 import Select from "../../UI/FormControls/Select";
 import Skeleton from "react-loading-skeleton";
 import useLockBody from "../../../hooks/utility/useLockBody";
@@ -117,7 +117,7 @@ const PostSearchResult = () => {
               <Select
                 variant={"inline"}
                 value={sortBy}
-                style={{ maxWidth: `${sortBy?.length + 1}ch` }}
+                style={{ maxWidth: `${sortBy?.length + 1}em` }}
                 onChange={(e) => setSortBy(e.target.value)}
               >
                 <option value="newest">Most recent</option>

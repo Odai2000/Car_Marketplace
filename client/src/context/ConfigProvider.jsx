@@ -9,8 +9,8 @@ export const ConfigProvider = ({children})=>{
         mapServiceProviderURL: import.meta.env.VITE_OPENSTREET_URL,
         commentLimit:import.meta.env.VITE_COMMENT_LIMIT,
         notificationLimit:import.meta.env.VITE_NOTIFICATION_LIMIT,
-        smBreakpoint:576,
-        mdBreakpoint:764,
+        smBreakpoint:400,
+        mdBreakpoint:768,
     });
 
     return(

@@ -5,7 +5,7 @@ import useConfig from "../../../../hooks/useConfig";
 import useAuth from "../../../../hooks/useAuth";
 import useAuthFetch from "../../../../hooks/useAuthFetch";
 import useToast from "../../../../hooks/useToast";
-import useWindow from "../../../../hooks/useWindow";
+import useWindow from "../../../../hooks/useWindowSize";
 
 const SecurityView = () => {
   const { config } = useConfig();

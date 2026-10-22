@@ -8,7 +8,6 @@ const Comment = require("../models/Comment");
 const crypto = require("crypto");
 const mongoose = require("mongoose");
 
-
 const isValidObjectId = (_id) => {
   return mongoose.Types.ObjectId.isValid(_id);
 };
@@ -17,21 +16,27 @@ const getPostById = asyncHandler(async (req, res) => {
     const { include, user_id } = req.query;
     const populateFields = [];
 
-    const _id = req.params._id
-    
-    if (!isValidObjectId(_id)) return res.status(404).json({ message: "No post found" })
+    const _id = req.params._id;
+
+    if (!isValidObjectId(_id))
+      return res.status(404).json({ message: "No post found" });
     let query = Post.findById(_id);
 
     populateFields.push({
       path: "user",
-      select: "firstName lastName name username profileImageId profileImageUrl ratings reputation",
+      select:
+        "firstName lastName name username profileImageId profileImageUrl ratings reputation",
     });
 
     if (include?.includes("bids")) {
       populateFields.push({
         path: "bids",
         options: { sort: { createdAt: -1 } },
-        populate: { path: "user", select: "firstName lastName name username profileImageId profileImageUrl" },
+        populate: {
+          path: "user",
+          select:
+            "firstName lastName name username profileImageId profileImageUrl",
+        },
       });
     }
 
@@ -39,10 +44,16 @@ const getPostById = asyncHandler(async (req, res) => {
       populateFields.push({
         path: "comments",
         match: { parent_id: null },
-        options: { sort: { createdAt: -1 }, limit:  process.env.COMMENT_LIMIT?parseInt( process.env.COMMENT_LIMIT ):10 },
+        options: {
+          sort: { createdAt: -1 },
+          limit: process.env.COMMENT_LIMIT
+            ? parseInt(process.env.COMMENT_LIMIT)
+            : 10,
+        },
         populate: {
           path: "user",
-          select: "firstName lastName name username profileImageId profileImageUrl",
+          select:
+            "firstName lastName name username profileImageId profileImageUrl",
         },
       });
     }
@@ -127,6 +138,7 @@ const getPosts = asyncHandler(async (req, res) => {
     sortBy,
   } = req.query;
 
+  //Note: rework this to have car object instead. wtf....
   const query = {
     ...(make && { "car.make": { $regex: new RegExp(make, "i") } }),
     ...(model && { "car.model": { $regex: new RegExp(model, "i") } }),
@@ -156,9 +168,9 @@ const getPosts = asyncHandler(async (req, res) => {
   }
 
   if (priceMin || priceMax) {
-    query["car.price"] = {};
-    if (priceMin) query["car.price"].$gte = parseInt(priceMin);
-    if (priceMax) query["car.price"].$lte = parseInt(priceMax);
+    query.price = {};
+    if (priceMin) query.price.$gte = parseInt(priceMin);
+    if (priceMax) query.price.$lte = parseInt(priceMax);
   }
 
   let sort = null;
@@ -167,10 +179,14 @@ const getPosts = asyncHandler(async (req, res) => {
       sort = { createdAt: -1 };
       break;
     case "highest-price":
-      sort = { "car.price": -1, createdAt: -1 };
+      sort = { "price": -1 };
       break;
     case "lowest-price":
-      sort = { "car.price": 1, createdAt: -1 };
+      sort = { "price": 1, createdAt: -1 };
+      break;
+
+    case "lowest-mileage":
+      sort = { "car.mileage": 1, createdAt: -1 };
       break;
     case "most-viewed":
       sort = { views: -1, createdAt: -1 };
@@ -181,7 +197,7 @@ const getPosts = asyncHandler(async (req, res) => {
   }
   const posts = await Post.find(query)
     .sort(sort)
-    .skip(limit * (page))
+    .skip(limit * page)
     .limit(limit)
     .lean();
 
@@ -211,16 +227,14 @@ const getPosts = asyncHandler(async (req, res) => {
     delete post.imageIds;
   }
 
-  if(limit>0){
-  const totalPosts = await Post.countDocuments(query);
+  if (limit > 0) {
+    const totalPosts = await Post.countDocuments(query);
     res.json({
       posts: posts,
       totalPages: Math.ceil(totalPosts / limit),
       totalPosts: totalPosts,
     });
-  }
-else res.status(200).json(posts); 
-
+  } else res.status(200).json(posts);
 });
 
 const getPostsByUserId = asyncHandler(async (req, res) => {
@@ -390,7 +404,7 @@ const updatePost = asyncHandler(async (req, res) => {
     // delete files on cloud storage after update success
     if (validImageIds.length > 0) {
       await Promise.all(
-        validImageIds.map((imageId) => cloudStorage.delete(Number(imageId)))
+        validImageIds.map((imageId) => cloudStorage.delete(Number(imageId))),
       );
     }
     res.status(200).send("Post updated.");
@@ -429,7 +443,7 @@ const deletePost = asyncHandler(async (req, res) => {
     await Promise.all(
       post.imageIds.map(async (imageId) => {
         await cloudStorage.delete(Number(imageId));
-      })
+      }),
     );
     res.status(200).json({ message: `Post with id: ${_id} has been deleted` });
   }

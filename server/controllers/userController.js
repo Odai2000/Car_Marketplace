@@ -12,6 +12,7 @@ const emailManager = new EmailManager("brevo");
 const CloudStorageManager = require("../modules/cloud_storage/cloudStorageManager");
 const { OAuth2Client } = require("google-auth-library");
 const mongoose = require("mongoose");
+const { search, options } = require("../routes/file");
 
 const folderId = process.env.PCLOUD_FOLDER_ID;
 const cloudStorage = new CloudStorageManager("pcloud");
@@ -23,11 +24,82 @@ const isValidObjectId = (_id) => {
 // Route functions
 //get users
 const getAllUsers = asyncHandler(async (req, res) => {
-  const users = await User.find().select("-password");
+  const { page = 0, limit = 0, searchTerm } = req.query;
+  // const attrs = searchAttrbuites ? searchAttrbuites.split(',') : ['firstName','lastName','username'];
+  const query = {};
+  const allowedFields = [
+    "firstName",
+    "lastName",
+    "username",
+    "emaill",
+    "emailVert",
+    "status",
+    "location",
+    "roles",
+    "createdAt",
+  ];
+  const searchableFields = ["firstName", "lastName", "username", "email"];
 
-  if (!users.length) return res.status(400).json({ message: "No users found" });
+  if (searchTerm) {
+    const fields = (req.query.fields || "")
+      .split(",")
+      .map((field) => field.trim())
+      .filter(Boolean)
+      .filter((field) => searchableFields.includes(field));
 
-  res.status(200).json(users);
+    const orConditions = [];
+    if (fields.length > 0) {
+      fields.map((field) => {
+        orConditions.push({ [field]: { $regex: new RegExp(searchTerm, "i") } });
+      });
+    } else {
+      searchableFields.map((field) => {
+        orConditions.push({ [field]: { $regex: new RegExp(searchTerm, "i") } });
+      });
+    }
+    query.$or = orConditions;
+  }
+
+  if (req.query.filters) {
+    const filters = JSON.parse(req.query.filters);
+
+    console.log(filters);
+    if (filters.roles && filters.roles.length>0) {
+      query.roles = { $in: filters.roles };
+    }
+
+    if (filters.status && filters.status.length>0) {
+      query.status = { $in: filters.status };
+    }
+    if (filters.emailVert) {
+      query.emailVert = filters.emailVert;
+    }
+    if (filters.createdAtFrom || filters.createdAtTo) {
+      query.createdAt = {};
+
+      if (filters.createdAtFrom) {
+        query.createdAt.$gte = new Date(filters.createdAtFrom);
+      }
+
+      if (filters.createdAtTo) {
+        query.createdAt.$lte = new Date(filters.createdAtTo);
+      }
+    }
+  }
+console.log(query)
+  // const order = sortBy ? [[sortBy, sortDir || 'asc']] : [['createdAt', 'DESC']]
+  const users = await User.find(query)
+    .select("-password")
+    // .sort(order)
+    .skip(limit * page)
+    .limit(limit);
+
+  const totalUsers = await User.countDocuments(query);
+  res.status(200).json({
+    users: users,
+    totalUsers: totalUsers,
+    totalPages: Math.ceil(totalUsers / limit),
+  });
 });
 
 const getUser = asyncHandler(async (req, res) => {
@@ -103,7 +175,7 @@ const createUser = asyncHandler(async (req, res) => {
   });
 });
 
-//Note: need to rework this to handle different use cases aka update by user verus by admin. 
+//Note: need to rework this to handle different use cases aka update by user verus by admin.
 const updateUser = asyncHandler(async (req, res) => {
   const { _id, username, email, location, firstName, lastName, roles } =
     req.body;
@@ -255,7 +327,8 @@ const loginUser = asyncHandler(async (req, res) => {
       username,
     });
 
-    if (!user) return res.status(401).send("Username or password is incorrect.");
+    if (!user)
+      return res.status(401).send("Username or password is incorrect.");
 
     if (await bcrypt.compare(password, user.password)) {
       const accessToken = generateAccessToken(user);
@@ -635,14 +708,13 @@ const refreshTheToken = asyncHandler(async (req, res) => {
   }
 });
 
-
 module.exports = {
   getAllUsers,
   getUser,
   getUserPersonalData,
   createUser,
   updateUser,
-deleteUser,
+  deleteUser,
   loginUser,
   googleLogin,
   logout,

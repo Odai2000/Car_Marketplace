@@ -47,7 +47,7 @@ const createBid = asyncHandler(async (req, res) => {
       return res.status(400).json({ message: "Invalid input for amount" });
     }
 
-    const post = await Post.findById(post_id).select("user_id").lean();
+    const post = await Post.findById(post_id).select("user_id").populate({ path: "user"}).exec();
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
     }
@@ -75,7 +75,7 @@ const createBid = asyncHandler(async (req, res) => {
     }
     //send notification
     const io = req.app.get("io");
-    io.sendNotification({message:`${bid.user.name} offered $${bid.amount.toLocaleString()} for your vehicle.`,user_id:post.user._id,link:`/post/${post._id}`});
+    io.sendNotification({message:`${populatedBid.user.name} offered $${populatedBid.amount.toLocaleString()} for your vehicle.`,user_id:post.user._id,link:`/post/${post._id}`});
     return res.status(201).json({ message: "Bid created.", bid: populatedBid });
   } catch (error) {
     console.log(error);

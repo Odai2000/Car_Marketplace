@@ -106,7 +106,8 @@
 
 .post .post-details .post-location {
   width: 100%;
-  overflow: hidden;
+  overflow-y: visible;
+  overflow-x: hidden;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -192,7 +193,7 @@
   .post {
     flex-direction: row;
     width: max(42rem, 65vw);
-    height: 18rem;
+    /* height: 18rem; */
   }
 
   .post .icon {

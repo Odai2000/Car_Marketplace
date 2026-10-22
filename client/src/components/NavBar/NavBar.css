@@ -12,6 +12,7 @@
 
 .nav-wrapper.scrolled {
   position: fixed;
+  border-bottom: 1px solid #ddd;
 }
 
 .nav-wrapper.style-transparent {

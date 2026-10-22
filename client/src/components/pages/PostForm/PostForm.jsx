@@ -10,7 +10,7 @@ import CarPhotosStep from "./steps/CarPhotosStep";
 import ReviewStep from "./steps/ReviewStep";
 import useConfig from "../../../hooks/useConfig";
 import { FaAngleRight } from "react-icons/fa6";
-import useWindowSize from "../../../hooks/useWindow";
+import useWindowSize from "../../../hooks/useWindowSize";
 import { useLocation } from "react-router-dom";
 import useAuthFetch from "../../../hooks/useAuthFetch";
 

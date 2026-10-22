@@ -10,7 +10,7 @@ const BulkActionsBar = ({ actionSets, table }) => {
                 </Button>
                 <span>{`${table?.getSelectedRowModel?.()?.rows?.length || 0} selected`}</span>
             </div>
-            <div className="right-side flex gap-05em center">{actionSets}</div>
+            <div className="right-side flex gap-05em center">{actionSets.map((action,index)=><Button key={index} variant="link inverse" onClick={()=>action.callBack()}>{action?.label}</Button>)}</div>
         </div>
     );
 };

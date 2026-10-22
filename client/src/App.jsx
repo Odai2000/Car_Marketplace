@@ -20,9 +20,10 @@ import { useEffect } from "react";
 import { AuthModalProvider } from "./context/AuthModalProvider";
 import { DialogProvider } from "./context/DialogProvider";
 import NotFound from "./components/pages/NotFound/NotFound";
-import AdminPanel from "./components/pages/AdminPanel/Dashboard";
+import AdminPanel from "./components/pages/Dashboard/Dashboard";
 import Modal from "./components/UI/Modal/Modal";
 import { ModalProvider } from "./context/ModalProvider";
+import Dashboard from "./components/pages/Dashboard/Dashboard";
 
 function App() {
   const ScrollToTop = () => {
@@ -66,14 +67,19 @@ function App() {
                           />
                           <Route path="me" element={<UserAccount />} />
                         </Route>
+                     
+                   ``
                       </Route>
 
                       <Route>
                         <Route element={<ReqAuth allowedRoles={["USER"]} />}>
+                         <Route path="dashboard" element={<Dashboard />} />
                           <Route
                             path="me/settings"
                             element={<UserSettings />}
                           />
+
+                          
                           <Route path="chat" element={<Chat />} />
                           <Route path="chat/:peer_id" element={<Chat />} />
                         </Route>
@@ -86,7 +92,6 @@ function App() {
                         ></Route>
                       </Route>
                     </Route>
-                    <Route path="control-panel" element={<AdminPanel />} />
                     <Route path="not-found" element={<NotFound />} />
                     <Route
                       path="*"

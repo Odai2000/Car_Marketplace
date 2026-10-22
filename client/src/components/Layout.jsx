@@ -1,5 +1,5 @@
 //For test only
-import NavBar from "./nav/NavBar";
+import NavBar from "./NavBar/NavBar";
 import Hero from "./Hero/Hero";
 import { Outlet, useLocation } from "react-router-dom";
 function Layout() {

@@ -10,7 +10,7 @@ import useDialog from "../../../../hooks/useDialog";
 import Autocomplete from "../../../UI/FormControls/Autocomplete";
 import Select from "../../../UI/FormControls/Select";
 import useAppData from "../../../../hooks/useAppData";
-import useWindow from "../../../../hooks/useWindow";
+import useWindow from "../../../../hooks/useWindowSize";
 import { FaLocationCrosshairs } from "react-icons/fa6";
 import useMap from "../../../../hooks/useMap";
 import ProfileImage from "../../../UI/Utility/ProfileImage/ProfileImage";

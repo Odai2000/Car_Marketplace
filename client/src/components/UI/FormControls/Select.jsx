@@ -7,12 +7,13 @@ const Select = ({
   id,
   value,
   label,
-  variant="standard",
+  variant = "standard",
   onChange,
   styleName = "",
+  multiple,
   options,
   defaultOption,
-  validationRules={},
+  validationRules = {},
   onValidationChange,
   children,
   ...props
@@ -34,21 +35,43 @@ const Select = ({
   };
 
   const handleChange = (e) => {
-    const errorMessage = validate(e.target.value);
+    const normalizedValue =multiple
+    ? Array.from(e.target.selectedOptions, (option) => option.value)
+    : e.target.value;
+    const errorMessage = validate(normalizedValue);
     setErrorMessage(errorMessage);
 
     // signals to parent component
     if (onValidationChange) {
       onValidationChange(!errorMessage);
     }
-    onChange(e)
+    onChange(e);
   };
 
-    useEffect(() => {
-      if (onValidationChange) {
-        onValidationChange(validate(value));
-      }
-    }, []);
+  useEffect(() => {
+    if (onValidationChange) {
+      onValidationChange(validate(value));
+    }
+  }, []);
+
+  const normalizedOptions = (options || []).map((option) => {
+    if (
+      option !== null &&
+      typeof option === "object" &&
+      ("value" in option || "label" in option)
+    ) {
+      return {
+        value: option.value,
+        label: option.label ?? option.value,
+      };
+    }
+
+    return {
+      value: option,
+      label: String(option),
+    };
+  });
+
   return (
     <div className={`form-control-container ${styleName}`}>
       {label ? (
@@ -59,6 +82,7 @@ const Select = ({
         ""
       )}
       <select
+      multiple={multiple}
         name={name}
         id={id}
         value={value}
@@ -73,8 +97,8 @@ const Select = ({
         ) : (
           ""
         )}
-        {options
-          ? options.map((option) => (
+        {normalizedOptions && normalizedOptions.length > 0
+          ? normalizedOptions.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>

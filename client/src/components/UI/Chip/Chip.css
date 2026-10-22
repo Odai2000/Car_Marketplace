@@ -1,6 +1,7 @@
 .Chip {
   width: fit-content;
-  padding: 0.25rem;
+  padding: 0.25rem .5rem;
+  
   border-radius: 0.5rem;
   display: flex;
   align-items: center;

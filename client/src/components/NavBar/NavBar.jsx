@@ -14,9 +14,18 @@ import useAuthModal from "../../hooks/useAuthModal";
 import useConfig from "../../hooks/useConfig";
 import useAuthFetch from "../../hooks/useAuthFetch";
 import useToast from "../../hooks/useToast";
-import { PiBell, PiChat, PiGear, PiSignOut, PiUser } from "react-icons/pi";
+import {
+  PiBell,
+  PiChat,
+  PiGear,
+  PiSidebar,
+  PiSignOut,
+  PiSliders,
+  PiUser,
+} from "react-icons/pi";
+import { MdDashboard } from "react-icons/md";
 
-function NavBar() {
+function NavBar({ includeLogo = true }) {
   const [scrolled, setScrolled] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [hasUnreadNoti, setHasUnreadNoti] = useState(false);
@@ -33,12 +42,11 @@ function NavBar() {
   const authFetch = useAuthFetch();
   const { showToast } = useToast();
 
-  
   const handleNotificationClick = async (noti) => {
     try {
       const response = await authFetch(
         `${config.serverURL}/notification/${noti?._id.toString()}/read`,
-        { method: "PATCH" }
+        { method: "PATCH" },
       );
 
       if (!response.ok) throw new Error("Failed to mark notification as read.");
@@ -47,8 +55,10 @@ function NavBar() {
       if (data?.notification) {
         setNotifications((prev) =>
           prev.map((n) =>
-            n._id === data.notification._id ? {...n,hasRead:data.notification.hasRead} : n
-          )
+            n._id === data.notification._id
+              ? { ...n, hasRead: data.notification.hasRead }
+              : n,
+          ),
         );
       }
 
@@ -64,38 +74,35 @@ function NavBar() {
     try {
       const response = await authFetch(
         `${config.serverURL}/notification/${_id.toString()}/read`,
-        { method: "PATCH" }
+        { method: "PATCH" },
       );
 
       if (!response.ok) throw new Error("Failed to mark notification as read.");
       const data = await response.json();
 
       if (data?.notification) {
-       setNotifications((prev) =>
+        setNotifications((prev) =>
           prev.map((n) =>
-            n._id === data.notification._id ? {...n,hasRead:data.notification.hasRead} : n
-          )
+            n._id === data.notification._id
+              ? { ...n, hasRead: data.notification.hasRead }
+              : n,
+          ),
         );
       }
     } catch (error) {
       console.error(error);
     }
   };
-    const handleDeleteNotification = async (_id) => {
+  const handleDeleteNotification = async (_id) => {
     try {
       const response = await authFetch(
         `${config.serverURL}/notification/${_id.toString()}`,
-        { method: "DELETE" }
+        { method: "DELETE" },
       );
 
       if (!response.ok) throw new Error("Failed to delete notification.");
 
-        setNotifications((prev) =>
-          prev.filter((n) =>
-            n._id !== _id 
-          )
-        );
-      
+      setNotifications((prev) => prev.filter((n) => n._id !== _id));
     } catch (error) {
       console.error(error);
     }
@@ -104,7 +111,7 @@ function NavBar() {
   const loadNotifications = async () => {
     try {
       const response = await authFetch(
-        `${config.serverURL}/notification?page=${notificationPagination}&limit=${config?.notificationLimit}`
+        `${config.serverURL}/notification?page=${notificationPagination}&limit=${config?.notificationLimit}`,
       );
       const nextPage = notificationPagination + 1;
 
@@ -216,20 +223,24 @@ function NavBar() {
             !scrolled && location.pathname == "/"
               ? "style-transparent"
               : scrolled
-              ? "scrolled"
-              : ""
+                ? "scrolled"
+                : ""
           } nav-wrapper`}
           ref={navRef}
         >
           <div className="nav-container">
-            <div id="logo">
-              <Link to="/">
-                <img
-                  src={!scrolled && location.pathname == "/" ? logoWhite : logo}
-                  alt="logo"
-                />
-              </Link>
-            </div>
+            {includeLogo && (
+              <div id="logo">
+                <Link to="/">
+                  <img
+                    src={
+                      !scrolled && location.pathname == "/" ? logoWhite : logo
+                    }
+                    alt="logo"
+                  />
+                </Link>
+              </div>
+            )}
 
             <nav className={"nav"}>
               <ul>
@@ -283,7 +294,7 @@ function NavBar() {
                     </Button>
                   }
                 >
-                  {(notifications?.length > 0 || totalNotifications>0 )? (
+                  {notifications?.length > 0 || totalNotifications > 0 ? (
                     <IconContext.Provider value={{ color: "#000" }}>
                       {notifications?.map((noti, i) => {
                         if (!noti?.hasRead && !hasUnreadNoti)
@@ -297,22 +308,51 @@ function NavBar() {
                             key={`noti-${i}`}
                             onClick={() => handleNotificationClick(noti)}
                           >
-                            <div className="content flex gap-1em"> {noti?.actor?.user?.profileImageUrl ? (
-                              <div className="profile-image round" style={{overflow:"hidden",height:"2.25rem",width:"2.25rem"}}>
-                                {noti?.actor?.user?.profileImageUrl ? (
-                                  <img
-                                    src={noti?.actor?.user?.profileImageUrl}
-                                  />
-                                ) : (
-                                  <DefaultProfile size="xs" />
-                                )}
-                              </div>
-                            ) : (
-                              ""
-                            )}
-                            <span className={`text`}>{noti?.message}</span></div>
-                           
-                            <div className="notification-control"><Button variant="link" onClick={(e)=>{e.stopPropagation(); handleDeleteNotification(noti?._id)}}>delete</Button><Button variant="link" onClick={(e)=>{e.stopPropagation();handleReadNotification(noti?._id)}}>mark as read</Button></div>
+                            <div className="content flex gap-1em">
+                              {" "}
+                              {noti?.actor?.user?.profileImageUrl ? (
+                                <div
+                                  className="profile-image round"
+                                  style={{
+                                    overflow: "hidden",
+                                    height: "2.25rem",
+                                    width: "2.25rem",
+                                  }}
+                                >
+                                  {noti?.actor?.user?.profileImageUrl ? (
+                                    <img
+                                      src={noti?.actor?.user?.profileImageUrl}
+                                    />
+                                  ) : (
+                                    <DefaultProfile size="xs" />
+                                  )}
+                                </div>
+                              ) : (
+                                ""
+                              )}
+                              <span className={`text`}>{noti?.message}</span>
+                            </div>
+
+                            <div className="notification-control">
+                              <Button
+                                variant="link"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDeleteNotification(noti?._id);
+                                }}
+                              >
+                                delete
+                              </Button>
+                              <Button
+                                variant="link"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleReadNotification(noti?._id);
+                                }}
+                              >
+                                mark as read
+                              </Button>
+                            </div>
                           </li>
                         );
                       })}
@@ -334,9 +374,12 @@ function NavBar() {
                       )}
                     </IconContext.Provider>
                   ) : (
-                    <div className="no-notifications-placeholder flex-col center gap-05em" style={{padding:"1.5em"}}>
-                      <PiBell size={109} color="#999"/>
-                    <h3 style={{color:"#888"}}>No Notificatoins Yet</h3>
+                    <div
+                      className="no-notifications-placeholder flex-col center gap-05em"
+                      style={{ padding: "1.5em" }}
+                    >
+                      <PiBell size={109} color="#999" />
+                      <h3 style={{ color: "#888" }}>No Notificatoins Yet</h3>
                     </div>
                   )}
                 </Dropdown>
@@ -350,6 +393,25 @@ function NavBar() {
                 >
                   <PiChat size="1.5rem" />
                 </Button>
+
+                {auth?.userData?.roles?.some(
+                  (role) =>
+                    role === "Admin" ||
+                    role === "Owner" ||
+                    role === "Moderator",
+                ) ? (
+                  <Button
+                    variant={"icon"}
+                    styleName="dashboard-btn"
+                    onClick={() => {
+                      navigate("/dashboard");
+                    }}
+                  >
+                    <PiSidebar size="1.5rem" />
+                  </Button>
+                ) : (
+                  ""
+                )}
 
                 <Dropdown
                   className="profil-dropdown"
@@ -374,7 +436,7 @@ function NavBar() {
                     >
                       <PiUser /> Profile
                     </li>
-                           <li onClick={()=>navigate("me/settings")}>
+                    <li onClick={() => navigate("/me/settings")}>
                       <PiGear /> Settings
                     </li>
                     <li onClick={logout}>

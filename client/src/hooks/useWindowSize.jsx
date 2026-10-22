@@ -3,16 +3,16 @@ import useConfig from "./useConfig";
 
 
 const useWindowSize = () => {
-  const config = useConfig();
+  const {config} = useConfig();
 
-  const smallScreenBreakpoint = config?.smallScreenBreakpoint || 500;
+  const mdBreakpoint = config?.mdBreakpoint;
   const [isSmallScreen, setIsSmallScreen] = useState(
-    () => window.innerWidth <= smallScreenBreakpoint
+    () => window.innerWidth <= mdBreakpoint
   );
 
   useEffect(() => {
     const handleResize = () => {
-      setIsSmallScreen(window.innerWidth <= smallScreenBreakpoint);
+      setIsSmallScreen(window.innerWidth <= mdBreakpoint)
     };
 
     window.addEventListener("resize", handleResize);
