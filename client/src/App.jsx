@@ -9,7 +9,6 @@ import AppDataProvider from "./context/AppDataProvider";
 import PersistLogin from "./components/PersistLogin";
 import { ToastProvider } from "./context/ToastProvider";
 import ReqAuth from "./components/ReqAuth";
-import UnAuthorized from "./components/pages/UnAuthorized/UnAuthorized";
 import UserAccount from "./components/pages/UserAccountPage/UserAccount";
 import Chat from "./components/pages/Chat/Chat";
 import UserSettings from "./components/pages/UserSettings/UserSettings";
@@ -20,10 +19,9 @@ import { useEffect } from "react";
 import { AuthModalProvider } from "./context/AuthModalProvider";
 import { DialogProvider } from "./context/DialogProvider";
 import NotFound from "./components/pages/NotFound/NotFound";
-import AdminPanel from "./components/pages/Dashboard/Dashboard";
-import Modal from "./components/UI/Modal/Modal";
 import { ModalProvider } from "./context/ModalProvider";
 import Dashboard from "./components/pages/Dashboard/Dashboard";
+import { PresenceProvider } from "./context/PresenseProvider";
 
 function App() {
   const ScrollToTop = () => {
@@ -38,71 +36,77 @@ function App() {
     <ConfigProvider>
       <AppDataProvider>
         <AuthProvider>
-          <ToastProvider>
-            <ModalProvider>
-            <AuthModalProvider>
-              <DialogProvider>
-                <ScrollToTop />
-                <Routes>
-                  <Route path="/">
-                    <Route element={<PersistLogin />}>
-                      <Route element={<Layout />}>
-                        <Route index element={<Home />} />
-                        <Route path="posts" element={<PostSearchResult />} />
-                        <Route path="post/:_id" element={<PostPage />} />
-                        <Route
-                          path="user/:identifier/"
-                          element={<UserAccount />}
-                        />
-                        <Route
-                          path="user/:_id/verify-email"
-                          element={<EmailVerification />}
-                        />
-
-                        <Route element={<ReqAuth allowedRoles={["USER"]} />}>
-                          <Route path="new" element={<PostForm />} />
-                          <Route
-                            path="edit"
-                            element={<PostForm isUpdating={true} />}
-                          />
-                          <Route path="me" element={<UserAccount />} />
-                        </Route>
-                     
-                   ``
-                      </Route>
-
-                      <Route>
-                        <Route element={<ReqAuth allowedRoles={["USER"]} />}>
-                         <Route path="dashboard" element={<Dashboard />} />
-                          <Route
-                            path="me/settings"
-                            element={<UserSettings />}
-                          />
-
-                          
-                          <Route path="chat" element={<Chat />} />
-                          <Route path="chat/:peer_id" element={<Chat />} />
-                        </Route>
-                        <Route
-                          element={
-                            <ReqAuth
-                              allowedRoles={["USER", "ADMIN", "SUPERADMIN"]}
+          <PresenceProvider>
+            <ToastProvider>
+              <ModalProvider>
+                <AuthModalProvider>
+                  <DialogProvider>
+                    <ScrollToTop />
+                    <Routes>
+                      <Route path="/">
+                        <Route element={<PersistLogin />}>
+                          <Route element={<Layout />}>
+                            <Route index element={<Home />} />
+                            <Route
+                              path="posts"
+                              element={<PostSearchResult />}
                             />
-                          }
-                        ></Route>
+                            <Route path="post/:_id" element={<PostPage />} />
+                            <Route
+                              path="user/:identifier/"
+                              element={<UserAccount />}
+                            />
+                            <Route
+                              path="user/:_id/verify-email"
+                              element={<EmailVerification />}
+                            />
+                            <Route
+                              element={<ReqAuth allowedRoles={["USER"]} />}
+                            >
+                              <Route path="new" element={<PostForm />} />
+                              <Route
+                                path="edit"
+                                element={<PostForm isUpdating={true} />}
+                              />
+                              <Route path="me" element={<UserAccount />} />
+                            </Route>
+                            ``
+                          </Route>
+
+                          <Route>
+                            <Route
+                              element={<ReqAuth allowedRoles={["USER"]} />}
+                            >
+                              <Route path="dashboard" element={<Dashboard />} />
+                              <Route
+                                path="me/settings"
+                                element={<UserSettings />}
+                              />
+
+                              <Route path="chat" element={<Chat />} />
+                              <Route path="chat/:peer_id" element={<Chat />} />
+                            </Route>
+                            <Route
+                              element={
+                                <ReqAuth
+                                  allowedRoles={["USER", "ADMIN", "SUPERADMIN"]}
+                                />
+                              }
+                            ></Route>
+                          </Route>
+                        </Route>
+                        <Route path="not-found" element={<NotFound />} />
+                        <Route
+                          path="*"
+                          element={<Navigate to="/not-found" replace />}
+                        />
                       </Route>
-                    </Route>
-                    <Route path="not-found" element={<NotFound />} />
-                    <Route
-                      path="*"
-                      element={<Navigate to="/not-found" replace />}
-                    />
-                  </Route>
-                </Routes>
-              </DialogProvider>
-            </AuthModalProvider>
+                    </Routes>
+                  </DialogProvider>
+                </AuthModalProvider>
               </ModalProvider>
-          </ToastProvider>
+            </ToastProvider>
+          </PresenceProvider>
         </AuthProvider>
       </AppDataProvider>
     </ConfigProvider>

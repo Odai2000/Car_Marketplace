@@ -26,7 +26,6 @@ const Sidebar = ({
   renderContent,
 }) => {
   const [activeTab, setActiveTab] = useState(defaultTab);
-  const [toggleView, setToggleView] = useState(false);
   const { isSmallScreen } = useWindowSize();
 
   const { auth, setAuth, logout } = useAuth();
@@ -37,7 +36,6 @@ const Sidebar = ({
 
   const handleTabClick = (tab) => {
     setActiveTab(tab.id);
-    setToggleView(true);
   };
 
   const activeContent =

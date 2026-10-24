@@ -188,7 +188,7 @@ function NavBar({ includeLogo = true }) {
       });
 
       socket.current.on("connect", () => {
-        console.log("[SOCKET CONNECTED]", socket.current.id);
+        // console.log("[SOCKET CONNECTED]", socket.current.id);
         socket.current.emit("register-user", socket.current.auth.user_id);
       });
 

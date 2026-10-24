@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useConfig from "../hooks/useConfig";
 export const AuthContext = createContext({});
@@ -8,9 +8,11 @@ const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState(null);
   const { config } = useConfig();
 
+        const socketRef = useRef(null)
   const [persist, setPersist] = useState(
     JSON.parse(localStorage.getItem("persist")) || true
   );
+
 
   const login = async (username, password) => {
     try {
@@ -113,16 +115,27 @@ const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
+     socketRef.current = window.io(config?.serverURL, {
+        auth: {
+          accessToken: `Bearer ${auth?.accessToken}`,
+        },
+      });
+
       const response = await fetch(`${config.serverURL}/user/logout`, {
         method: "POST",
         credentials: "include",
+        
         headers: {
           "Content-Type": "application/json; charset=UTF-8",
+
+        Authorization: `Bearer ${auth?.accessToken}`,
         },
       });
 
       if (response.ok) {
         setPersist(false);
+
+        socketRef.current.disconnect()
         setAuth(null);
         navigate("/");
       }

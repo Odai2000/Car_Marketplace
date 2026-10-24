@@ -11,6 +11,8 @@ import UserCard from "./UserCard";
 import Chip from "@/components/UI/Chip/Chip";
 import ProfileImage from "@/components/UI/Utility/ProfileImage/ProfileImage";
 import FiltersCard from "./FiltersCard";
+import { usePresence } from "@/context/PresenseProvider";
+import StatusChip from "@/components/UI/Utility/StatusChip/StatusChip";
 function useDebounce(value, delay = 400) {
   const [debounced, setDebounced] = useState(value);
 
@@ -83,6 +85,8 @@ const UsersManagerView = () => {
   ];
 
   const [page, setPage] = useState(0);
+  const { getPresence, watchUsers, unwatchUsers } = usePresence();
+
   const useDebounce = (value, delay = 300) => {
     const [debounced, setDebounced] = useState(value);
 
@@ -94,9 +98,21 @@ const UsersManagerView = () => {
     return debounced;
   };
 
+useEffect(() => {
+  if (!users.length) return;
+
+  const user_ids = users.map((user) => user._id);
+
+  watchUsers(user_ids);
+
+  return () => {
+    unwatchUsers(user_ids);
+  };
+}, [users]);
+
   const getUsers = async () => {
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       const res = await authFetch(
         `${config.serverURL}/user?limit=${limit}&page=${page}&searchTerm=${searchTerm}&filters=${JSON.stringify(filters)}`,
       );
@@ -114,12 +130,15 @@ const UsersManagerView = () => {
       setUsers(data.users || data || []);
       setUsersCount(data.totalUsers);
       setPageCount(data.totalPages);
-      setIsLoading(false)
+      setIsLoading(false);
     } catch (error) {
       console.error("Failed to fetch users", error);
-      showToast(error.message || 'error while attempting to fetch users', "error");
+      showToast(
+        error.message || "error while attempting to fetch users",
+        "error",
+      );
       setUsers([]);
-      setIsLoading(false)
+      setIsLoading(false);
     }
   };
 
@@ -216,6 +235,25 @@ const UsersManagerView = () => {
           );
         },
       }),
+      columnHelper.accessor("status", {
+        header: "Status",
+        meta: { cellClassName: "" },
+        cell: (info) => {
+          const presence = getPresence(info.row.original._id)
+          const status = info.getValue();
+          return (
+            <div className="flex gap-05em font-sm">
+              {status === "banned" ? (
+                <StatusChip status="banned" />
+              ) : presence.online ? (
+                <StatusChip status="online" />
+              ) : (
+                <StatusChip status="offline" />
+              )}
+            </div>
+          );
+        },
+      }),
       columnHelper.display({
         header: "Actions",
         cell: (props) => {
@@ -270,7 +308,6 @@ const UsersManagerView = () => {
         filtersOptions={filtersOptions}
         isLoading={isLoading}
       />
-     
     </div>
   );
 };

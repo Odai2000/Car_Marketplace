@@ -10,6 +10,8 @@ import useProfileImageUpload from "../../../hooks/useProfileImageUpload";
 import { useRef } from "react";
 import ProfileImage from "../../UI/Utility/ProfileImage/ProfileImage";
 import useToast from "../../../hooks/useToast";
+import { usePresence } from "@/context/PresenseProvider";
+import StatusChip from "@/components/UI/Utility/StatusChip/StatusChip";
 
 const UserAccount = () => {
   const [userData, setUserData] = useState(null);
@@ -28,6 +30,7 @@ const UserAccount = () => {
   const authFetch = useAuthFetch();
   const location = useLocation();
   const navigate = useNavigate();
+  const { getPresence, watchUser, unwatchUser } = usePresence();
 
   const { showToast } = useToast();
 
@@ -69,7 +72,7 @@ const UserAccount = () => {
         } else {
           // fetch by username
           const response = await fetch(
-            `${config.serverURL}/user/${identifier}`
+            `${config.serverURL}/user/${identifier}`,
           );
           if (!response.ok) {
             switch (response.status) {
@@ -79,7 +82,7 @@ const UserAccount = () => {
               case 500:
                 showToast(
                   "Unexcepted Server error. Please try again later.",
-                  "error"
+                  "error",
                 );
                 return;
               default:
@@ -109,6 +112,17 @@ const UserAccount = () => {
   }, [auth, location.pathname]);
 
   useEffect(() => {
+    const userId = userData?.user_id;
+    if (!userId) return;
+
+    watchUser(userId);
+
+    return () => {
+      unwatchUser(userId);
+    };
+  }, [userData?.user_id]);
+
+  useEffect(() => {
     const user_id = userData?.user_id;
     if (!user_id) return;
 
@@ -134,7 +148,7 @@ const UserAccount = () => {
         .finally(() => setIsLoading(false));
     } else setIsLoading(false);
   }, [activeTab, userData]);
-
+  const presence = getPresence(userData?.user_id);
   return (
     <>
       <div className="UserAccount">
@@ -154,9 +168,16 @@ const UserAccount = () => {
           <ProfileImage round src={userData?.profileImageUrl} size="md" />
 
           <div className="user-info">
-            <div className="name">{`${userData?.firstName} ${userData?.lastName}`}</div>
+            <div className="name">{`${userData?.firstName} ${userData?.lastName} `}</div>
             <div className="username">@{userData?.username}</div>
 
+            {userData?.status === "banned" ? (
+              <StatusChip status="banned" />
+            ) : presence.online ? (
+              <StatusChip status="online" />
+            ) : (
+              <StatusChip status="online" />
+            )}
             {location.pathname === "/me" ? (
               <Link to="/me/settings">
                 <Button styleName="edit-user-btn" variant="primary">

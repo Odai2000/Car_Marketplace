@@ -2,7 +2,6 @@ const Notification = require("../models/Notification");
 const User = require("../models/User");
 const asyncHandler = require("express-async-handler");
 
-// notice: check weather mods should be allowed to access user notifications
 const createNotification = asyncHandler(async (req, res) => {
   const { user_id, message, link } = JSON.parse(req.body.data);
 

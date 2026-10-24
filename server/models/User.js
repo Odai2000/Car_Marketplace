@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-
 const Country = require("./Country");
 
 const locationSchema = new mongoose.Schema({
@@ -81,9 +80,13 @@ const userSchema = new mongoose.Schema(
       enum: ["offline", "online", "deleted"],
       default: ["offline"],
     },
+    lastSeen: {
+      type: Date,
+      default: Date.now,
+    },
     roles: {
       type: [String],
-      enum: ["USER", "ADMIN","SUPERADMIN"],
+      enum: ["USER", "ADMIN", "SUPERADMIN"],
       default: ["USER"],
     },
     savedPosts: [
@@ -93,13 +96,15 @@ const userSchema = new mongoose.Schema(
       },
     ],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 userSchema.virtual("name").get(function () {
   return `${this.firstName} ${this.lastName}`;
 });
 userSchema.virtual("profileImageUrl").get(function () {
-  return this.profileImageId?`${process.env.SERVER_URL}/files/${this.profileImageId}`:null;
+  return this.profileImageId
+    ? `${process.env.SERVER_URL}/files/${this.profileImageId}`
+    : null;
 });
 userSchema.virtual("ratingCount").get(function () {
   return this.ratings?.length;
@@ -110,7 +115,8 @@ userSchema.pre("save", function (next) {
   this.reputation =
     this.ratingCount === 0
       ? 0
-      : ratings.reduce((sum, rating) => sum + rating.rate, 0) / this.ratingCount;
+      : ratings.reduce((sum, rating) => sum + rating.rate, 0) /
+        this.ratingCount;
   next();
 });
 

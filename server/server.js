@@ -1,5 +1,6 @@
 const notificationSocket = require("./sockets/notificationSocket");
-const Notification = require("./models/Notification");
+
+const activitySocket = require("./sockets/activitySocket");
 require("dotenv").config();
 const PORT = process.env.PORT || 3500;
 
@@ -20,29 +21,29 @@ const chatSocket = require("./sockets/chatSocket");
 const authenticateSocket = require("./middleware/authenticateSocket");
 const { Server } = require("socket.io");
 
+const onlineUsers = new Map();
 const io = new Server(server, {
   cors: {
-    origin: [process.env.CLIENT_URL], 
+    origin: [process.env.CLIENT_URL],
     methods: ["GET", "POST"],
     credentials: true,
   },
 });
 
 io.use(authenticateSocket);
-io.on("connection", (socket) => {
+io.on("connection", async (socket) => {
   console.log("a user connected");
+
   chatSocket(io, socket);
   notificationSocket(io, socket);
+  activitySocket(io, socket);
+
 });
 
 io.sendNotification = async (notification) => {
   try {
-
-    const noti= await createNotification(notification);
-    io.to(notification.user_id.toString()).emit(
-      "receive-notification",
-      noti
-    );
+    const noti = await createNotification(notification);
+    io.to(notification.user_id.toString()).emit("receive-notification", noti);
   } catch (error) {
     console.error(error);
   }

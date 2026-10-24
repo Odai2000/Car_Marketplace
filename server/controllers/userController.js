@@ -64,11 +64,11 @@ const getAllUsers = asyncHandler(async (req, res) => {
     const filters = JSON.parse(req.query.filters);
 
     console.log(filters);
-    if (filters.roles && filters.roles.length>0) {
+    if (filters.roles && filters.roles.length > 0) {
       query.roles = { $in: filters.roles };
     }
 
-    if (filters.status && filters.status.length>0) {
+    if (filters.status && filters.status.length > 0) {
       query.status = { $in: filters.status };
     }
     if (filters.emailVert) {
@@ -86,7 +86,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
       }
     }
   }
-console.log(query)
+  console.log(query);
   // const order = sortBy ? [[sortBy, sortDir || 'asc']] : [['createdAt', 'DESC']]
   const users = await User.find(query)
     .select("-password")
@@ -445,6 +445,15 @@ const googleLogin = asyncHandler(async (req, res) => {
 
 const logout = asyncHandler(async (req, res) => {
   try {
+    const io = req.app.get("io");
+
+    const sockets = await io.in(`presence:${req.user._id}`).fetchSockets();
+
+    for (const socket of sockets) {
+      socket.emit("force-logout");
+      socket.disconnect(true);
+      console.log('socket disconnect')
+    }
     //sends null token
     return res
       .status(200)

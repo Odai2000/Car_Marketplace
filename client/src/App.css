@@ -27,6 +27,7 @@
 
   --disabled-gray: hsl(0, 0%, 60%);
   --neutral-gray: hsl(0, 0%, 50%);
+  --dark-gray: hsl(0, 0%, 30%);
 
   --shade: hsla(0, 0%, 98%);
 
@@ -52,6 +53,8 @@
     100%,
     98%
   ); /* primary greenish gray*/
+
+
 
   --smBreakpoint: 576px;
   --mdBreakpoint: 768px;
